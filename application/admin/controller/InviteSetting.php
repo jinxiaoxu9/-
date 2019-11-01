@@ -2,7 +2,7 @@
 
 namespace Admin\Controller;
 
-use Admin\Model\InviteSettingModel;
+use Admin\Model\UserInviteSetting;
 use Gemapay\Model\GemapayCodeTypeModel;
 /**
  * 用户控制器
@@ -25,7 +25,7 @@ class InviteSetting extends Admin
 
         $inviteSetting   = M('user_invite_setting');
 
-        $InviteSettingModel = new InviteSettingModel();
+        $InviteSettingModel = new UserInviteSetting();
         //分页
         $p=getpage($inviteSetting,$map,10);
         $page=$p->show();

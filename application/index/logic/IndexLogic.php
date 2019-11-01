@@ -4,6 +4,7 @@ namespace app\index\logic;
 
 use app\common\library\enum\CodeEnum;
 use app\index\model\User;
+use app\index\model\UserInviteSetting;
 
 class IndexLogic
 {
@@ -47,6 +48,52 @@ class IndexLogic
 
                 return ['code' => CodeEnum::SUCCESS, 'msg' => '登录成功', 'data'=>$data];
             }
+        }
+    }
+
+    public function register($mobile, $username, $login_pwd, $inventCode)
+    {
+        $UserInviteSetting = new UserInviteSetting();
+        $setting = $UserInviteSetting->where(array('code'=>$inventCode))->find();
+
+        if(empty($setting)){
+            return ['code' => CodeEnum::ERROR, 'msg' => '推荐人不存在！'];
+        }
+        $salt = strrand(4);
+        $UserModel =  new User();
+        $cuser= $UserModel->where(array('account'=>$mobile))->find();
+        $muser= $UserModel->where(array('mobile'=>$mobile))->find();
+        if(!empty($cuser) || !empty($muser)){
+            return ['code' => CodeEnum::ERROR, 'msg' => '手机号已经被注册！'];
+        }
+
+        $data['pid'] = $setting['user_id'];
+        $data['gid'] = 0;
+        $data['ggid'] = 0;
+        $data['account'] = $mobile;
+        $data['mobile'] = $mobile;
+        $data['u_yqm'] = $inventCode;
+
+        $data['add_admin_id'] = $setting['admin_id'];
+
+        $data['username'] = $username;
+        $data['login_pwd'] = pwd_md5($login_pwd,$salt);
+        $data['login_salt'] = $salt;
+        $data['reg_date'] = time();
+        $data['reg_ip'] = get_userip();
+        $data['status'] = 1;
+        //$data['user_credit']= 5;
+        $data['use_grade']= 1;
+        $data['tx_status']= 1;
+
+        $ure_re = M('user')->add($data);
+        if($ure_re)
+        {
+            return ['code' => CodeEnum::SUCCESS, 'msg' => '注册成功！'];
+        }
+        else
+        {
+            return ['code' => CodeEnum::ERROR, 'msg' => '网络错误！'];
         }
     }
 }

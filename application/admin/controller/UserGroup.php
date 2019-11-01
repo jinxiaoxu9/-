@@ -2,7 +2,7 @@
 
 namespace Admin\Controller;
 
-use Admin\Model\InviteSettingModel;
+use Admin\Model\UserInviteSetting;
 use Admin\Model\UserGroupModel;
 use Gemapay\Model\GemapayCodeTypeModel;
 use Think\Db;

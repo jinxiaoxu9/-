@@ -1,7 +1,7 @@
 <?php
 
 namespace app\index\logic;
-use Admin\Model\InviteSettingModel;
+use Admin\Model\UserInviteSetting;
 use Common\Library\enum\CodeEnum;
 use Gemapay\Model\GemapayCodeTypeModel;
 use app\index\model\GemapayCodeModel;
@@ -12,7 +12,7 @@ class GemaCodeLogic
     public function getcodeTypes($userId)
     {
         $UserModel = new User();
-        $InviteSettingModel = new InviteSettingModel();
+        $InviteSettingModel = new UserInviteSetting();
         $GemapayCodeTypeModel = new GemapayCodeTypeModel();
         $userinfo = $UserModel->find($userId);
         $inviteSetting = $InviteSettingModel->where(array('code' => $userinfo["u_yqm"]))->find();
@@ -41,7 +41,7 @@ class GemaCodeLogic
     public function addQRcode($userId, $codeType, $imgs, $accountName, $accountNumber, $security)
     {
         $UserModel = new User();
-        $InviteSettingModel = new InviteSettingModel();
+        $InviteSettingModel = new UserInviteSetting();
         $GemapayCodeModel = new GemapayCodeModel();
         $SecurityLogic = new SecurityLogic();
         $userInfo = $UserModel->find($userId);

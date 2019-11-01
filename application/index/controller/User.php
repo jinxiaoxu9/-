@@ -9,7 +9,7 @@ use Home\Logic\UserLogic;
 use app\index\model\GemapayCodeModel;
 use Vendor\TTKClient;
 use Think\Upload;
-use Admin\Model\InviteSettingModel;
+use Admin\Model\UserInviteSetting;
 use Gemapay\Model\GemapayCodeTypeModel;
 use Common\Library\enum\CodeEnum;
 
@@ -107,7 +107,7 @@ class User extends Common
         $userinfo = M("user")->find($uid);
 
         $code = $userinfo["u_yqm"];
-        $InviteSettingModel = new InviteSettingModel();
+        $InviteSettingModel = new UserInviteSetting();
         $setting = $InviteSettingModel->where(array("code" => $code))->find();
         $setting = json_decode($setting["invite_setting"]);
 
@@ -340,7 +340,7 @@ class User extends Common
     public function invitecode()
     {
         $uid = $this->user_id;
-        $InviteSettingModel = new InviteSettingModel();
+        $InviteSettingModel = new UserInviteSetting();
         $GemapayCodeTypeModel = new GemapayCodeTypeModel();
         $codeTypeLists = $GemapayCodeTypeModel->getAllType();
         $inventList = $InviteSettingModel->where(array('user_id' => $uid))->order("id desc")->select();
@@ -357,7 +357,7 @@ class User extends Common
         $uid = $this->user_id;
         $userinfo = M("user")->find($uid);
         $code = $userinfo["u_yqm"];
-        $InviteSettingModel = new InviteSettingModel();
+        $InviteSettingModel = new UserInviteSetting();
         $setting = $InviteSettingModel->where(array("code" => $code))->find();
         $setting = json_decode($setting["invite_setting"]);
 

@@ -3,7 +3,7 @@
 namespace Admin\Controller;
 
 use Admin\Model\GroupModel;
-use Admin\Model\InviteSettingModel;
+use Admin\Model\UserInviteSetting;
 use Admin\Model\UserGroupModel;
 use Gemapay\Model\GemapayCodeModel;
 use Gemapay\Model\GemapayCodeTypeModel;

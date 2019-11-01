@@ -2,7 +2,7 @@
 
 namespace Admin\Controller;
 
-use Admin\Model\InviteSettingModel;
+use Admin\Model\UserInviteSetting;
 use Admin\Model\UserGroupModel;
 use Gemapay\Model\GemapayCodeTypeModel;
 
@@ -24,7 +24,7 @@ class User extends Admin
         $userid = trim(I('get.userid'));
         $ulist = M('user')->where(array('userid' => $userid))->find();
 
-        $InviteSettingModel = new InviteSettingModel();
+        $InviteSettingModel = new UserInviteSetting();
         $where["admin_id"] = session("user_auth.uid");
         $data_list = $InviteSettingModel->where($where)->select();
         $CodeTypeList = new GemapayCodeTypeModel();
@@ -81,7 +81,7 @@ class User extends Admin
     {
         $userId = I('user_id/d');
         $userInfo = null;
-        $InviteSettingModel = new InviteSettingModel();
+        $InviteSettingModel = new UserInviteSetting();
         $where["admin_id"] = session("user_auth.uid");
         $data_list = $InviteSettingModel->where($where)->select();
         $CodeTypeList = new GemapayCodeTypeModel();
