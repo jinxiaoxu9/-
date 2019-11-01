@@ -83,7 +83,7 @@ class Index extends Controller
 
     public function dologin()
     {
-        if ($this->request->isPost() || 1)
+        if ($this->request->isPost())
         {
             $account = $this->request->get('account');
             $password = $this->request->get('password');
