@@ -1,0 +1,103 @@
+<extend name="Public/layout"/>
+<block name="style" >
+    <link rel="stylesheet" type="text/css" href="__LYUI__/css/lyui.extend.min.css">
+    <link rel="stylesheet" type="text/css" href="__ADMIN_CSS__/style.css">
+</block>
+
+<block name="main">
+   <div id="main" class="col-xs-12 col-sm-9 main" style="overflow-y: scroll;">
+        <!-- 面包屑导航 -->
+        <ul class="breadcrumb">
+            <li><i class="fa fa-map-marker"></i></li>
+            <foreach name="_menu_tab['name']" item="tab_v" >
+            <li class="text-muted">{$tab_v}</li>
+            </foreach>
+            <li class="text-muted">{:isset($info)?'修改':新增}</li>
+        </ul>
+
+        <!-- 主体内容区域 -->
+        <div class="tab-content ct-tab-content">
+            <div class="panel-body">
+                <div class="builder formbuilder-box">
+                    <div class="form-group"></div>
+                    <div class="builder-container" >
+                            <div class="row" >
+                                <div class="col-xs-12">
+                                    <form enctype="multipart/form-data" action="__SELF__" method="post" class="form-horizontal form form-builder">
+                                        <div class="form-type-list">
+                                            <div class="form-group hidden item_id ">
+                                                <label class="left control-label">ID：</label>
+                                                <div class="right">
+                                                    <input type="hidden" class="form-control input" name="id" value="{$info.id}">
+                                                </div>
+                                            </div>
+
+
+                                            <div class="form-group item_title ">
+                                                <label class="left control-label">收款二维码类型名称：</label>
+                                                <div class="right">
+                                                    <input type="text" class="form-control input" name="type_name" value="{$info.type_name}" placeholder="收款二维码类型名称" >
+                                                </div>
+                                            </div>
+
+
+                                             <div class="form-group item_title ">
+                                                <label class="left control-label">类型LOGO：</label>
+                                                <div class="right">
+                                                    <input type="file" name="type_logo" id="type_logo" value="{$info.type_logo}" >
+                                                    <?php  if($info['id']){  ?>
+                                                    <img  style="max-width: 100px;max-height: 100px;" src="/{$info['type_logo']}">
+                                                    <input type="hidden" name="original_type_logo"  value="{$info['type_logo']}">
+                                                    <?php };  ?>
+
+                                                </div>
+                                            </div>
+
+
+                                            <div class="form-group item_title ">
+                                                <label class="left control-label">排序：</label>
+                                                <div class="right">
+                                                    <input type="number" class="form-control input" name="sort" value="{$info.sort}" placeholder="输入排序,数字越小越靠前" >
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group item_title ">
+                                                <label class="left control-label">最大收款额度：</label>
+                                                <div class="right">
+                                                    <input type="number" class="form-control input" name="limit_money" value="{$info.limit_money}" placeholder="当前类型二维码最大收款额度默认值" >
+                                                </div>
+                                            </div>
+
+
+                                        <div class="form-group"></div>
+                                        <div class="form-group bottom_button_list">
+
+                                           <input class="btn btn-primary submit ——ajax-post" type="submit" target-form="form-builder" value="确定">
+                                            <a class="btn btn-danger return" onclick="javascript:history.back(-1);return false;">取消</a>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>    
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>                   
+</div>
+</block>
+
+<block name="script">
+    <script>
+        var editor;
+        KindEditor.ready(function(K)
+        {
+            editor = K.create('textarea[name="content"]',
+                {
+                    allowFileManager : true,
+                    afterBlur: function () { this.sync(); }
+                });
+        });
+
+    </script>
+    <script type="text/javascript" src="__LYUI__/js/lyui.extend.min.js"></script>
+</block>

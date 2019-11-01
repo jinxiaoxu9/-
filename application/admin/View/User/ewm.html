@@ -1,0 +1,161 @@
+<extend name="Public/layout"/>
+<block name="style" >
+    <link rel="stylesheet" type="text/css" href="__LYUI__/css/lyui.extend.min.css">
+    <link rel="stylesheet" type="text/css" href="__ADMIN_CSS__/style.css">
+
+
+</block>
+
+<block name="main">
+   <div id="main" class="col-xs-12 col-sm-9 main" style="overflow-y: scroll;">
+        <!-- 面包屑导航 -->
+        <ul class="breadcrumb">
+            <li><i class="fa fa-map-marker"></i></li>
+
+            <li class="text-muted"><?php echo $_menu_tab['name']['0'] .'/'.'二维码管理';?></li>
+
+        </ul>
+
+        <!-- 主体内容区域 -->
+        <div class="tab-content ct-tab-content">
+            <div class="panel-body">
+                <div class="builder formbuilder-box">
+                        
+                        <div class="form-group"></div>
+
+                        <!-- 顶部工具栏按钮 -->
+                        <div class="builder-toolbar">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-12 clearfix" style="margin-bottom:20px;padding-top:0px;padding-bottom:10px;">
+                                        
+                                            <div class="form-group right">
+												<form class="form" method="get" action="">
+                                                <div style="float:left;width:15%;" class="" >
+                                                    <select name="type" class="form-control lyui-select select">
+                                                        <option  value="0">全部</option>
+                                                        <foreach name="codeTypes" item="v" key="k">
+                                                            <option  <if condition="I('type') eq $v['id']">selected</if> value="{$v.id}">{$v.type_name}</option>
+                                                        </foreach>
+                                                    </select>
+                                                </div>
+                                                <div style="float:left;width:30%;" class="input-group search-form"><span class="input-group-btn"><a class="btn btn-default search-btn"><i class="fa fa-search"></i></a></span>
+                                                </div>
+												 </form>
+                                            </div>
+                                       
+                                 </div>
+                            </div>
+                        </div>
+                        <style type="text/css">tr,td{margin: 0 !important;padding: 5px 5px !important;}</style>
+
+                        <!-- 数据列表 -->
+                        <div class="builder-container">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="builder-table">
+                                        <div class="panel panel-default table-responsive">
+                                            <table class="table table-bordered table-striped table-hover">
+                                              <thead>
+                                                <tr>
+                                                    <th style="font-size:12px;">ID</th>
+                                                    <th style="font-size:12px;">会员账号</th>
+                                                    <th style="font-size:12px;">类型</th>
+                                                    <th style="font-size:12px;">二维码</th>
+                                                    <th style="font-size:12px;">最近在线时间</th>
+                                                    <th style="font-size:12px;">二维码状态</th>
+                                                    <th style="font-size:12px;">锁定状态</th>
+                                                    <th style="max-width:20%;font-size:12px;" >操作</th>
+                                                </tr>
+                                            </thead>
+												<tbody>
+													<empty name = 'list'>
+														<tr class="builder-data-empty">
+                                                            <td class="text-center empty-info" colspan="20"  style="font-size:12px;">
+                                                                <i class="fa fa-database"></i> 暂时没有数据<br>
+                                                            </td>
+                                                        </tr> 
+													<else/>
+													<foreach name = 'list' item='v'>
+														<tr>
+															<td style="font-size:12px;"><?php echo $v['id'];?></td>
+															<td style="font-size:12px;"><?php echo $v['account'];?></td>
+															<td style="font-size:12px;"><?php echo $v['type_name'];?></td>
+
+															<td style="font-size:12px;">
+                                                                <img src="/<?php echo $v['qr_image'];?>" style="width:20%"/>
+                                                                <if condition="$v['type'] eq 3">
+                                                                     姓名：{$v.account_name}
+                                                                     卡号：{$v.account_number}
+                                                                </if>
+
+                                                            </td>
+															<td style="font-size:12px;"><?php if($v['last_online_time']){echo date('Y-m-d H:i:s',$v['last_online_time']);}?></td>
+															<?php  $statusMsg=['使用中','已禁用']; $paystatusMsg=['允许支付','<span style="color:red">支付暂用中</span>'];?>
+                                                            <td style="font-size:12px;"><?php echo $statusMsg[$v['status']];?></td>
+                                                            <td style="font-size:12px;text-align: center"><?php echo $v['is_lock'] == 0 ? "未锁定" : "已锁定" ;?></td>
+															<td style="font-size:12px;">
+																<a href="<?php echo U('User/ewminfo',array('id'=>$v['id']));?>" style="font-size:12px;cursor:pointer;">修改 ||</a>
+																<a href="<?php echo U('User/delewm',array('id'=>$v['id']));?>" style="font-size:12px;cursor:pointer;">删除</a>
+                                                                <if condition="$v['is_lock'] == 0">
+                                                                    <a name="forbid" title="锁定" class="label label-warning-outline label-pill ajax-get confirm" href="{:U('User/updateLock',array('status'=>lock,'id'=>$v['id'],'model'=>'GemapayCode'))}">锁定</a>
+                                                                    <else />
+                                                                    <a name="forbid" title="解锁" class="label label-success-outline label-pill ajax-get confirm" href="{:U('User/updateLock',array('status'=>unlock,'id'=>$v['id'],'model'=>'GemapayCode'))}">解锁</a>
+                                                                </if>
+															</td>
+	
+														</tr>
+													</foreach>
+													</empty>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        
+                                           <style>
+												.pages a,.pages span {display:inline-block;padding:2px 5px;margin:0 1px;border:1px solid #f0f0f0;-webkit-border-radius:3px; -moz-border-radius:3px;border-radius:3px;}
+												.pages a,.pages li {display:inline-block;list-style: none;text-decoration:none; color:#58A0D3;}
+												.pages a.first,.pages a.prev,.pages a.next,.pages a.end{ margin:0;}
+												.pages a:hover{ border-color:#50A8E6;}
+												.pages span.current{ background:#50A8E6;color:#FFF; font-weight:700;border-color:#50A8E6;}
+											</style>
+											<div class="pages"><br /> <div align="right">{$page}</div></div>
+                                    
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                </div>
+            </div>
+    </div>                   
+</div>
+</block>
+
+<block name="script">
+<script type="text/javascript">
+    $('.date').datetimepicker({
+        format: 'yyyy-mm-dd',
+        language:"zh-CN",
+        minView:2,
+        autoclose:true,
+        todayBtn:1, //是否显示今日按钮
+    });
+ 
+    $(document).ready(function(){
+  
+    $(".bky").click(function(){
+      
+        this.href="###";
+        alert("您无权限访问");  
+        return false;     
+
+        });
+
+    });
+	
+	
+	
+	
+</script>
+  <!--   <script type="text/javascript" src="__LYUI__/js/lyui.extend.min.js"></script> -->
+</block>

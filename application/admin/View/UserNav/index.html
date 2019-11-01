@@ -1,0 +1,129 @@
+<extend name="Public/layout"/>
+<block name="style" >
+<link rel="stylesheet" type="text/css" href="__LYUI__/css/lyui.extend.min.css">
+<link rel="stylesheet" type="text/css" href="__ADMIN_CSS__/style.css">
+</block>
+
+<block name="main">
+<div id="main" class="col-xs-12 col-sm-9 main" style="overflow-y: scroll;">
+<!-- 面包屑导航 -->
+<ul class="breadcrumb">
+<li><i class="fa fa-map-marker"></i></li>
+<li class="text-muted">个人中心菜单栏设置(是：代表显示&nbsp&nbsp&nbsp否：代表不显示)</li>
+</ul>
+
+<!-- 主体内容区域 -->
+<div class="tab-content ct-tab-content">
+<div class="panel-body">
+<div class="builder formbuilder-box">
+<div class="form-group"></div>
+<div class="builder-container" >
+    <div class="row" >
+        <div class="col-xs-12">
+            <form action="{:U('index')}" method="post" class="form-horizontal form form-builder">
+                <div class="form-type-list">
+
+                    <div class="form-group item_title ">
+                        <label class="left control-label">我的资产：</label>
+                        <div class="right">
+                            <label class="control-label">是：<input <?php if($userNavConfig['zichan']==1){echo "checked";} ?> type="radio" name="zichan" value="1" ></label>&nbsp&nbsp&nbsp
+                            <label class="control-label">否：<input <?php if($userNavConfig['zichan']==0){echo "checked";}; ?> type="radio"  name="zichan" value="0" ></label>
+                        </div>
+                    </div>
+
+                    <div class="form-group item_title ">
+                        <label class="left control-label">个人资料：</label>
+                        <div class="right">
+                            <label class="control-label">是：<input <?php if($userNavConfig['ziliao']==1){echo "checked";} ?>  type="radio" name="ziliao" value="1" ></label>&nbsp&nbsp&nbsp
+                            <label class="control-label">否：<input <?php if($userNavConfig['ziliao']==0){echo "checked";} ?> type="radio"  name="ziliao" value="0" ></label>
+                        </div>
+                    </div>
+
+                    <div class="form-group item_title ">
+                        <label class="left control-label">充值管理：</label>
+                        <div class="right">
+                            <label class="control-label">是：<input type="radio"  <input <?php if($userNavConfig['chongzhi']==1){echo "checked";} ?>  name="chongzhi" value="1" ></label>&nbsp&nbsp&nbsp
+                            <label class="control-label">否：<input type="radio" <input <?php if($userNavConfig['chongzhi']==0){echo "checked";} ?>  name="chongzhi" value="0" ></label>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group item_title ">
+                        <label class="left control-label">提现管理：</label>
+                        <div class="right">
+                            <label class="control-label">是：<input <input type="radio" <input <?php if($userNavConfig['tixian']==1){echo "checked";} ?>  type="radio" name="tixian" value="1" ></label>&nbsp&nbsp&nbsp
+                            <label class="control-label">否：<input <input type="radio" <input <?php if($userNavConfig['tixian']==0){echo "checked";} ?>  type="radio"  name="tixian" value="0" ></label>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group item_title ">
+                        <label class="left control-label">资金日志：</label>
+                        <div class="right">
+                            <label class="control-label">是：<input <input type="radio" <input <?php if($userNavConfig['money_log']==1){echo "checked";} ?>  type="radio" name="money_log" value="1" ></label>&nbsp&nbsp&nbsp
+                            <label class="control-label">否：<input <input type="radio" <input <?php if($userNavConfig['money_log']==0){echo "checked";} ?>  type="radio"  name="money_log" value="0" ></label>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group item_title ">
+                        <label class="left control-label">支出明细：</label>
+                        <div class="right">
+                            <label class="control-label">是：<input type="radio" <input type="radio" <input <?php if($userNavConfig['zhichu']==1){echo "checked";} ?>  name="zhichu" value="1" ></label>&nbsp&nbsp&nbsp
+                            <label class="control-label">否：<input type="radio"  <input type="radio" <input <?php if($userNavConfig['zhichu']==0){echo "checked";} ?>  name="zhichu" value="0" ></label>
+                        </div>
+                    </div>
+
+
+
+                    <div class="form-group item_title ">
+                        <label class="left control-label">二维码管理：</label>
+                        <div class="right">
+                            <label class="control-label">是：<input <input type="radio" <input <?php if($userNavConfig['qr_code']==1){echo "checked";} ?>  type="radio" name="qr_code" value="1" ></label>&nbsp&nbsp&nbsp
+                            <label class="control-label">否：<input <input type="radio" <input <?php if($userNavConfig['qr_code']==0){echo "checked";} ?>  type="radio"  name="qr_code" value="0" ></label>
+                        </div>
+                    </div>
+                    <div class="form-group item_title ">
+                        <label class="left control-label">分享链接：</label>
+                        <div class="right">
+                            <label class="control-label">是：<input <input type="radio" <input <?php if($userNavConfig['share_link']==1){echo "checked";} ?>  type="radio" name="share_link" value="1" ></label>&nbsp&nbsp&nbsp
+                            <label class="control-label">否：<input <input type="radio" <input <?php if($userNavConfig['share_link']==0){echo "checked";} ?>  type="radio"  name="share_link" value="0" ></label>
+                        </div>
+                    </div>
+
+                    <div class="form-group item_title ">
+                        <label class="left control-label">在线客服：</label>
+                        <div class="right">
+                            <label class="control-label">是：<input type="radio" <input type="radio" <input <?php if($userNavConfig['kefu']==1){echo "checked";} ?>  name="kefu" value="1" ></label>&nbsp&nbsp&nbsp
+                            <label class="control-label">否：<input type="radio"  <input type="radio" <input <?php if($userNavConfig['kefu']==0){echo "checked";} ?>  name="kefu" value="0" ></label>
+                        </div>
+                    </div>
+                    <div class="form-group item_title ">
+                        <label class="left control-label">设置：</label>
+                        <div class="right">
+                            <label class="control-label">是：<input type="radio" <input type="radio" <input <?php if($userNavConfig['setting']==1){echo "checked";} ?>  name="setting" value="1" ></label>&nbsp&nbsp&nbsp
+                            <label class="control-label">否：<input type="radio"  <input type="radio" <input <?php if($userNavConfig['setting']==0){echo "checked";} ?>  name="setting" value="0" ></label>
+                        </div>
+                    </div>
+
+                    <div class="form-group"></div>
+                    <div class="form-group bottom_button_list">
+                        <a class="btn btn-primary submit ajax-post" type="submit" target-form="form-builder">确定</a>
+                        <a class="btn btn-danger return" onclick="javascript:history.back(-1);return false;">取消</a>
+                    </div>
+                </div>
+                <input type="hidden" name="config_item" value="USER_NAV">
+            </form>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</block>
+
+<block name="script">
+{$extra_html}
+<script type="text/javascript" src="__LYUI__/js/lyui.extend.min.js"></script>
+</block>
