@@ -276,16 +276,14 @@ function get_verify(){
  * @return [type]           [json数据]
  */
 function ajaxReturn($message,$status=0, $url ='',$extra='') {
-    // 返回JSON数据格式到客户端 包含状态信息
-    header('Content-Type:application/json; charset=utf-8');
-    $result = array(
+
+    $result = [
         'message' => $message,
         'status'  =>  $status,
         'url' => $url,
         'result'  =>  $extra
-    );
-
-    exit(json_encode($result));
+    ];
+    echo json_encode($result);die();
 }
 
 // =陶==js消息提示框===
