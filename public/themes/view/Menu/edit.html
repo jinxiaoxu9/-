@@ -1,0 +1,96 @@
+<extend name="Public/layout"/>
+<block name="style" >
+    <link rel="stylesheet" type="text/css" href="__LYUI__/css/lyui.extend.min.css">
+    <link rel="stylesheet" type="text/css" href="__ADMIN_CSS__/style.css">
+</block>
+
+<block name="main">
+    <div id="main" class="col-xs-12 col-sm-9 main" style="overflow-y: scroll;">
+        <!-- 面包屑导航 -->
+        <ul class="breadcrumb">
+            <li><i class="fa fa-map-marker"></i></li>
+            <foreach name="_menu_tab['name']" item="tab_v" >
+                <li class="text-muted">{$tab_v}</li>
+            </foreach>
+            <li class="text-muted">{:isset($info)?'修改':新增}</li>
+        </ul>
+
+        <!-- 主体内容区域 -->
+        <div class="tab-content ct-tab-content">
+            <div class="builder formbuilder-box">
+                <div class="panel-body">
+                    <notempty name="info" >
+                        <form action="{:U('Menu/edit')}" method="post" class="form-horizontal form form-builder">
+                            <else />
+                            <form action="{:U('Menu/add')}" method="post" class="form-horizontal form form-builder">
+                    </notempty>
+                    <div class="tab-content" >
+                        <div id="tab1" class="tab-pane active" >
+                            <div class="col-xs-12">
+
+                                <div class="form-type-list">
+                                    <div class="form-group hidden item_id ">
+                                        <label class="left control-label">ID：</label>
+                                        <div class="right">
+                                            <input type="hidden" class="form-control input" name="id" value="{$info.id}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group item_title ">
+                                        <label class="left control-label">菜单名称：</label>
+                                        <div class="right">
+                                            <input type="text" class="form-control input" name="name" value="{$info.name}" placeholder="菜单名称" >
+                                        </div>
+                                    </div>
+                                    <div class="form-group item_title ">
+                                        <label class="left control-label">所属上级：</label>
+                                        <div class="right">
+                                            <select name="pid" class="lyui-select select">
+                                                <option value="0">顶级</option>
+                                                <foreach name="menu_list" item="v" key="k">
+                                                    <option  <?php if($info['pid'] == $v['id']){ echo "selected"; } ?> value="{$v.id}">
+                                                    {$v.name}
+                                                    </option>
+                                                </foreach>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group item_title ">
+                                        <label class="left control-label">控制器：</label>
+                                        <div class="right">
+                                            <input type="text" class="form-control input" name="col" value="{$info.col}" placeholder="控制器" >
+                                        </div>
+                                    </div>
+                                    <div class="form-group item_title ">
+                                        <label class="left control-label">方法：</label>
+                                        <div class="right">
+                                            <input type="text" class="form-control input" name="act" value="{$info.act}" placeholder="方法" >
+                                        </div>
+                                    </div>
+                                    <div class="form-group item_title ">
+                                        <label class="left control-label">排序：</label>
+                                        <div class="right">
+                                            <input type="text" class="form-control input" name="sort" value="{$info.sort}" placeholder="排序" >
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+
+                        <div class="form-group"></div>
+                        <div class="form-group bottom_button_list">
+                            <a class="btn btn-primary submit ajax-post" type="submit" target-form="form-builder">确定</a>
+                            <a class="btn btn-danger return" onclick="javascript:history.back(-1);return false;">取消</a>
+                        </div>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</block>
+
+<block name="script">
+    <script type="text/javascript" src="__LYUI__/js/lyui.extend.min.js"></script>
+</block>

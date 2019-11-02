@@ -185,7 +185,7 @@ function time_format($time = null, $format = 'Y-m-d H:i')
 function user_md5($str, $auth_key)
 {
     if (!$auth_key) {
-        $auth_key = C('AUTH_KEY') ?: '0755web';
+        $auth_key = config('AUTH_KEY') ?: '0755web';
     }
     return '' === $str ? '' : md5(sha1($str) . $auth_key);
 }

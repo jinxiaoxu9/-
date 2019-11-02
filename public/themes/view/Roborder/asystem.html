@@ -1,0 +1,161 @@
+<extend name="Public/layout"/>
+<block name="style" >
+    <link rel="stylesheet" type="text/css" href="__LYUI__/css/lyui.extend.min.css">
+    <link rel="stylesheet" type="text/css" href="__ADMIN_CSS__/style.css">
+</block>
+
+<block name="main">
+   <div id="main" class="col-xs-12 col-sm-9 main" style="overflow-y: scroll;">
+        <!-- 面包屑导航 -->
+        <ul class="breadcrumb">
+            <li><i class="fa fa-map-marker"></i></li>
+
+             <li class="text-muted">游戏参数设置</li>
+        </ul>
+
+        <!-- 主体内容区域 -->
+        <div class="tab-content ct-tab-content">
+            <div class="panel-body">
+                <div class="builder formbuilder-box">
+
+                    <div class="form-group"></div>
+                    <div class="builder-container" >
+                        <div class="row" >
+                            <div class="col-xs-12" >
+                                <form action="{:U('Roborder/asystem')}" method="post" class="form-horizontal form form-builder">
+                                <div class="form-type-list">
+                                    抢单参数设置<hr style="margin-top: 0px;width: 100%">
+                                   <div class="form-group item_config[WEB_SITE_TITLE] ">
+                                        <label class="left control-label">抢单额度比例：</label>
+                                        <div style="width:50%" class="input-group">
+                                            <input type="text" name="qd_cf" class="form-control" value="{$info.qd_cf}" placeholder="抢单金额和用户授信额度比例，如授信额度1000，最大抢单为700，就填70，表示70%"/>
+                                            
+                                        </div>
+                                    </div>
+
+                                     <div class="form-group item_config[WEB_SITE_TITLE] ">
+                                        <label class="left control-label">抢单难度:</label>
+                                        <div style="width:50%" class="input-group">
+                                            <input type="text" name="qd_nd" class="form-control" value="{$info.qd_nd}" placeholder="0.1,0.2,0.3,0.4 注意输入时难度系数单以英文逗号隔开，否则会出错"/>
+                                            
+                                        </div>
+                                    </div>
+                                    <div class="form-group item_config[WEB_SITE_TITLE] ">
+                                        <label class="left control-label">微信抢单佣金比例：</label>
+                                        <div style="width:50%" class="input-group">
+                                            <input type="text" name="qd_wxyj" class="form-control" value="{$info.qd_wxyj}" placeholder="微信抢单佣金比例：如30%要写成0.3"/>
+                                            
+                                        </div>
+                                    </div>
+									<div class="form-group item_config[WEB_SITE_TITLE] ">
+                                        <label class="left control-label">支付宝抢单佣金比：</label>
+                                         <div style="width:50%" class="input-group">
+                                            <input type="text" name="qd_zfbyj" class="form-control" value="{$info.qd_zfbyj}" placeholder="支付宝抢单佣金比例：如30%要写成0.3"/>
+                                            
+                                        </div>
+                                    </div>
+									<div class="form-group item_config[WEB_SITE_TITLE] ">
+                                        <label class="left control-label">银行抢单佣金比例：</label>
+                                         <div style="width:50%" class="input-group">
+                                            <input type="text" name="qd_bkyj" class="form-control" value="{$info.qd_bkyj}" placeholder="银行抢单佣金比例：如30%要写成0.3"/>
+                                            
+                                        </div>
+                                    </div>
+									<div class="form-group item_config[WEB_SITE_TITLE] ">
+                                        <label class="left control-label">增加难度时间点：</label>
+                                         <div style="width:50%" class="input-group">
+                                            <input type="text" name="qd_ndtime" class="form-control" value="{$info.qd_ndtime}" placeholder="如11点写成11,表示11点至12点，多个点写成9,11,13,15以英文逗号隔开"/>
+                                            
+                                        </div>
+                                    </div>
+									<div class="form-group item_config[WEB_SITE_TITLE] ">
+                                        <label class="left control-label">佣金加成：</label>
+                                         <div style="width:50%" class="input-group">
+                                            <input type="text" name="qd_yjjc" class="form-control" value="{$info.qd_yjjc}" placeholder="如加成0.1%，写成0.01"/>
+                                            
+                                        </div>
+                                    </div>
+									<div class="form-group item_config[WEB_SITE_TITLE] ">
+                                        <label class="left control-label">最低抢单额度：</label>
+                                         <div style="width:50%" class="input-group">
+                                            <input type="text" name="qd_minmoney" class="form-control" value="{$info.qd_minmoney}" placeholder="如：100"/>
+                                            
+                                        </div>
+                                    </div>
+                                    
+                                     充值提现参数设置<hr style="margin-top: 0px;width: 100%">
+                                   <div class="form-group item_config[WEB_SITE_TITLE] ">
+                                        <label class="left control-label">最小充值额度：</label>
+                                        <div style="width:50%" class="input-group">
+                                            <input type="text" name="min_recharge" class="form-control" value="{$info.min_recharge}" placeholder="直接填写最小充值金额如：1000"/>
+                                            
+                                        </div>
+                                    </div>
+                                    
+                                     <div class="form-group item_config[WEB_SITE_TITLE] ">
+                                        <label class="left control-label">最小提现额度：</label>
+                                       <div style="width:50%" class="input-group">
+                                            <input type="text" name="mix_withdraw" class="form-control" value="{$info.mix_withdraw}" placeholder="直接填写最小提现金额如：1000"/>
+                                            
+                                        </div>
+                                    </div>
+									 <div class="form-group item_config[WEB_SITE_TITLE] ">
+                                        <label class="left control-label">最大提现额度：</label>
+                                       <div style="width:50%" class="input-group">
+                                            <input type="text" name="max_withdraw" class="form-control" value="{$info.max_withdraw}" placeholder="直接填写最大提现额度如：10000"/>
+                                            
+                                        </div>
+                                    </div>
+									<div class="form-group item_config[WEB_SITE_TITLE] ">
+                                        <label class="left control-label">收款与充值额度比：</label>
+                                       <div style="width:50%" class="input-group">
+                                            <input type="text" name="tx_yeb" class="form-control" value="{$info.tx_yeb}" placeholder="提现时需对与收款与充值额度比例，70% 写70"/>
+                                            
+                                        </div>
+                                    </div>tx_yeb
+									
+									团队奖励设置<hr style="margin-top: 0px;width: 100%">
+									
+                                     <div class="form-group item_config[WEB_SITE_TITLE] ">
+                                        <label class="left control-label">直推佣金收益比例：</label>
+                                        <div style="width:50%" class="input-group">
+                                            <input type="text" name="team_oneyj" class="form-control" value="{$info.team_oneyj}" placeholder="直推佣金收益比例10%写成0.1"/>
+                                            
+                                        </div>
+                                    </div>
+                                    <div class="form-group item_config[WEB_SITE_TITLE] ">
+                                        <label class="left control-label">二代佣金收益比例：</label>
+                                         <div style="width:50%" class="input-group">
+                                            <input type="text" name="team_twoyj" class="form-control" value="{$info.team_twoyj}" placeholder="二代佣金收益比例5%写成0.05"/>
+                                            
+                                        </div>
+                                    </div>
+
+                                   <div class="form-group item_config[WEB_SITE_TITLE] ">
+                                        <label class="left control-label">三代佣金收益比例：</label>
+                                        <div style="width:50%" class="input-group">
+                                            <input type="text" name="team_threeyj" class="form-control" value="{$info.team_threeyj}" placeholder="三代佣金收益比例3%写成0.03"/>
+                                            
+                                        </div>
+                                    </div>
+
+                                 
+                                <div class="form-group"></div>
+                                <div class="form-group bottom_button_list">
+                                    <a class="btn btn-primary submit ajax-post" type="submit" target-form="form-builder">确定</a>
+                                    <a class="btn btn-danger return" onclick="javascript:history.back(-1);return false;">取消</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>                   
+</div>
+</block>
+
+<block name="script">
+    <script type="text/javascript" src="__LYUI__/js/lyui.extend.min.js"></script>
+</block>

@@ -10,6 +10,9 @@
 // +----------------------------------------------------------------------
 
 // [ 应用入口文件 ]
+// 调试模式开关
+define("APP_DEBUG", 1);
+define("SCRIPT_DIR", rtrim(dirname($_SERVER['SCRIPT_NAME']), '\/\\'));
 
 // 定义应用目录
 define('APP_PATH', __DIR__ . '/../application/');

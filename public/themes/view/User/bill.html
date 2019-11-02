@@ -1,0 +1,150 @@
+<extend name="Public/layout"/>
+<block name="style" >
+    <link rel="stylesheet" type="text/css" href="__LYUI__/css/lyui.extend.min.css">
+    <link rel="stylesheet" type="text/css" href="__ADMIN_CSS__/style.css">
+
+
+</block>
+
+<block name="main">
+   <div id="main" class="col-xs-12 col-sm-9 main" style="overflow-y: scroll;">
+        <!-- 面包屑导航 -->
+        <ul class="breadcrumb">
+            <li><i class="fa fa-map-marker"></i></li>
+
+           <li class="text-muted">会员中心 /  会员资金流水</li>
+
+        </ul>
+
+        <!-- 主体内容区域 -->
+        <div class="tab-content ct-tab-content">
+            <div class="panel-body">
+                <div class="builder formbuilder-box">
+                        <div class="form-group"></div>
+                        <style type="text/css">tr,td{margin: 0 !important;padding: 5px 5px !important;}</style>
+
+                        <!--搜索区开始--->
+                        <form class="form" method="get" action="{:U('bill')}">
+                            账变类型：<select  class="lyui-select select" name="bill_type">
+                                <option value="0">全部</option>
+                                <foreach name="billTypes" item="v" key="k">>
+                                    <option <?php if(I('bill_type')==$k){echo "selected";} ?> value="{$k}">{$v}</option>
+                                </foreach>
+                            </select>
+
+                            用户： <input type="text"  class="lyui-select select" name="username" value="{:I('username','')}">
+
+                            开始时间 ：<input id="start_time"  value="{:I('start_time','')}" class="lyui-select" type="text" name="start_time">
+                            结束时间 ：<input  id="end_time"value="{:I('end_time','')}" class="lyui-select select" type="text" name="end_time">
+                            <input type="submit"  class="btn btn-primary"  value="搜索"/></button>
+                          </form>
+                         <!--搜索区结束-->
+                    <!-- 数据列表 -->
+                        <div class="builder-container">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="builder-table">
+                                        <div class="panel panel-default table-responsive">
+                                            <table class="table table-bordered table-striped table-hover">
+                                              <thead>
+                                                <tr>
+                                                    <th style="font-size:12px;">ID</th>
+                                                    <th style="font-size:12px;">会员账号</th>
+                                                    <th style="font-size:12px;">会员昵称</th>
+                                                    <th style="font-size:12px;">事件</th>
+                                                    <th style="font-size:12px;">变动前</th>
+                                                    <th style="font-size:12px;">变动金额</th>
+                                                    <th style="font-size:12px;">变动后</th>
+                                                    <th style="font-size:12px;">时间</th>
+                                                    <th style="font-size:12px;">金额</th>
+
+                                                    <th style="max-width:20%;font-size:12px;" >操作</th>
+                                                </tr>
+                                            </thead>
+												<tbody>
+													<empty name = 'list'>
+														<tr class="builder-data-empty">
+                                                            <td class="text-center empty-info" colspan="20"  style="font-size:12px;">
+                                                                <i class="fa fa-database"></i> 暂时没有数据<br>
+                                                            </td>
+                                                        </tr> 
+													<else/>
+													<foreach name = 'list' item='v'>
+														<tr>
+															<td style="font-size:12px;"><?php echo $v['id'];?></td>
+															<td style="font-size:12px;"><?php echo getuserinfo($v['uid'],1);;?></td>
+															<td style="font-size:12px;"><?php echo getuserinfo($v['uid'],2);?></td>
+															<td style="font-size:12px;"><?php echo $v['info'];?></td>
+															<td style="font-size:12px;"><?php echo $v['pre_amount'];?></td>
+															<td style="font-size:12px;"><?php echo $v['num'];?></td>
+															<td style="font-size:12px;"><?php echo $v['last_amount'];?></td>
+															<td style="font-size:12px;"><?php echo date('Y-m-d H:i',$v['addtime']);?></td>
+															<td style="font-size:12px;"><?php echo $v['num'];?></td>
+
+															<td style="font-size:12px;">
+																<a href="<?php echo U('User/delbill',array('id'=>$v['id']));?>" style="font-size:12px;cursor:pointer;">删除记录</a>
+															</td>
+	
+														</tr>
+													</foreach>
+													</empty>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        
+                                           <style>
+												.pages a,.pages span {display:inline-block;padding:2px 5px;margin:0 1px;border:1px solid #f0f0f0;-webkit-border-radius:3px; -moz-border-radius:3px;border-radius:3px;}
+												.pages a,.pages li {display:inline-block;list-style: none;text-decoration:none; color:#58A0D3;}
+												.pages a.first,.pages a.prev,.pages a.next,.pages a.end{ margin:0;}
+												.pages a:hover{ border-color:#50A8E6;}
+												.pages span.current{ background:#50A8E6;color:#FFF; font-weight:700;border-color:#50A8E6;}
+											</style>
+											<div class="pages"><br /> <div align="right">{$page}</div></div>
+                                    
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                </div>
+            </div>
+    </div>                   
+</div>
+</block>
+
+<block name="script">
+    <script src="/Public/libs/layDate-v5.0.9/laydate/laydate.js"></script> <!-- 改成你的路径 -->
+    <script type="text/javascript">
+    //执行一个laydate实例
+    laydate.render({
+        elem: '#start_time' //指定元素
+        ,theme: '#2699ed'
+        ,type: 'datetime'
+    });
+
+    //执行一个laydate实例
+    laydate.render({
+        elem: '#end_time' //指定元素
+        ,theme: '#2699ed'
+        ,type: 'datetime'
+    });
+ 
+    $(document).ready(function(){
+  
+    $(".bky").click(function(){
+      
+        this.href="###";
+        alert("您无权限访问");  
+        return false;     
+
+        });
+
+    });
+	
+	
+	
+	
+</script>
+  <!--   <script type="text/javascript" src="__LYUI__/js/lyui.extend.min.js"></script> -->
+</block>

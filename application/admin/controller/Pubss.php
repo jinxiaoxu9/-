@@ -1,18 +1,25 @@
 <?php
-namespace Admin\Controller;
-use Think\Controller;
-class Pubss extends Controller
+
+namespace app\admin\Controller;
+
+
+use app\admin\model\Group;
+use think\Controller;
+use think\Request;
+
+class Pubss extends BaseController
 {
+
     /**
      * 后台登陆
      */
     public function login()
     {
-	 
-        if (IS_POST) {
-			
-            $username = I('username');
-            $password = I('password');
+
+        if ($this->request->isPost()) {
+            $param = $this->request->param();
+            $username = $param['username'];
+            $password = $param['password'];
 
             // 图片验证码校验
             // if (!$this->check_verify(I('post.verify'))) {
@@ -22,34 +29,34 @@ class Pubss extends Controller
             // 验证用户名密码是否正确
             // 
 
-            $user_object = D('Admin/Manage');
-            $user_info   = $user_object->login($username,$password);
+            $AdminLogic = new \app\admin\logic\AdminLogic();;
+            $user_info   = $AdminLogic->login($username,$password);
 			
 			
-            if (!$user_info) {
-                $this->error($user_object->getError());
+            if (!isset($user_info['auth_id'])) {
+                $this->error($user_info);
             }
              // 验证该用户是否有管理权限
-            $account_object = D('Admin/Group');
+            $group = new Group();
             $where['id']   = $user_info['auth_id'];
-            $account_info   = $account_object->where($where)->find();
+            $account_info   = $group->where($where)->find();
             if (!$account_info) {
                 $this->error('该用户没有管理员权限');
             }
 
             // 设置登录状态
-            $uid = $user_object->auto_login($user_info);
+            $uid = $AdminLogic->auto_login($user_info);
 
             // 跳转
             if (0 < $account_info['id']) {
-                $this->success('登录成功！', U('Admin/Index/index'));
+                $this->success('登录成功！', url('admin/Index/index'));
             } else {
                 $this->logout();
             }
         } else {
-			
+
             $this->assign('meta_title', '管理员登录');
-            $this->display();
+            return $this->fetch();
         }
     }
 

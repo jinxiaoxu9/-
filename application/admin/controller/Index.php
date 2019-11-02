@@ -1,132 +1,157 @@
 <?php
 
-namespace Admin\Controller;
+namespace app\admin\controller;
 
-use Think\Controller;
 
-class Index extends Admin
+use app\admin\Model\Admin\Admin;
+use think\Controller;
+use app\admin\model\GemaPayOrder;
+use app\admin\model\User;
+use app\admin\model\Recharge;
+use app\admin\model\Withdraw;
+
+class Index extends Controller
 {
 
     public function index()
     {
-        $this->todaySuccessOrderInfo();
-        $this->todayAddUsersCount();
-        $this->UsersCount();
-        $this->totalCharge();
-        $this->totalTx();
-        $this->totalOrderPrice();
-        $this->totalBonusFee();
-        $this->orderDealCount();
-        $this->orderDealMoneys();
-        $this->orderUnpayCount();
-        $this->orderUnpayMoneys();
+        $AdminLogic = new \app\admin\logic\AdminLogic();
+        $tzUserID = $AdminLogic->tzUsers();
+dump($tzUserID);exit();
+        $this->todaySuccessOrderInfo($tzUserID);
+        $this->todayAddUsersCount($tzUserID);
+        $this->UsersCount($tzUserID);
+        $this->totalCharge($tzUserID);
+        $this->totalTx($tzUserID);
+        $this->totalOrderPrice($tzUserID);
+        $this->totalBonusFee($tzUserID);
+        $this->orderDealCount($tzUserID);
+        $this->orderDealMoneys($tzUserID);
+        $this->orderUnpayCount($tzUserID);
+        $this->orderUnpayMoneys($tzUserID);
         $this->assign('meta_title', "首页");
         $this->display();
     }
 
     /**
      * 今日成功金额
+     * @param object|string $tzUserID 用户
+     * @throws \think\exception\DbException
      */
-    public function todaySuccessOrderInfo(){
+    public function todaySuccessOrderInfo($tzUserID){
         $startTime = strtotime(date('Y-m-d'));
         $endTime = strtotime(date('Y-m-d 23:59:59'));
         $map['add_time'] = ['between', [$startTime, $endTime]];
         $map['status'] =1;
         $adminId = session('user_auth.uid');
+        $AdminLogic = new \app\admin\logic\AdminLogic();
         //如果是团长就统计团长的会员  和组无关  可能是团长的会员单没有入团长的组
-        checkIstz($adminId) &&  $map['gema_userid'] = ['in', tzUsers()];
-        $success= M('gemapay_order')->field('sum(order_price) success_price,count(id) as success_nums')
+        $AdminLogic->checkIstz($adminId) &&  $map['gema_userid'] = ['in', $tzUserID];
+
+        $gemapayOrder = new GemaPayOrder();
+        $success= $gemapayOrder->field('sum(order_price) success_price,count(id) as success_nums')
             ->where($map)->find();
         $this->assign('todaySuccessOrderInfo',$success);
     }
 
 
-
-    /**
-     * 今日新增会员数目
+    /** 今日新增会员数目
+     * @param object|string $tzUserID  用户
      */
-    public function todayAddUsersCount()
+    public function todayAddUsersCount($tzUserID)
     {
         $startTime = strtotime(date('Y-m-d'));
         $endTime = strtotime(date('Y-m-d 23:59:59'));
-        $where['userid'] = ['in', tzUsers()];
+        $where['userid'] = ['in', $tzUserID];
         $where['reg_date'] = ['between', [$startTime, $endTime]];
-        $ret = M('user')->where($where)->count();
+        $user = new User();
+        $ret = $user->where($where)->count();
         $this->assign('todayAddUsersCount',$ret);
     }
 
-    /**
-     * 全网总会员数：
+    /** 全网总会员数
+     * @param object|string $tzUserID 用户
      */
-    public function UsersCount()
+    public function UsersCount($tzUserID)
     {
-        $ret = count(tzUsers());
+        $ret =$tzUserID ? count($tzUserID) : 0;
         $this->assign('UsersCount',$ret);
     }
 
 
-    /**
-     * 总充值金额：
+    /**总充值金额
+     * @param object|string $tzUserID 用户
      */
-    public function totalCharge()
+    public function totalCharge($tzUserID)
     {
-        $where['id'] = ['in', tzUsers()];
-        $ret = M('recharge')->where($where)->sum('price');
+        $where['id'] = ['in', $tzUserID];
+        $recharge = new Recharge();
+        $ret = $recharge->where($where)->sum('price');
         $this->assign('totalCharge',$ret);
     }
 
 
     /**
      * 总提现金额
+     * @param object|string $tzUserID 用户
      */
-    public function totalTx()
+    public function totalTx($tzUserID)
     {
-        $where['id'] = ['in', tzUsers()];
-        $ret = M('withdraw')->where($where)->sum('price');
+        $where['id'] = ['in', $tzUserID];
+        $Withdraw = new Withdraw();
+        $ret = $Withdraw->where($where)->sum('price');
         $this->assign('totalTx',$ret);
     }
 
     /**
      * 网总余额
+     * @param object|string $tzUserID 用户
      */
-    public function totalOrderPrice()
+    public function totalOrderPrice($tzUserID)
     {
-        $where['id'] = ['in', tzUsers()];
-        $ret = M('gemapay_order')->where($where)->sum('order_price');
+        $where['id'] = ['in', $tzUserID];
+        $gemapayOrder = new GemaPayOrder();
+        $ret = $gemapayOrder->where($where)->sum('order_price');
         $this->assign('totalOrderPrice',$ret);
     }
 
     /**
      * 全网总佣金
+     * @param object|string $tzUserID 用户
      */
-    public function totalBonusFee()
+    public function totalBonusFee($tzUserID)
     {
-        $where['id'] = ['in', tzUsers()];
-        $ret = M('gemapay_order')->where($where)->sum('bonus_fee');
+        $where['id'] = ['in', $tzUserID];
+        $gemapayOrder = new GemaPayOrder();
+        $ret = $gemapayOrder->where($where)->sum('bonus_fee');
         $this->assign('totalBonusFee',$ret);
     }
 
 
     /**
      * 已完成订单量：
+     * @param object|string $tzUserID 用户
      */
-    public function orderDealCount()
+    public function orderDealCount($tzUserID)
     {
-        $where['id'] = ['in', tzUsers()];
+        $where['id'] = ['in', $tzUserID];
         $where['status'] =1;
-        $ret = M('gemapay_order')->where($where)->count();
+        $gemapayOrder = new GemaPayOrder();
+        $ret = $gemapayOrder->where($where)->count();
         $this->assign('orderDealCount',$ret);
     }
 
 
     /**
      * 已完成订单金额
+     * @param object|string $tzUserID 用户
      */
-    public function orderDealMoneys()
+    public function orderDealMoneys($tzUserID)
     {
-        $where['id'] = ['in', tzUsers()];
+        $where['id'] = ['in', $tzUserID];
         $where['status'] =1;
-        $ret = M('gemapay_order')->where($where)->sum('order_price');
+        $gemapayOrder = new GemaPayOrder();
+        $ret = $gemapayOrder->where($where)->sum('order_price');
         $this->assign('orderDealMoneys',$ret);
 
     }
@@ -134,24 +159,28 @@ class Index extends Admin
 
     /**
      * 已匹配订单量：
+     * @param object|string $tzUserID 用户
      */
-    public function orderUnpayCount()
+    public function orderUnpayCount($tzUserID)
     {
-        $where['id'] = ['in', tzUsers()];
+        $where['id'] = ['in', $tzUserID];
         $where['status'] =0;
-        $ret = M('gemapay_order')->where($where)->count();
+        $gemapayOrder = new GemaPayOrder();
+        $ret = $gemapayOrder->where($where)->count();
         $this->assign('orderUnpayCount',$ret);
     }
 
 
     /**
      * 已匹配订单金额
+     * @param object|string $tzUserID 用户
      */
-    public function orderUnpayMoneys()
+    public function orderUnpayMoneys($tzUserID)
     {
-        $where['id'] = ['in', tzUsers()];
+        $where['id'] = ['in', $tzUserID];
         $where['status'] =0;
-        $ret = M('gemapay_order')->where($where)->sum('order_price');
+        $gemapayOrder = new GemaPayOrder();
+        $ret = $gemapayOrder->where($where)->sum('order_price');
         $this->assign('orderUnpayMoneys',$ret);
     }
 
@@ -164,7 +193,7 @@ class Index extends Admin
     //获取会员数据统计
     public function getUserCount()
     {
-        $user = D('User');
+        $user = new User();
 
         $user_total = $user->count();
 
@@ -186,9 +215,10 @@ class Index extends Admin
 
     public function getmoneyCount()
     {
-
-        $resum = M('recharge')->sum('price');
-        $wisum = M('withdraw')->sum('price');
+        $recharge = new Recharge();
+        $withdraw = new Withdraw();
+        $resum = $recharge->sum('price');
+        $wisum = $withdraw->sum('price');
         $this->assign('wisum', $wisum);
         $this->assign('resum', $resum);
     }
@@ -249,7 +279,8 @@ class Index extends Admin
                 $this->error('两次密码不一致');
             }
             $adminId = session('user_auth.uid');
-            $adminInfo = M('admin')->find($adminId);
+            $admin = new Admin();
+            $adminInfo = $admin->find($adminId);
 
             if (user_md5($data['old_password'], null) != $adminInfo['password']) {
                 $this->error('原密码错误');
@@ -257,7 +288,7 @@ class Index extends Admin
 
             //修改密码
             $newpassword = user_md5($data['password'], null);
-            $ret = M('admin')->where(['id' => $adminId])->setField('password', $newpassword);
+            $ret = $admin->where(['id' => $adminId])->setField('password', $newpassword);
             if ($ret !== false) {
                 session('user_auth', null);
                 $this->success('修改成功', U('Pubss/login'));

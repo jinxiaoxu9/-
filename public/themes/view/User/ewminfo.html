@@ -1,0 +1,102 @@
+<extend name="Public/layout"/>
+<block name="style" >
+    <link rel="stylesheet" type="text/css" href="__LYUI__/css/lyui.extend.min.css">
+    <link rel="stylesheet" type="text/css" href="__ADMIN_CSS__/style.css">
+</block>
+
+<block name="main">
+   <div id="main" class="col-xs-12 col-sm-9 main" style="overflow-y: scroll;">
+        <ul class="breadcrumb">
+            <li><i class="fa fa-map-marker"></i></li>
+
+            <li class="text-muted">二维码管理 /  二维码详情</li>
+
+        </ul>
+
+        <!-- 主体内容区域 -->
+        <div class="tab-content ct-tab-content">
+            <div class="panel-body">
+                <div class="builder formbuilder-box">
+                    <div class="form-group"></div>
+                    <div class="builder-container" >
+                            <div class="row" >
+                                <div class="col-xs-12">
+                                    <form action="__SELF__" method="post" class="form-horizontal form form-builder">
+                                        <div class="form-type-list">
+                                            <div class="form-group hidden item_id ">
+                                                <label class="left control-label">ID号：</label>
+                                                <div class="right">
+                                                    <input type="hidden" class="form-control input" readonly="readonly" name="id" value="{$info.id}" />
+                                                </div>
+                                            </div>
+                                            
+
+                                            <div class="form-group item_title ">
+                                                <label class="left control-label">用户名：</label>
+                                                <div class="right">
+                                                    <input type="text" class="form-control input" readonly="readonly" value="{$info.user_name}" />
+                                                </div>
+                                            </div>
+											 <div class="form-group item_title ">
+                                                <label class="left control-label">二维码类型：</label>
+                                                <div class="right">
+                                                    <input type="text" class="form-control input" readonly="readonly" value="<?php echo  M('gemapay_code_type')->where(['id'=>$info['type']])->getField('type_name');?>" />
+                                                </div>
+                                            </div>
+											 <div class="form-group item_title ">
+                                                <label class="left control-label">收款金额：</label>
+                                                <div class="right">
+                                                    <input type="text" class="form-control input" name="limit_money" value="{$info.limit_money}"/>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group item_title ">
+                                                <label class="left control-label">收款账户：</label>
+                                                <div class="right">
+                                                    <input type="text" class="form-control input" name="account_name" value="{$info.account_name}"  />
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group item_title ">
+                                                <label class="left control-label">收款账号：</label>
+                                                <div class="right">
+                                                    <input type="text" class="form-control input text" name="account_number"  value="{$info.account_number}" />
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group item_title ">
+                                                <label class="left control-label">费率：</label>
+                                                <div class="right">
+                                                    <input type="text" class="form-control input" name="bonus_points" value="{$info.bonus_points}"/>
+                                                </div>
+                                            </div>
+
+
+											<div class="form-group item_title ">
+                                                <label class="left control-label">收款图片：</label>
+                                                <div class="right">
+                                                    <img src="/{$info.qr_image}" style="width:10%"/>
+                                                </div>
+                                            </div>
+
+             
+                                        <div class="form-group"></div>
+                                        <div class="form-group bottom_button_list">
+                                            <a class="btn btn-primary submit ajax-post" type="submit" target-form="form-builder">确定</a>
+
+                                            <a class="btn btn-danger return" onclick="javascript:history.back(-1);return false;">返回</a>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>    
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>                   
+</div>
+</block>
+
+<block name="script">
+    <script type="text/javascript" src="__LYUI__/js/lyui.extend.min.js"></script>
+</block>
