@@ -1,0 +1,175 @@
+<html>
+	<head>
+	<meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="./bootstrap.min.css">
+    <link rel="stylesheet" href="./bootstrap-theme.min.css">
+	<link rel="stylesheet" href="./select2.min.css">
+    <script src="./jquery.min.js"></script>
+    <script src="./bootstrap.min.js"></script>
+	<script src="./select2.min.js"></script>
+	<script src="./jquery.form.min.js"></script>
+	<script src="./api.js"></script>
+	<style>
+		body{padding:1%;}
+		form{width:30%;}
+		.jumbotron{padding:1%;}
+	</style>
+	</head>
+<body>
+	<form class="normal-form">
+		<div class="form-group">
+			<label>接口组选择：</label>
+			<select class="form-control" id="api_group"></select>
+		</div>
+		<div class="form-group">
+			<label>接口选择：</label>
+			<select class="form-control" id="api_select"></select>
+		</div>
+	</form>
+
+
+	<form class="normal-form" id="api_form" enctype="multipart/form-data">
+		<label>token</label>
+		<input type="text" class="form-control" name="token" value="" readonly />
+		<br />
+		<button type="submit" class="submit-button loading-button btn btn-success">请求</button>
+	</form>
+    请求地址【请求方法】
+	<pre class="jumbotron" id="api_type">
+
+    </pre>
+
+	接口说明
+	<pre class="jumbotron" id="api_comments">
+
+	</pre>
+	接口结果
+	<pre class="jumbotron" id="api_result">
+
+	</pre>
+
+</body>
+
+	<script src="./crypto-js/components/pad-zeropadding-min.js" type="text/javascript"></script>
+<script>
+	var Token ="ccc";
+
+	$(function(){
+		$('#api_select').on('change', function(){
+			var api_key = $(this).val();
+			apiKeys = api_key.split('-');
+			api = apiSelect[apiKeys[0]][apiKeys[1]];
+			if(typeof api === 'undefined')
+			{
+				alert('未找到接口');
+			}
+			$('#api_form').find('.params').remove();
+			if(typeof api.params !== 'undefined')
+			{
+				var paramsHtml = '';
+				for(i in api.params)
+				{
+                    iArr = i.split('#');
+                    if(iArr.length == 1)
+                    {
+					    paramsHtml += '<div class="form-group params">\
+					    	<label>'+ api.params[i]+'：</label>\
+					    	<input class="form-control" type="text" value="" name="'+ i +'" />\
+					    </div>';
+                    }
+                    else
+                    {
+                        paramsHtml += '<div class="form-group params">\
+					    	<label>'+ api.params[i]+'：</label>\
+					    	<input type="'+iArr[1]+'" value="1" name="'+ iArr[0] +'" />\
+					    </div>';
+                    }
+				}
+				$('#api_form').find('.submit-button').before(paramsHtml);
+			}
+
+			if(typeof api.comment !== 'undefined')
+			{
+				Object.assign(api.comment, comments);
+			}
+			var commentsHtml = JSON.stringify(api.comment, null, 4);
+			$('#api_comments').html(commentsHtml);
+			$('#api_type').html(api.uri + '【' + api.type + '】');
+		});
+
+		$('#api_group').on('change', function(){
+			var group = $(this).val().toLowerCase();
+			if($('#' + group).length > 0)
+			{
+				runGroup(group);
+				return ;
+			}
+			$('body').append("<script id='"+ group +"' src='/apis/" + group + ".js'><\/script>")
+		});
+
+		$('#api_form').on('submit', function(){
+			if(api.dataType == 'image')
+			{
+				var result = '<img src="' + api.uri + '?t='+ new Date().toString()+'" />';
+				$('#api_result').html(result);
+			}
+			else
+			{
+				if(Token != '')
+				{
+					$('input[name="token"]').val(Token);
+				}
+
+				var $btn = $(this).find('.loading-button').button('loading');
+                api.dataType = 'html';
+                var options = {
+                    url:  api.uri,
+					type: api.type,
+					dataType: api.dataType,
+					//data:$('#api_form').serialize(),
+                    success: function(data) {
+                        $btn.button('reset');
+						var result;
+						switch(api.dataType)
+						{
+						   case 'html':
+                               result = data;
+                               break;
+						   case 'text':
+						   	    result = decrypt(data);
+                               result = JSON.stringify(result, null, 4);
+						   	    break;
+						   case 'json':
+						   	result = JSON.stringify(data, null, 4);
+						   	if(typeof data.token !== 'undefined')
+						   	{
+						   		Token = data.token;
+						   		$('input[name="token"]').val(Token);
+						   	}
+						   	break;
+						}
+						$('#api_result').html(result);
+                    },
+                    error:function(){
+				        $btn.button('reset');
+				    }
+                };
+				console.log(options);
+                $('#api_form').ajaxSubmit(options);
+			}
+
+			return false;
+		})
+
+		var selectHtml = '', api;
+		for(i in apis)
+		{
+			selectHtml += '<option value="'+ i +'">'+ apis[i] +'</option>';
+		}
+		$('#api_group').html(selectHtml).select2().change();
+
+	});
+</script>
+</html>
