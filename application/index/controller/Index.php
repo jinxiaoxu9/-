@@ -26,18 +26,20 @@ class Index extends Controller
 
     public function dologin()
     {
-        if ($this->request->isPost())
+        if ($this->request->isPost()||1)
         {
-            $account = $this->request->get('account');
-            $password = $this->request->get('password');
+            $account = $this->request->post('account');
+            $password = $this->request->post('password');
             $IndexLogic = new \app\index\logic\IndexLogic();
             // 验证用户名密码是否正确
+
+
             $res = $IndexLogic->login($account, $password);
             if ($res['code'] == CodeEnum::ERROR)
             {
                 ajaxReturn($res['msg'],0);
             }
-            ajaxReturn('登录成功',1,'', U('User/index'));
+            ajaxReturn('登录成功',1,'', $res['data']);
         }
     }
 }
