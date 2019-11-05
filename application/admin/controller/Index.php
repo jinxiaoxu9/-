@@ -3,21 +3,23 @@
 namespace app\admin\controller;
 
 
-use app\admin\Model\Admin\Admin;
+use app\admin\model\admin;
 use think\Controller;
 use app\admin\model\GemaPayOrder;
 use app\admin\model\User;
 use app\admin\model\Recharge;
 use app\admin\model\Withdraw;
+use think\Request;
 
-class Index extends Controller
+class Index extends Base
 {
 
     public function index()
     {
         $AdminLogic = new \app\admin\logic\AdminLogic();
         $tzUserID = $AdminLogic->tzUsers();
-dump($tzUserID);exit();
+        $a = session('user_auth');
+
         $this->todaySuccessOrderInfo($tzUserID);
         $this->todayAddUsersCount($tzUserID);
         $this->UsersCount($tzUserID);

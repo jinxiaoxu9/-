@@ -9,6 +9,8 @@ use think\Validate;
  */
 class User extends Model
 {
+    protected $pk = 'userid';
+
     protected $tableName = 'ysk_user';
 
      /**

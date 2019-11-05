@@ -7,15 +7,36 @@ use app\admin\model\Group;
 use think\Controller;
 use think\Request;
 
-class Pubss extends BaseController
+class Pubss extends Controller
 {
+
+    /**
+     * 架构函数
+     * @param Request $request Request对象
+     * @access public
+     */
+    public function _initialize()
+    {
+        $request = Request::instance();
+        $s_name_module = strtolower($request->module());
+        $s_name_controller = strtolower($request->controller());
+        $s_name_action = strtolower($request->action());
+
+        $this->assign('s_name_module', $s_name_module);
+        $this->assign('s_name_controller', $s_name_controller);
+        $this->assign('s_name_action', $s_name_action);
+        parent::_initialize();
+    }
 
     /**
      * 后台登陆
      */
     public function login()
     {
-
+        $admin_id = session('user_auth.uid');
+        if (!empty($admin_id)) {//已经登录
+            return redirect(url("admin/Index/index"));
+        }
         if ($this->request->isPost()) {
             $param = $this->request->param();
             $username = $param['username'];
@@ -49,7 +70,8 @@ class Pubss extends BaseController
 
             // 跳转
             if (0 < $account_info['id']) {
-                $this->success('登录成功！', url('admin/Index/index'));
+                //$this->success('登录成功！', url('admin/Index/index'));
+                return redirect(url("admin/Index/index"));
             } else {
                 $this->logout();
             }

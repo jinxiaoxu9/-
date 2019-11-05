@@ -41,6 +41,7 @@ class AdminLogic
         }
         $user = new User();
         $users = $user->where($where)->field('userid')->select();
+
         $users = array_column($users,'userid');
         $users= (count($users)>0)?$users:'';
         return $users;
