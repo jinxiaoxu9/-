@@ -2,6 +2,7 @@
 namespace app\admin\logic;
 
 use app\admin\model\Group;
+use app\admin\model\Menu;
 
 
 class GroupLogic
@@ -10,11 +11,13 @@ class GroupLogic
      * 检查部门功能权限
      * @author jry <bbs.sasadown.cn>
      */
-    public function checkMenuAuth()
+    public function checkMenuAuth( $controller_name = '')
     {
-        $current_col = CONTROLLER_NAME; // 当前菜单
-        $user_col   = D('Admin/Menu')->getCol(); // 获得当前登录用户信息
-        if ($user_col !== '1') {
+        $current_col = $controller_name; // 当前菜单
+        $menu = new \app\admin\logic\MenuLogic();
+        $user_col   = $menu->getCol(); // 获得当前登录用户信息
+
+        if ($user_col !== 1) {
             if(!in_array($current_col,$user_col)){
                 return false;
             }

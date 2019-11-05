@@ -12,7 +12,7 @@ use think\Config;
  * Class BaseController
  * @package think
  */
-class Base extends Controller
+class BaseController extends Controller
 {
     /**
      * 架构函数
@@ -34,6 +34,14 @@ class Base extends Controller
                 exit();
             }
         }
+        $request = Request::instance();
+        $s_name_module = strtolower($request->module());
+        $s_name_controller = strtolower($request->controller());
+        $s_name_action = strtolower($request->action());
+
+        $this->assign('s_name_module', $s_name_module);
+        $this->assign('s_name_controller', $s_name_controller);
+        $this->assign('s_name_action', $s_name_action);
     }
 
 }

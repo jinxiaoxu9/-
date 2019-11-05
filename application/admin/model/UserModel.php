@@ -2,7 +2,6 @@
 namespace app\admin\model;
 
 use think\Model;
-use think\Validate;
 /**
  * 用户模型
  *

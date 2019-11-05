@@ -3,15 +3,16 @@
 namespace app\admin\controller;
 
 
-use app\admin\model\admin;
+
 use think\Controller;
-use app\admin\model\GemaPayOrder;
-use app\admin\model\User;
-use app\admin\model\Recharge;
-use app\admin\model\Withdraw;
+use app\admin\model\GemaPayOrderModel;
+use app\admin\model\UserModel;
+use app\admin\model\RechargeModel;
+use app\admin\model\WithdrawModel;
+use app\admin\model\AdminModel;
 use think\Request;
 
-class Index extends Base
+class IndexController extends AdminController
 {
 
     public function index()
@@ -32,7 +33,7 @@ class Index extends Base
         $this->orderUnpayCount($tzUserID);
         $this->orderUnpayMoneys($tzUserID);
         $this->assign('meta_title', "首页");
-        $this->display();
+        return $this->fetch();
     }
 
     /**
@@ -237,7 +238,8 @@ class Index extends Base
 //		$dd_ordern_admin = M('roborder')->where(array('status'=>1))->sum('price');
 //		$dd_orderm_admin = M('roborder')->where(array('status'=>1))->count();
 
-        $sumyj = M('somebill')->where(array('jl_class' => 1))->sum('num');
+       /* 上面没有定义变量注释  2019-11-05
+       $sumyj = M('somebill')->where(array('jl_class' => 1))->sum('num');
 
         $this->assign('sumyj', $sumyj);
         $this->assign('finishorder_count', $finishorder_count);
@@ -246,7 +248,7 @@ class Index extends Base
         $this->assign('dd_orderm_admin', $dd_orderm_admin);
         $this->assign('sucorder_money', $sucorder_money);
         $this->assign('sucorder_count', $sucorder_count);
-        $this->assign('nollorder_count', $nollorder_count);
+        $this->assign('nollorder_count', $nollorder_count);*/
 
 
     }
@@ -257,13 +259,27 @@ class Index extends Base
      */
     public function removeRuntime()
     {
-        $file = new \Util\File();
-        $result = $file->del_dir(RUNTIME_PATH);
-        if ($result) {
-            $this->success("缓存清理成功1");
-        } else {
-            $this->error("缓存清理失败1");
+        /*$file = new \Util\File();
+        $result = $file->del_dir(RUNTIME_PATH);*/
+        $start = time();//页面打开时间
+        function delFile($dirname,$fileType){
+            $dir=opendir($dirname);
+            while (($file=readdir($dir))!=false){
+                $filename=$dirname. DS .$file;
+                if($file!=".." && $file!="." && $file!=".gitignore"){
+                    if(is_dir($filename)){
+                        delFile($filename,$fileType);
+                    }
+                    if(is_file($filename) && in_array(strrchr($file,'.'),$fileType)){
+                        @unlink($filename);
+                    }
+                }
+            }
         }
+        delFile(ROOT_PATH . 'runtime',array(".php",".log")); //目录,文件类型
+        $diff = time() - $start;
+        $this->success("缓存清理成功,用时{$diff}秒");
+
     }
 
 

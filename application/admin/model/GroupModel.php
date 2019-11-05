@@ -6,20 +6,20 @@
 // +----------------------------------------------------------------------
 // | Author: jry <bbs.sasadown.cn>
 // +----------------------------------------------------------------------
-namespace app\admin\Model;
-
+namespace app\admin\model;
 
 use think\Model;
 
 /**
- * 功能模块模型
+ * 部门模型
  * @author jry <bbs.sasadown.cn>
  */
-class MenuModel extends Model
+class GroupModel extends Model
 {
     /**
      * 数据库表名
+     * @author jry <bbs.sasadown.cn>
      */
-    protected $table = 'ysk_menu';
+    protected $tableName = 'ysk_group';
 
 }

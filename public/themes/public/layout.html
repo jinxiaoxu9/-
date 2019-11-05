@@ -102,7 +102,7 @@
                         <nav class="navside navside-default" role="navigation">
                             <?php if(isset($_menu_list_p) && $_menu_list_p): ?>
                                 <ul class="nav navside-nav navside-first">
-                                    <volist name="_menu_list_p" id="_ns_first" key="fkey">
+                                    {volist name="_menu_list_p" id="_ns_first" key="fkey"}
                                         <li>
                                             <a data-toggle="collapse" href="#navside-collapse-{$_ns_first.id}-{$fkey}">
                                                 <i class="{$_ns_first.icon}"></i>
@@ -110,27 +110,27 @@
                                                 <span class="angle fa fa-angle-down"></span>
                                                 <span class="angle-collapse fa fa-angle-left"></span>
                                             </a>
-                                            <notempty name="_menu_list_c">
+                                            {notempty name="_menu_list_c"}
                                                 <ul class="nav navside-nav navside-second collapse in" id="navside-collapse-{$_ns_first.id}-{$fkey}">
-                                                    <volist name="_menu_list_c" id="_ns_second" key="skey">
-                                                    <eq name="_ns_first['id']" value="$_ns_second['pid']"  >
+                                                    {volist name="_menu_list_c" id="_ns_second" key="skey"}
+                                                    {eq name="_ns_first['id']" value="$_ns_second['pid']"  }
                                                         <li <?php 
                                                         if(!empty($_select_url) && strtolower($_ns_second['col'].'-'.$_ns_second['act'])== $_select_url)
                                                             echo 'class="active"'; 
                                                         elseif(empty($_select_url) && $_ns_second['col'] == $s_name_controller)
                                                             echo 'class="activea"'; 
                                                         ?>>
-                                                            <a href="<?php echo U($_ns_second['col'].'/'.$_ns_second['act']); ?>" >
+                                                            <a href="<?php echo url($_ns_second['col'].'/'.$_ns_second['act']); ?>" >
                                                                 <i class="{$_ns_second.icon}"></i>
                                                                 <span class="nav-label">{$_ns_second.name}</span>
                                                             </a>
                                                         </li>
-                                                    </eq>
-                                                    </volist>
+                                                    {/eq}
+                                                    {/volist}
                                                 </ul>
-                                            </notempty>
+                                            {/notempty}
                                         </li>
-                                    </volist>
+                                    {/volist}
                                 </ul>
                             <?php endif; ?>
                         </nav>

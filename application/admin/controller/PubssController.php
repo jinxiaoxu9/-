@@ -3,11 +3,11 @@
 namespace app\admin\Controller;
 
 
-use app\admin\model\Group;
+use app\admin\model\GroupModel;
 use think\Controller;
 use think\Request;
 
-class Pubss extends Controller
+class PubssController extends Controller
 {
 
     /**
@@ -70,8 +70,8 @@ class Pubss extends Controller
 
             // 跳转
             if (0 < $account_info['id']) {
-                //$this->success('登录成功！', url('admin/Index/index'));
-                return redirect(url("admin/Index/index"));
+                $this->success('登录成功！', url('admin/Index/index'));
+                //return redirect(url("admin/Index/index"));
             } else {
                 $this->logout();
             }
