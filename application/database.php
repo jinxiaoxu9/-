@@ -17,9 +17,9 @@ return [
     // 数据库名
     'database'        => 'www_pf_com',
     // 用户名
-    'username'        => 'root',
+    'username'        => 'www_pf_com',
     // 密码
-    'password'        => '',
+    'password'        => 'www_pf_com',
     // 端口
     'hostport'        => '',
     // 连接dsn

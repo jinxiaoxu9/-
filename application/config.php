@@ -19,7 +19,7 @@ return [
     // 应用调试模式
     'app_debug'              => true,
     // 应用Trace
-    'app_trace'              => false,
+    'app_trace'              => true,
     // 应用模式状态
     'app_status'             => '',
     // 是否支持多模块
@@ -122,8 +122,10 @@ return [
     'template'               => [
         // 模板引擎类型 支持 php think 支持扩展
         'type'         => 'Think',
+        // 视图根目录
+        'view_base'       => '',
         // 模板路径
-        'view_path'    => '',
+        'view_path'    => './themes/',
         // 模板后缀
         'view_suffix'  => 'html',
         // 模板文件名分隔符
@@ -136,10 +138,22 @@ return [
         'taglib_begin' => '{',
         // 标签库标签结束标记
         'taglib_end'   => '}',
+        // 标签库标签开始标记
+        'tpl_cache'       => APP_DEBUG ? false : true,
+        'tpl_deny_php'    => false,
+        'tpl_replace_string' => [
+            '__PUBLIC__' => $_SERVER['REQUEST_SCHEME']."://".$_SERVER['HTTP_HOST'].rtrim(dirname($_SERVER['SCRIPT_NAME']), '\/\\'),
+            '__ROOT__' => SCRIPT_DIR,
+            '__LYUI__' => SCRIPT_DIR . '/libs/lyui/dist' ,
+        ],
+
     ],
 
     // 视图输出字符串内容替换
-    'view_replace_str'       => [],
+    'view_replace_str'       => [
+        '__ADMIN_CSS__' => SCRIPT_DIR . '/static/css',
+        '__ADMIN_JS__' => SCRIPT_DIR . '/static/js'
+    ],
     // 默认跳转页面对应的模板文件
     'dispatch_success_tmpl'  => THINK_PATH . 'tpl' . DS . 'dispatch_jump.tpl',
     'dispatch_error_tmpl'    => THINK_PATH . 'tpl' . DS . 'dispatch_jump.tpl',

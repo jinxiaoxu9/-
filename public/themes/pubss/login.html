@@ -1,6 +1,6 @@
-{include file="../application/admin/view/public/layout"/}
+{extend name="public/layout"/}
 
-<block name="style">
+{block name="style"}
     <style type="text/css">
         .background {
             position: absolute;
@@ -175,7 +175,7 @@
             }
         }
     </style>
-</block>
+{/block}
 
 {block name="full-header"}{/block}
 
