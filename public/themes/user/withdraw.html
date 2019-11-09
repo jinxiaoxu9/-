@@ -38,7 +38,7 @@
                                                 </div>
 
                                                 <div style="float:left;width:30%;" class="input-group search-form">
-                                                    <input  type="text" name="keyword" class="search-input form-control" value="{$_GET.keyword}" placeholder="输入搜索内容">
+                                                    <input  type="text" name="keyword" class="search-input form-control" value="{:isset($_GET.keyword) ? $_GET.keyword : ''}" placeholder="输入搜索内容">
                                                     <span class="input-group-btn"><a class="btn btn-default search-btn"><i class="fa fa-search"></i></a></span>
                                                 </div>
 												 </form>
@@ -79,14 +79,14 @@
                                                 </tr>
                                             </thead>
 												<tbody>
-													<empty name = 'list'>
+													{empty name="list"}
 														<tr class="builder-data-empty">
                                                             <td class="text-center empty-info" colspan="20"  style="font-size:12px;">
                                                                 <i class="fa fa-database"></i> 暂时没有数据<br>
                                                             </td>
                                                         </tr> 
-													<else/>
-													<foreach name = 'list' item='v'>
+													{else/}
+													{foreach $list as $v}
 														<tr>
 															<td style="font-size:12px;"><?php echo $v['id'];?></td>
 															<td style="font-size:12px;"><?php echo $v['account'];?></td>
@@ -104,8 +104,8 @@
 															</td>
 	
 														</tr>
-													</foreach>
-													</empty>
+													{/foreach}
+													{/empty}
                                                 </tbody>
                                             </table>
                                         </div>
@@ -118,7 +118,7 @@
 												.pages a:hover{ border-color:#50A8E6;}
 												.pages span.current{ background:#50A8E6;color:#FFF; font-weight:700;border-color:#50A8E6;}
 											</style>
-											<div class="pages"><br /> <div align="right">{$page}</div></div>
+											<div class="pages"><br /> <div align="right">{$page|default=''}</div></div>
                                     
                                     </div>
                                 </div>
@@ -131,7 +131,7 @@
 </div>
 {/block}
 
-<block name="script">
+{block name="script"}
 <script type="text/javascript">
     $('.date').datetimepicker({
         format: 'yyyy-mm-dd',

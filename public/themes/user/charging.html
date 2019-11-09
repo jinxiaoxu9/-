@@ -125,14 +125,14 @@
                                                 </tr>
                                             </thead>
 												<tbody>
-													<empty name = 'list'>
+													{empty name="list"}
 														<tr class="builder-data-empty">
                                                             <td class="text-center empty-info" colspan="20"  style="font-size:12px;">
                                                                 <i class="fa fa-database"></i> 暂时没有数据<br>
                                                             </td>
                                                         </tr> 
-													<else/>
-													<foreach name = 'list' item='v'>
+													{else/}
+													{foreach $list as $v}
 														<tr>
 															<td style="font-size:12px;"><?php echo $v['id'];?></td>
 															<td style="font-size:12px;"><?php echo getmyphone($v['uid']);?></td>
@@ -145,8 +145,8 @@
 
 	
 														</tr>
-													</foreach>
-													</empty>
+													{/foreach}
+													{/empty}
                                                 </tbody>
                                             </table>
                                         </div>
@@ -172,7 +172,7 @@
 </div>
 {/block}
 
-<block name="script">
+{block name="script"}
 <script type="text/javascript">
     $('.date').datetimepicker({
         format: 'yyyy-mm-dd',

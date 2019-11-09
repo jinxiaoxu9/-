@@ -34,7 +34,7 @@
                                         菜单组：
                                         <select name="pid" class="lyui-select select">
                                             <option <?php if(pid == 0){ echo "selected";} ?>  value="0">全部</option>
-                                            <foreach name="groups" item="v" key="k">
+                                            {foreach $groups as $k => $v}
                                                 <option  <?php if($pid == $v['id']){ echo "selected"; } ?> value="{$v.id}">
                                                     {$v.name}
                                                 </option>

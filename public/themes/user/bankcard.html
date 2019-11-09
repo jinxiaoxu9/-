@@ -38,7 +38,7 @@
                                                 </div>
 
                                                 <div style="float:left;width:30%;" class="input-group search-form">
-                                                    <input  type="text" name="keyword" class="search-input form-control" value="{$_GET.keyword}" placeholder="输入搜索内容">
+                                                    <input  type="text" name="keyword" class="search-input form-control" value="{:isset($_GET.keyword) ? $_GET.keyword : ''}" placeholder="输入搜索内容">
                                                     <span class="input-group-btn"><a class="btn btn-default search-btn"><i class="fa fa-search"></i></a></span>
                                                 </div>
 												 </form>
@@ -48,7 +48,7 @@
                                                     <input type="hidden" value="1" name="coinpx" />
                                                     <input type="submit" value="添加时间" style="border:none;height:33px;width:80%;background:#2699ed;color:#ffffff;cursor:pointer;"/></button>
                                                 </div>
-												 </form>
+											</form>
 
 												
                                             </div>
@@ -79,14 +79,14 @@
                                                 </tr>
                                             </thead>
 												<tbody>
-													<empty name = 'list'>
+													{empty name="list"}
 														<tr class="builder-data-empty">
                                                             <td class="text-center empty-info" colspan="20"  style="font-size:12px;">
                                                                 <i class="fa fa-database"></i> 暂时没有数据<br>
                                                             </td>
                                                         </tr> 
-													<else/>
-													<foreach name = 'list' item='v'>
+													{else/}
+													{foreach $list as $v}
 														<tr>
 															<td style="font-size:12px;"><?php echo $v['id'];?></td>
 															<td style="font-size:12px;"><?php echo getmyphone($v['uid']);?></td>
@@ -101,8 +101,8 @@
 															</td>
 	
 														</tr>
-													</foreach>
-													</empty>
+													{/foreach}
+													{/empty}
                                                 </tbody>
                                             </table>
                                         </div>
@@ -128,7 +128,7 @@
 </div>
 {/block}
 
-<block name="script">
+{block name="script"}
 <script type="text/javascript">
     $('.date').datetimepicker({
         format: 'yyyy-mm-dd',

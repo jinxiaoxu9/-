@@ -1,11 +1,12 @@
 <?php
 
-namespace Admin\Controller;
+namespace app\admin\Controller;
 
-use Admin\Model\ConfigModel;
-use Think\Page;
+use app\admin\model\ConfigModel;
+use think\Request;
+use think\Db;
 
-class User extends Admin
+class UserNavController extends AdminController
 {
     /**
      * 首页  只提供编辑功能

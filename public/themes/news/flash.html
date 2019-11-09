@@ -55,7 +55,7 @@
                                                 </tr>
                                             </thead>
                                                 <tbody>
-                                                    <volist name="list" id="data">
+                                                    {volist name="list" id="data"}
                                                         <tr>
                                                             <td>
                                                                 <input class="ids" type="checkbox" value="{$data['id']}" name="ids[]">
@@ -67,15 +67,15 @@
                                                             <td>
                                                                 <a name="delete" title="删除" class="label label-danger-outline label-pill ajax-get confirm" model="News" href="{:url('News/delflash',array('id'=>$data['id']))}">删除</a>
 															</tr>
-                                                    </volist>
+                                                    {/volist}
 
-                                                    <empty name="list">
+                                                    {empty name="list"}
                                                         <tr class="builder-data-empty">
                                                             <td class="text-center empty-info" colspan="20">
                                                                 <i class="fa fa-database"></i> 暂时没有数据<br>
                                                             </td>
                                                         </tr>
-                                                    </empty>
+                                                    {/empty}
                                                 </tbody>
                                             </table>
                                         </div>

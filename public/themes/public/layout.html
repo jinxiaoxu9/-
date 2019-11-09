@@ -30,7 +30,16 @@
     <!-- 日期js cs -->
     <link href="__PUBLIC__/libs/datetimepicker/css/datetimepicker.css" rel="stylesheet" type="text/css">
     <link href="__PUBLIC__/libs/datetimepicker/css/dropdown.css" rel="stylesheet" type="text/css">
-
+    <script type="text/javascript">
+        //全局变量
+        var GV = {
+            ROOT: "__ROOT__/",
+            WEB_ROOT: "__PUBLIC__/",
+            JS_ROOT: "static/js/",
+            APP: '{$Request.module}'/*当前应用名*/
+        };
+    </script>
+    <script src="__STATIC__/js/wind.js"></script>
 </head>
 <!-- <body class="admin_index_index"> -->
 <body class="admin_config_group" >
@@ -58,16 +67,16 @@
                                        echo "class='active'";
                                     } ?> ><a href="{:url('admin/Index/index')}"><i class="fa fa-home"></i> 首页</a></li>
 
-                                    <foreach name="_menu_list_g" item="g_val" >
+                                    {foreach $_menu_list_g as $g_val}
                                     <li <?php if (isset($_menu_tab['gid'],$g_val['id']) && $_menu_tab['gid']==$g_val['id'] && $s_name_controller!='Index') {
                                        echo "class='active'";
                                     } ?> >
-                                    <a href="<?php if(isset($g_val['act']) && $g_val['col'] && $g_val['act']) echo U('Admin/'.$g_val['col'].'/'.$g_val['act']); ?>" target="">
+                                    <a href="<?php if(isset($g_val['act']) && $g_val['col'] && $g_val['act']) echo url('Admin/'.$g_val['col'].'/'.$g_val['act']); ?>" target="">
                                         <i class="fa {php}isset($g_val['icon']) ? $g_val['icon'] : ''{/php}"></i>
                                         <span>{php}isset($g_val['name']) ? $g_val['name'] : ''{/php}</span>
                                     </a>
                                     </li> 
-                                   </foreach>                                                  
+                                   {/foreach}
                                 </ul>
                                 <ul class="nav navbar-nav navbar-right">
                                     <li><a href="{:url('admin/Index/removeRuntime')}" style="border: 0;text-align: left" class="btn no-refresh"><i class="fa fa-trash"></i> 清空缓存</a></li>

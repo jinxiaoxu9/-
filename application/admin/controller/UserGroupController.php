@@ -87,8 +87,8 @@ class UserGroupController extends AdminController
             $this->error('失败');
         }
         $UserGroupModel->commit();
-        return '成功';
-        //$this->success('成功', url('UserGroup/index'));
+
+        $this->success('成功', url('UserGroup/index'));
 
 
     }
@@ -142,8 +142,7 @@ class UserGroupController extends AdminController
             }
 
             $UserGroupModel->commit();
-            return '成功';
-            //$this->success('成功', url('UserGroup/index'));
+            $this->success('成功', url('UserGroup/index'));
         } else {
             //xiaozhu
             $re = $UserGroupModel->where(array('id'=>$ids))->update($data);
@@ -159,8 +158,7 @@ class UserGroupController extends AdminController
                 $this->error('失败!');
             }
             $UserGroupModel->commit();
-            return '成功';
-            //$this->success('成功', url('UserGroup/index'));
+            $this->success('成功', url('UserGroup/index'));
         }
     }
 
@@ -196,11 +194,9 @@ class UserGroupController extends AdminController
             $data["admin_id"] = session("user_auth.uid");
             $re = $UserGroupModel->save($data);
             if($re){
-                return '发布成功';
-                //$this->success('发布成功', url('UserGroup/index'));
+                $this->success('发布成功', url('UserGroup/index'));
             }else{
-                return '发布失败';
-                //$this->error('发布失败');
+                $this->error('发布失败');
             }
         } else {
             $this->assign('data_lists',$levelOneList);
@@ -216,24 +212,22 @@ class UserGroupController extends AdminController
     protected function checkValid($request, $methon= false)
     {
         if(intval($request->param('id')) == 0 && $methon){
-            return '参数错误！';
-            //$this->error('小组名字不能为空,发布失败,');die();
+
+            $this->error('小组名字不能为空,发布失败,');die();
         }
         if($request->param('name') == ''){
-            return '小组名字不能为空,发布失败';
-            //$this->error('小组名字不能为空,发布失败,');die();
+            $this->error('小组名字不能为空,发布失败,');die();
         }
         if($request->param('bouns_points') == '') {
-            return '小组费率不能为空,发布失败';
+
             $this->error('小组费率不能为空,发布失败');die();
         }
         if($request->param('bouns_points')>1000){
-            return '小组费率error,发布失败,';
-            //$this->error('小组费率error,发布失败');die();
+
+            $this->error('小组费率error,发布失败');die();
         }
         if($request->param('note') == '') {
-            return '小组备注不能为空,发布失败,';
-            //$this->error('小组备注不能为空,发布失败');die();
+            $this->error('小组备注不能为空,发布失败');die();
         }
         return '';
     }
@@ -255,11 +249,9 @@ class UserGroupController extends AdminController
             //dump($request->post());exit();
             $re = $UserGroupModel->where($where)->update($data);
             if($re){
-                return '发布成功';
-                //$this->success('发布成功', url('UserGroup/index'));
+                $this->success('发布成功', url('UserGroup/index'));
             }else{
-                return '发布失败,或数据没有变更!';
-                //$this->error('发布失败');
+                $this->error('发布失败');
             }
         } else {
             $id = $request->param('id');
@@ -303,25 +295,31 @@ class UserGroupController extends AdminController
         }
     }
 
+    /** 加入分组
+     * @param Request $request
+     * @return mixed
+     */
     public function joinGroup(Request $request)
     {
         if ($request->isPost()) {
             $data['group_id'] = $request->param('group_id');
             $where["userid"]= $request->param('userid');
 
-            $re = M("user")->where($where)->save($data);
+            $re = Db::name("user")->where($where)->update($data);
             if($re){
                 $this->success('成功', url('User/index'));
             }else{
                 $this->error('失败');
             }
         }
-        $info = M("user")->find($request->param('userid'));
+        $info = Db::name("user")->find($request->param('userid'));
         $UserGroupModel   = new UserGroupModel();
         $levelList = $UserGroupModel->getLevelList(session("user_auth.uid"),2);
         $this->assign('data_lists',$levelList);
         $this->assign('info',$info);
+        $this->assign('act', url('joinGroup'));
         $this->assign('userid',$request->param('userid'));
+
         return $this->fetch('joinGroup');
     }
 }

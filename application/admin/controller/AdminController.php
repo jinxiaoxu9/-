@@ -44,6 +44,7 @@ class AdminController extends Controller
         $this->assign('s_name_module', $this->s_name_module);
         $this->assign('s_name_controller', $this->s_name_controller);
         $this->assign('s_name_action', $this->s_name_action);
+        $this->assign('request', $request);
 
         // 权限检测
         $current_url = $this->s_name_module . '/' . $this->s_name_controller . '/' . $this->s_name_action;
@@ -194,7 +195,7 @@ class AdminController extends Controller
             ),
             (array) $msg
         );
-        $result = $model->where($map)->save($data);
+        $result = $model->where($map)->update($data);
         if ($result != false) {
             $this->success($msg['success'], $msg['url'], $msg['ajax']);
         } else {

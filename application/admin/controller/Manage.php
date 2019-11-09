@@ -6,15 +6,16 @@
 // +----------------------------------------------------------------------
 // | Author: jry <bbs.sasadown.cn>
 // +----------------------------------------------------------------------
-namespace Admin\Controller;
+namespace app\admin\Controller;
 
-use Think\Page;
+use think\Request;
+use think\Db;
 
 /**
  * 用户控制器
  * @author jry <bbs.sasadown.cn>
  */
-class Manage extends Admin
+class ManageController extends AdminController
 {
 
 

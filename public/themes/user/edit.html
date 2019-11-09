@@ -21,7 +21,7 @@
                     <div class="builder-container" >
                             <div class="row" >
                                 <div class="col-xs-12">
-                                    <form action="__SELF__" method="post" class="form-horizontal form form-builder">
+                                    <form action="{$act}" method="post" class="form-horizontal form form-builder">
                                         <div class="form-type-list">
                                             <div class="form-group hidden item_id ">
                                                 <label class="left control-label">ID：</label>
@@ -33,7 +33,7 @@
                                             <div class="form-group item_title ">
                                                 <label class="left control-label">上级：</label>
                                                 <div class="right">
-                                                    <?php echo getSjuser($info['pid']);?>
+                                                    <?php echo  $info['pid_account'];?>
                                                 </div>
                                             </div>
 
@@ -92,20 +92,20 @@
                                                 <label class="left control-label">邀请费率：</label>
                                                 <div class="right">
                                                     <select name="code" class="form-control cui-select select">
-                                                        <empty name="info" >
+                                                        {empty name="info"}
                                                             <option value="">请选择：</option>
-                                                        </empty>
+                                                        {/empty}
 
-                                                        <foreach name="data_list" item="v" >
-                                                            <option value="{$v.code}" <eq name="info['u_yqm']" value="$v['code']" >selected="true"</eq> >{$v.desc}</option>
-                                                        </foreach>
+                                                        {foreach $data_list as $v}
+                                                            <option value="{$v.code}" {eq name="info['u_yqm']" value="$v['code']" }selected="true"{/eq} >{$v.desc}</option>
+                                                        {/foreach}
                                                     </select>
                                                 </div>
                                             </div>
 
                                         <div class="form-group"></div>
                                         <div class="form-group bottom_button_list">
-                                            <a class="btn btn-primary submit ajax-post" type="submit" target-form="form-builder">确定</a>
+                                            <button class="btn btn-primary submit" type="submit" target-form="form-builder">确定</button>
                                             <a class="btn btn-danger return" onclick="javascript:history.back(-1);return false;">取消</a>
                                         </div>
                                     </div>
@@ -119,6 +119,6 @@
 </div>
 {/block}
 
-<block name="script">
+{block name="script"}
     <script type="text/javascript" src="__LYUI__/js/lyui.extend.min.js"></script>
 {/block}

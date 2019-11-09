@@ -27,15 +27,16 @@
                         <form class="form" method="get" action="{:url('bill')}">
                             账变类型：<select  class="lyui-select select" name="bill_type">
                                 <option value="0">全部</option>
-                                <foreach name="billTypes" item="v" key="k">>
-                                    <option <?php if(I('bill_type')==$k){echo "selected";} ?> value="{$k}">{$v}</option>
-                                </foreach>
+                            {notempty name="billTypes"}
+                                {foreach $billTypes as $k => $v}
+                                    <option <?php if(Input('bill_type')==$k){echo "selected";} ?> value="{$k}">{$v}</option>
+                                {/foreach}
                             </select>
+                            {/notempty}
+                            用户： <input type="text"  class="lyui-select select" name="username" value="{:Input('username','')}">
 
-                            用户： <input type="text"  class="lyui-select select" name="username" value="{:I('username','')}">
-
-                            开始时间 ：<input id="start_time"  value="{:I('start_time','')}" class="lyui-select" type="text" name="start_time">
-                            结束时间 ：<input  id="end_time"value="{:I('end_time','')}" class="lyui-select select" type="text" name="end_time">
+                            开始时间 ：<input id="start_time"  value="{:Input('start_time','')}" class="lyui-select" type="text" name="start_time">
+                            结束时间 ：<input  id="end_time"value="{:Input('end_time','')}" class="lyui-select select" type="text" name="end_time">
                             <input type="submit"  class="btn btn-primary"  value="搜索"/></button>
                           </form>
                          <!--搜索区结束-->
@@ -62,18 +63,18 @@
                                                 </tr>
                                             </thead>
 												<tbody>
-													<empty name = 'list'>
+													{empty name="list"}
 														<tr class="builder-data-empty">
                                                             <td class="text-center empty-info" colspan="20"  style="font-size:12px;">
                                                                 <i class="fa fa-database"></i> 暂时没有数据<br>
                                                             </td>
                                                         </tr> 
-													<else/>
-													<foreach name = 'list' item='v'>
+													{else/}
+													{foreach $list as $v}
 														<tr>
 															<td style="font-size:12px;"><?php echo $v['id'];?></td>
-															<td style="font-size:12px;"><?php echo getuserinfo($v['uid'],1);;?></td>
-															<td style="font-size:12px;"><?php echo getuserinfo($v['uid'],2);?></td>
+															<td style="font-size:12px;"><?php echo $v['account'];//getuserinfo($v['uid'],1);;?></td>
+															<td style="font-size:12px;"><?php echo $v['username'];//getuserinfo($v['uid'],2);?></td>
 															<td style="font-size:12px;"><?php echo $v['info'];?></td>
 															<td style="font-size:12px;"><?php echo $v['pre_amount'];?></td>
 															<td style="font-size:12px;"><?php echo $v['num'];?></td>
@@ -86,8 +87,8 @@
 															</td>
 	
 														</tr>
-													</foreach>
-													</empty>
+													{/foreach}
+													{/empty}
                                                 </tbody>
                                             </table>
                                         </div>
@@ -113,8 +114,8 @@
 </div>
 {/block}
 
-<block name="script">
-    <script src="/Public/libs/layDate-v5.0.9/laydate/laydate.js"></script> <!-- 改成你的路径 -->
+{block name="script"}
+    <script src="__PUBLIC__/libs/layDate-v5.0.9/laydate/laydate.js"></script> <!-- 改成你的路径 -->
     <script type="text/javascript">
     //执行一个laydate实例
     laydate.render({

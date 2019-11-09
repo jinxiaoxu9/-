@@ -33,7 +33,7 @@ class NewsController extends AdminController
         $page = $data_list->render();
 
         $this->assign('list',$data_list);
-        $this->assign('table_data_page',$page);
+        $this->assign('page',$page);
         $this->assign('count', $count);
         return $this->fetch();
     }
@@ -46,6 +46,7 @@ class NewsController extends AdminController
     {
         if ($request->isPost()) {
             $user_object = new News();
+
             $data        = $request->post();
             if(empty($data['title'])){
               $this->error('标题不能为空');  
@@ -216,8 +217,8 @@ class NewsController extends AdminController
                 $result = $user_object
                     ->update($data);
                 if ($result) {
-                    return '更新成功';
-                    //$this->success('更新成功', url('index'));
+                    //return '更新成功';
+                    $this->success('更新成功', url('index'));
                 } else {
                     return '更新失败';
                     //$this->error('更新失败', $user_object->getError());
@@ -256,10 +257,8 @@ class NewsController extends AdminController
         $table = Db::name('news');
         $re = $table->where(array('id' => $id))->delete();
         if ($re) {
-            return '删除成功';
-            //$this->success('删除成功');
+            $this->success('删除成功', url('index'));
         } else {
-            return '删除失败';
             $this->error('删除失败');
         }
     }

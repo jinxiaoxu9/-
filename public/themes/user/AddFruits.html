@@ -9,9 +9,9 @@
         <!-- 面包屑导航 -->
         <ul class="breadcrumb">
             <li><i class="fa fa-map-marker"></i></li>
-            <foreach name="_menu_tab['name']" item="tab_v" >
+            {foreach $_menu_tab['name'] as $tab_v }
             <li class="text-muted">{$tab_v}</li>
-            </foreach>
+            {/foreach}
             <li class="text-muted">修改财富</li>
         </ul>
 
@@ -181,6 +181,6 @@
 </div>
 {/block}
 
-<block name="script">
+{block name="script"}
     <script type="text/javascript" src="__LYUI__/js/lyui.extend.min.js"></script>
 {/block}

@@ -71,8 +71,7 @@ class PubssController extends Controller
 
             // 跳转
             if (0 < $account_info['id']) {
-                //$this->success('登录成功！', url('admin/Index/index'));
-                return '登录成功！';
+                $this->success('登录成功！', url('admin/Index/index'));
                 //return redirect(url("admin/Index/index"));
             } else {
                 $this->logout();
