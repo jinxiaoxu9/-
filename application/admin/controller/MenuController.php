@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 namespace app\admin\Controller;
 
-
+use app\admin\model\MenuModel;
 use app\admin\model\MenuModel as Menu;
 use app\admin\logic\MenuLogic;
 use think\Request;
@@ -47,7 +47,6 @@ class MenuController extends AdminController
             $map['m.name'] = array('like',"%{$name}%");
         }
         $list = Db::table('ysk_menu')->alias('m')->field('m.*,m1.name as pname')->where($map)
-            //->join("left join __MENU__ as m1 on m.pid = m1.id")
             ->join("__MENU__ m1", 'm.pid = m1.id')
             ->paginate(15);
 
@@ -104,12 +103,14 @@ class MenuController extends AdminController
      * 编辑
      *
      */
-    public function edit($id, Request $request)
+    public function edit(Request $request)
     {
-        $table = Db::table('ysk_menu');
+        $id = intval($request->param('id'));
+        $table = Db::name('menu')->where('id', intval($id));
         $menuLogic = new MenuLogic();
         if ($request->isPost()) {
             $data = $request->post();
+
             if (empty($data['name'])) {
                 $this->error('菜单名称不能为空');
             }
@@ -119,21 +120,23 @@ class MenuController extends AdminController
             $data['gid'] = $info['gid'];
             $data['level'] = $info['level'];
             if ($data) {
-                $result = $table->save($data);
+               // dump($id);exit();
+                unset($data['id']);
+                $result = $table->update($data);
                 if ($result) {
                     $this->success('更新成功', url('index'));
                 } else {
-                    $this->error('更新失败', $table->getError());
+                    $this->success('数据没有变更', url('index'));
                 }
             } else {
-                $this->error($table->getError());
+                $this->error($table->getLastSql());
             }
         } else {
             $info = $table->find($id);
             $this->assign('info', $info);
             $menu_list = $menuLogic->getSelectMenu();
             $this->assign('menu_list',$menu_list);
-            $this->display('edit');
+            return $this->fetch('edit');
         }
     }
 
@@ -143,11 +146,11 @@ class MenuController extends AdminController
      */
     public function del(Request $request)
     {
-        $id = $request->param('get.id');
+        $id = intval($request->param('id'));
         if (empty($id)) {
             $this->error('参数错误');
         }
-        $table = M('menu');
+        $table = Db::name('menu');
         $count = $table->where(array('pid'=>$id))->count();
         if($count > 0){
             $this->error('当前分类下存在菜单不可删除');

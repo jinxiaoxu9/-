@@ -20,9 +20,9 @@
             <div class="builder formbuilder-box">
                 <div class="panel-body">
                     {notempty name="info" }
-                        <form action="{:url('Menu/edit')}" method="post" class="form-horizontal form form-builder" data-auto="true">
+                        <form action="{:url('Menu/edit')}" method="post" class="form-horizontal form form-builder">
                     {else}
-                        <form action="{:url('Menu/add')}" method="post" class="form-horizontal form form-builder" data-auto="true">
+                        <form action="{:url('Menu/add')}" method="post" class="form-horizontal form form-builder" >
                     {/notempty}
                     <div class="tab-content" >
                         <div id="tab1" class="tab-pane active" >

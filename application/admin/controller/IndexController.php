@@ -19,7 +19,6 @@ class IndexController extends AdminController
     {
         $AdminLogic = new \app\admin\logic\AdminLogic();
         $tzUserID = $AdminLogic->tzUsers();
-        $a = session('user_auth');
 
         $this->todaySuccessOrderInfo($tzUserID);
         $this->todayAddUsersCount($tzUserID);
@@ -51,7 +50,7 @@ class IndexController extends AdminController
         //如果是团长就统计团长的会员  和组无关  可能是团长的会员单没有入团长的组
         $AdminLogic->checkIstz($adminId) &&  $map['gema_userid'] = ['in', $tzUserID];
 
-        $gemapayOrder = new GemaPayOrder();
+        $gemapayOrder = new GemaPayOrderModel();
         $success= $gemapayOrder->field('sum(order_price) success_price,count(id) as success_nums')
             ->where($map)->find();
         $this->assign('todaySuccessOrderInfo',$success);
@@ -67,7 +66,7 @@ class IndexController extends AdminController
         $endTime = strtotime(date('Y-m-d 23:59:59'));
         $where['userid'] = ['in', $tzUserID];
         $where['reg_date'] = ['between', [$startTime, $endTime]];
-        $user = new User();
+        $user = new UserModel();
         $ret = $user->where($where)->count();
         $this->assign('todayAddUsersCount',$ret);
     }
@@ -88,7 +87,7 @@ class IndexController extends AdminController
     public function totalCharge($tzUserID)
     {
         $where['id'] = ['in', $tzUserID];
-        $recharge = new Recharge();
+        $recharge = new RechargeModel();
         $ret = $recharge->where($where)->sum('price');
         $this->assign('totalCharge',$ret);
     }
@@ -101,7 +100,7 @@ class IndexController extends AdminController
     public function totalTx($tzUserID)
     {
         $where['id'] = ['in', $tzUserID];
-        $Withdraw = new Withdraw();
+        $Withdraw = new WithdrawModel();
         $ret = $Withdraw->where($where)->sum('price');
         $this->assign('totalTx',$ret);
     }
@@ -113,7 +112,7 @@ class IndexController extends AdminController
     public function totalOrderPrice($tzUserID)
     {
         $where['id'] = ['in', $tzUserID];
-        $gemapayOrder = new GemaPayOrder();
+        $gemapayOrder = new GemaPayOrderModel();
         $ret = $gemapayOrder->where($where)->sum('order_price');
         $this->assign('totalOrderPrice',$ret);
     }
@@ -125,7 +124,7 @@ class IndexController extends AdminController
     public function totalBonusFee($tzUserID)
     {
         $where['id'] = ['in', $tzUserID];
-        $gemapayOrder = new GemaPayOrder();
+        $gemapayOrder = new GemaPayOrderModel();
         $ret = $gemapayOrder->where($where)->sum('bonus_fee');
         $this->assign('totalBonusFee',$ret);
     }
@@ -139,7 +138,7 @@ class IndexController extends AdminController
     {
         $where['id'] = ['in', $tzUserID];
         $where['status'] =1;
-        $gemapayOrder = new GemaPayOrder();
+        $gemapayOrder = new GemaPayOrderModel();
         $ret = $gemapayOrder->where($where)->count();
         $this->assign('orderDealCount',$ret);
     }
@@ -153,7 +152,7 @@ class IndexController extends AdminController
     {
         $where['id'] = ['in', $tzUserID];
         $where['status'] =1;
-        $gemapayOrder = new GemaPayOrder();
+        $gemapayOrder = new GemaPayOrderModel();
         $ret = $gemapayOrder->where($where)->sum('order_price');
         $this->assign('orderDealMoneys',$ret);
 
@@ -168,7 +167,7 @@ class IndexController extends AdminController
     {
         $where['id'] = ['in', $tzUserID];
         $where['status'] =0;
-        $gemapayOrder = new GemaPayOrder();
+        $gemapayOrder = new GemaPayOrderModel();
         $ret = $gemapayOrder->where($where)->count();
         $this->assign('orderUnpayCount',$ret);
     }
@@ -182,7 +181,7 @@ class IndexController extends AdminController
     {
         $where['id'] = ['in', $tzUserID];
         $where['status'] =0;
-        $gemapayOrder = new GemaPayOrder();
+        $gemapayOrder = new GemaPayOrderModel();
         $ret = $gemapayOrder->where($where)->sum('order_price');
         $this->assign('orderUnpayMoneys',$ret);
     }
@@ -196,7 +195,7 @@ class IndexController extends AdminController
     //获取会员数据统计
     public function getUserCount()
     {
-        $user = new User();
+        $user = new UserModel();
 
         $user_total = $user->count();
 
@@ -218,8 +217,8 @@ class IndexController extends AdminController
 
     public function getmoneyCount()
     {
-        $recharge = new Recharge();
-        $withdraw = new Withdraw();
+        $recharge = new RechargeModel();
+        $withdraw = new WithdrawModel();
         $resum = $recharge->sum('price');
         $wisum = $withdraw->sum('price');
         $this->assign('wisum', $wisum);
@@ -278,7 +277,7 @@ class IndexController extends AdminController
         }
         delFile(ROOT_PATH . 'runtime',array(".php",".log")); //目录,文件类型
         $diff = time() - $start;
-        $this->success("缓存清理成功,用时{$diff}秒");
+        return $this->success("缓存清理成功,用时{$diff}秒");
 
     }
 
@@ -286,10 +285,10 @@ class IndexController extends AdminController
     /**
      * 修改登录密码
      */
-    public function editPassword()
+    public function editPassword(Request $request)
     {
-        if ($_POST) {
-            $data = I('post.');
+        if ($request->isPost()) {
+            $data = $request->post();
             if (empty($data['old_password']) || empty($data['password']) || empty($data['repassword'])) {
                 $this->error('参数不能为空');
             }
@@ -297,7 +296,7 @@ class IndexController extends AdminController
                 $this->error('两次密码不一致');
             }
             $adminId = session('user_auth.uid');
-            $admin = new Admin();
+            $admin = new AdminModel();
             $adminInfo = $admin->find($adminId);
 
             if (user_md5($data['old_password'], null) != $adminInfo['password']) {
@@ -309,10 +308,11 @@ class IndexController extends AdminController
             $ret = $admin->where(['id' => $adminId])->setField('password', $newpassword);
             if ($ret !== false) {
                 session('user_auth', null);
-                $this->success('修改成功', U('Pubss/login'));
+                $this->success('修改成功', url('pubss/login'));
             }
             $this->error('修改失败');
         }
-        $this->display();
+
+        return $this->fetch();
     }
 }

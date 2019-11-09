@@ -1,11 +1,13 @@
 <?php
 
-namespace Admin\Controller;
+namespace app\admin\Controller;
 
-use Admin\Model\UserInviteSetting;
-use Admin\Model\UserGroupModel;
-use Gemapay\Model\GemapayCodeTypeModel;
-
+use app\admin\model\UserModel;
+use app\adminodel\UserInviteSetting;
+use app\admin\model\UserGroupModel;
+use app\admin\model\GemapayCodeTypeModel;
+use think\Request;
+use think\Db;
 
 /**
  * 用户控制器
@@ -13,16 +15,14 @@ use Gemapay\Model\GemapayCodeTypeModel;
  */
 class UserController extends AdminController
 {
-
-
     /**
      * 编辑用户
      *
      */
-    public function edit()
+    public function edit(Request $request)
     {
-        $userid = trim(I('get.userid'));
-        $ulist = M('user')->where(array('userid' => $userid))->find();
+        $userid = trim($request->param('get.userid'));
+        $ulist = Db::name('user')->where(array('userid' => $userid))->find();
 
         $InviteSettingModel = new UserInviteSetting();
         $where["admin_id"] = session("user_auth.uid");
@@ -34,18 +34,18 @@ class UserController extends AdminController
             $data_list[$key]["desc"] = $InviteSettingModel->getInviteDesc($data["invite_setting"], $codeTypeLists);
         }
 
-        if ($_POST) {
-            $code = trim(I('post.code'));
-            $data['username'] = trim(I('post.username'));
-            $data['mobile'] = trim(I('post.mobile'));
-            $data['truename'] = trim(I('post.truename'));
-            $data['nsc_money'] = trim(I('post.nsc_money'));
-            $data['eth_money'] = trim(I('post.eth_money'));
-            $data['eos_money'] = trim(I('post.eos_money'));
-            $data['btc_money'] = trim(I('post.btc_money'));
-            $data['money'] = trim(I('post.money'));
+        if ($request->isPost()) {
+            $code = trim($request->param('code'));
+            $data['username'] = trim($request->param('username'));
+            $data['mobile'] = trim($request->param('mobile'));
+            $data['truename'] = trim($request->param('truename'));
+            $data['nsc_money'] = trim($request->param('nsc_money'));
+            $data['eth_money'] = trim($request->param('eth_money'));
+            $data['eos_money'] = trim($request->param('eos_money'));
+            $data['btc_money'] = trim($request->param('btc_money'));
+            $data['money'] = trim($request->param('money'));
             $data['u_yqm'] = $code;
-            $login_pwd = trim(I('post.login_pwd'));
+            $login_pwd = trim($request->param('login_pwd'));
             if (empty($code)) {
                 $this->error('邀请费率不能为空,请先添加邀请配置');
             }
@@ -53,12 +53,12 @@ class UserController extends AdminController
                 $data['login_pwd'] = pwd_md5($login_pwd, $ulist['login_salt']);
             }
 
-            $safety_pwd = trim(I('post.safety_pwd'));
+            $safety_pwd = trim($request->param('safety_pwd'));
 
             if ($login_pwd != '') {
                 $data['safety_pwd'] = pwd_md5($safety_pwd, $ulist['safety_salt']);
             }
-            $re = M('user')->where(array('userid' => $userid))->save($data);
+            $re = Db::name('user')->where(array('userid' => $userid))->save($data);
             if ($re) {
 
                 $this->success('资料修改成功');
@@ -77,9 +77,9 @@ class UserController extends AdminController
     }
 
 
-    public function add()
+    public function add(Request $request)
     {
-        $userId = I('user_id/d');
+        $userId = intval($request->param('user_id'));
         $userInfo = null;
         $InviteSettingModel = new UserInviteSetting();
         $where["admin_id"] = session("user_auth.uid");
@@ -91,14 +91,14 @@ class UserController extends AdminController
             $data_list[$key]["desc"] = $InviteSettingModel->getInviteDesc($data["invite_setting"], $codeTypeLists);
         }
 
-        $userId && $userInfo = M('user')->where(['id' => $userId])->find();
+        $userId && $userInfo = Db::name('user')->where(['id' => $userId])->find();
         if ($_POST) {
 
-            $username = trim(I('post.username'));
-            $mobile = trim(I('post.mobile'));
-            $login_pwd = trim(I('post.login_pwd'));
-            $relogin_pwd = trim(I('post.relogin_pwd'));
-            $code = trim(I('post.code'));
+            $username = trim($request->param('username'));
+            $mobile = trim($request->param('mobile'));
+            $login_pwd = trim($request->param('login_pwd'));
+            $relogin_pwd = trim($request->param('relogin_pwd'));
+            $code = trim($request->param('code'));
 
             if (empty($code)) {
                 $this->error('邀请费率不能为空,请先添加邀请配置');
@@ -114,8 +114,8 @@ class UserController extends AdminController
                 $this->error('手机号码格式不正确');
             }
             $salt = strrand(4);
-            $cuser = M('user')->where(array('account' => $mobile))->find();
-            $muser = M('user')->where(array('mobile' => $mobile))->find();
+            $cuser = Db::name('user')->where(array('account' => $mobile))->find();
+            $muser = Db::name('user')->where(array('mobile' => $mobile))->find();
             if (!empty($cuser) || !empty($muser)) {
                 $re_data['status'] = 1;
                 $re_data['message'] = "手机号已经被注册";
@@ -136,7 +136,7 @@ class UserController extends AdminController
             $data['status'] = 1;
             $adminId = session('user_auth.uid');
             $data['add_admin_id'] = ($adminId == 1) ? 0 : $adminId;
-            $ure_re = M('user')->add($data);
+            $ure_re = Db::name('user')->add($data);
             if ($ure_re !== false) {
                 $this->success('添加成功');
             }
@@ -150,13 +150,13 @@ class UserController extends AdminController
     /**
      * 平台手动调整用户余额
      */
-    public function changeUserBalance()
+    public function changeUserBalance(Request $request)
     {
-        $userId = I('get.userid');
-        $curretuserMoney = M('user')->where(['userid' => $userId])->getField('money');
+        $userId = $request->param('userid');
+        $curretuserMoney = Db::name('user')->where(['userid' => $userId])->getField('money');
         if ($_POST) {
             //看了存储引擎不支持事务算了 M()->startTrans();
-            $data = I('post.');
+            $data = $request->param();
             if (bccomp(0.00, $data['money']) != -1) {
                 $this->error('操作资金不可小于或等于0.00');
             }
@@ -171,25 +171,25 @@ class UserController extends AdminController
             $this->error('操作失败');
         }
         $this->assign('curretuserMoney', $curretuserMoney);
-        $this->display('change_user_balance');
+        return $this->display('change_user_balance');
 
     }
 
     /**
      * 用户列表
      */
-    public function index()
+    public function index(Request $request)
     {
+        $userobj = new UserModel();
 
-        $userobj = M('user');
-        $groupId = I('group_id', -1, 'intval');
+        $groupId = $request->param('group_id', -1, 'intval');
         $this->assign('groupId', $groupId);
         $groups = $this->getGroups($groupId);
 
         if ($groups !== "") {
             $map['group_id'] = array("in", $groups . "");
         }
-        $mobile = I('mobile/s');
+        $mobile = $request->param('mobile');
         (!empty($mobile)) && $map['mobile'] = ['like', "%" . $mobile . "%"];
         $map['userid'] = ['in', tzUsers()];
         $count = $userobj->where($map)->count();
@@ -199,12 +199,12 @@ class UserController extends AdminController
             foreach ($list as $k => $v) {
                 $addAdminId = $v['add_admin_id'];
                 $where['a.id'] = $addAdminId;
-                $info = M('admin')->alias('a')->field('a.id,b.title')
+                $info = DB::name('admin')->alias('a')->field('a.id,b.title')
                     ->join('ysk_group  b ON a.auth_id=b.id', "LEFT")
                     ->where($where)
                     ->find();
                 $list[$k]['role_name'] = $info['id'] ? $info['title'] : "超级管理员";
-                $groupInfo = M('user_group')->field('name')->where(['id' => $v['group_id']])->find();
+                $groupInfo = Db::name('user_group')->field('name')->where(['id' => $v['group_id']])->find();
                 $list[$k]['group_name'] = (!empty($groupInfo)) ? $groupInfo['name'] : '暂无分组';
                 if ($v['work_status'] == UserGroupModel::STATUS_NOT_WORK) {
                     $list[$k]["work_status_name"] = "<a style='color: red'>停工中</a>";
@@ -218,13 +218,13 @@ class UserController extends AdminController
         $_map = [];
         $adminId = session('user_auth.uid');
         checkIstz($adminId) && $_map['admin_id'] = $adminId;
-        $groups = M('user_group')->where($_map)->field('id,parentid,name')->select();
+        $groups = Db::name('user_group')->where($_map)->field('id,parentid,name')->select();
         $this->assign('groups', getCategory($groups));
         $this->assign('count', $count);
         $this->assign('list', $list); // 賦值數據集
         $this->assign('count', $count);
         $this->assign('page', $p->show()); // 賦值分頁輸出
-        $this->display();
+        return $this->fetch();
     }
 
     public function getGroups($groupId)
@@ -252,14 +252,14 @@ class UserController extends AdminController
     }
 
     //流水
-    public function bill()
+    public function bill(Request $request)
     {
-        $userobj = M('somebill');
+        $userobj = Db::name('somebill');
         $map['uid'] = ['in', tzUsers()];
         //增加的查询条件
         //时间
-        $startTime = I('start_time','','strtotime');
-        $endTime =I('end_time','','strtotime');
+        $startTime = $request->param('start_time','', 'strtotime');
+        $endTime =$request->param('end_time','','strtotime');
         if ($startTime && empty($endTime)) {
             $map['addtime'] = ['egt', $startTime];
         }
@@ -269,9 +269,9 @@ class UserController extends AdminController
         if ($startTime && $endTime) {
             $map['addtime'] = ['between', [$startTime, $endTime]];
         }
-        $billType =I('bill_type',0,'intval');
+        $billType =$request->param('bill_type', 0,'intval');
         $billType && $map['jl_class'] =$billType;
-        $username = I('username','','trim');
+        $username = $request->param('username','','trim');
         $username  && $map ['b.username']=$username;
         $count = $userobj->alias('a')
             ->join("ysk_user b on a.uid=b.userid", "left")
@@ -283,12 +283,12 @@ class UserController extends AdminController
             ->join("ysk_user b on a.uid=b.userid", "left")
             ->where($map)
             ->order('addtime desc')->limit($p->firstRow, $p->listRows)->select();
-        $this->assign('billTypes',C('bill_types'));
+        $this->assign('billTypes',Config('bill_types'));
         $this->assign('count', $count);
         $this->assign('list', $list); // 賦值數據集
         $this->assign('count', $count);
         $this->assign('page', $p->show()); // 賦值分頁輸出
-        $this->display();
+        return $this->fetch();
     }
 
 
@@ -298,10 +298,10 @@ class UserController extends AdminController
 
 
 
-    public function delbill()
+    public function delbill(Request $request)
     {
-        $id = trim(I('get.id'));
-        $re = M('somebill')->where(array('id' => $id))->delete();
+        $id = trim($request->param('get.id'));
+        $re = Db::name('somebill')->where(array('id' => $id))->delete();
         if ($re) {
             $this->success('删除成功');
             exit;
@@ -311,16 +311,16 @@ class UserController extends AdminController
         }
     }
 
-    public function setWorkStatus()
+    public function setWorkStatus(Request $request)
     {
-        $status = I('get.work_status');
-        $ids = I('get.ids');
+        $status = $request->param('work_status');
+        $ids = $request->param('ids');
         $data["work_status"] = $status;
         if (empty($ids)) {
             $this->error('失败');
         }
 
-        $re = M("user")->where(array('userid' => $ids))->save($data);
+        $re = Db::name("user")->where(array('userid' => $ids))->update($data);
         if ($re === false) {
             $this->error('失败');
         }
@@ -328,11 +328,11 @@ class UserController extends AdminController
     }
 
     //提现列表
-    public function recharge()
+    public function recharge(Request $request)
     {
-        $querytype = trim(I('get.querytype'));
-        $account = trim(I('get.keyword'));
-        $coinpx = trim(I('get.coinpx'));
+        $querytype = trim($request->param('querytype'));
+        $account = trim($request->param('keyword'));
+        $coinpx = trim($request->param('coinpx'));
         if ($querytype != '') {
             if ($querytype == 'mobile') {
                 $map['account'] = $account;
@@ -344,43 +344,43 @@ class UserController extends AdminController
         }
 
 
-        $userobj = M('recharge');
+        $userobj = Db::name('recharge');
         $map['uid'] = ['in', tzUsers()];
         $count = $userobj->where($map)->count();
         $p = getpagee($count, 50);
 
         if ($coinpx) {
             if ($coinpx == 1) {
-                $list = $userobj->where($map)->order('price desc')->limit($p->firstRow, $p->listRows)->select();
+                $list = $userobj->where($map)->order('price desc')->limit($p->firstRow, $p->listRows)->select()->toArray();
             } else {
-                $list = $userobj->where($map)->order('id desc')->limit($p->firstRow, $p->listRows)->select();
+                $list = $userobj->where($map)->order('id desc')->limit($p->firstRow, $p->listRows)->select()->toArray();
             }
         } else {
-            $list = $userobj->where($map)->order('id desc')->limit($p->firstRow, $p->listRows)->select();
+            $list = $userobj->where($map)->order('id desc')->limit($p->firstRow, $p->listRows)->select()->toArray();
         }
 
-        $conf = M('system')->where(array('id' => 1))->find();
+        $conf = Db::name('system')->where(array('id' => 1))->find();
         $this->assign('conf', $conf);
 
         $this->assign('count', $count);
         $this->assign('list', $list); // 賦值數據集
         $this->assign('count', $count);
         $this->assign('page', $p->show()); // 賦值分頁輸出
-        $this->display();
+        return $this->fetch();
 
     }
 
-    public function reedit()
+    public function reedit(Request $request)
     {
-        $id = trim(I('get.id'));
-        $st = trim(I('get.st'));
-        $relist = M('recharge')->where(array('id' => $id))->find();
-        $ulist = M('user')->where(array('userid' => $relist['uid']))->find();
+        $id = trim($request->param('get.id'));
+        $st = trim($request->param('get.st'));
+        $relist = Db::name('recharge')->where(array('id' => $id))->find();
+        $ulist = Db::name('user')->where(array('userid' => $relist['uid']))->find();
 
         if ($st == 1) {
             if ($relist['status'] == 1) {
-                $re = M('recharge')->where(array('id' => $id))->save(array('status' => 3));
-                $ure = M('user')->where(array('userid' => $relist['uid']))->setInc('money', $relist['price']);
+                $re = Db::name('recharge')->where(array('id' => $id))->save(array('status' => 3));
+                $ure = Db::name('user')->where(array('userid' => $relist['uid']))->setInc('money', $relist['price']);
             } else {
                 $re = 0;
                 $ure = 0;
@@ -389,7 +389,7 @@ class UserController extends AdminController
 
         } elseif ($st == 2) {
             if ($relist['status'] == 1) {
-                $re = M('recharge')->where(array('id' => $id))->save(array('status' => 2));
+                $re = Db::name('recharge')->where(array('id' => $id))->save(array('status' => 2));
                 $ure = 1;
             } else {
                 $re = 0;
@@ -399,7 +399,7 @@ class UserController extends AdminController
 
         } elseif ($st == 3) {
             if ($relist['status'] == 3) {
-                $re = M('recharge')->where(array('id' => $id))->delete();
+                $re = Db::name('recharge')->where(array('id' => $id))->delete();
                 $ure = 1;
             } else {
                 $re = 0;
@@ -419,12 +419,12 @@ class UserController extends AdminController
 
     //充值处理
 
-    public function save_czset()
+    public function save_czset(Request $request)
     {
         if ($_GET) {
-            $data['cz_yh'] = trim(I('get.cz_yh'));
-            $data['cz_xm'] = trim(I('get.cz_xm'));
-            $data['cz_kh'] = trim(I('get.cz_kh'));
+            $data['cz_yh'] = trim($request->param('get.cz_yh'));
+            $data['cz_xm'] = trim($request->param('get.cz_xm'));
+            $data['cz_kh'] = trim($request->param('get.cz_kh'));
 
             $re = M('system')->where(array('id' => 1))->save($data);
 
@@ -442,11 +442,11 @@ class UserController extends AdminController
 
     //充值处理
 
-    public function withdraw()
+    public function withdraw(Request $request)
     {
-        $querytype = trim(I('get.querytype'));
-        $account = trim(I('get.keyword'));
-        $coinpx = trim(I('get.coinpx'));
+        $querytype = trim($request->param('get.querytype'));
+        $account = trim($request->param('get.keyword'));
+        $coinpx = trim($request->param('get.coinpx'));
 
         if ($querytype != '') {
             if ($querytype == 'mobile') {
@@ -459,7 +459,7 @@ class UserController extends AdminController
         }
 
 
-        $userobj = M('withdraw');
+        $userobj = Db::name('withdraw');
         $map['uid'] = ['in', tzUsers()];
         $count = $userobj->where($map)->count();
         $p = getpagee($count, 50);
@@ -486,22 +486,22 @@ class UserController extends AdminController
 
     //提现列表
 
-    public function wiedit()
+    public function wiedit(Request $request)
     {
-        $id = trim(I('get.id'));
-        $st = trim(I('get.st'));
-        $relist = M('withdraw')->where(array('id' => $id))->find();
+        $id = trim($request->param('get.id'));
+        $st = trim($request->param('get.st'));
+        $relist = Db::name('withdraw')->where(array('id' => $id))->find();
 
         if ($st == 1) {
-            $re = M('withdraw')->where(array('id' => $id))->save(array('status' => 3));
+            $re = Db::name('withdraw')->where(array('id' => $id))->save(array('status' => 3));
 
 
         } elseif ($st == 2) {
-            $re = M('withdraw')->where(array('id' => $id))->save(array('status' => 2));
+            $re = Db::name('withdraw')->where(array('id' => $id))->save(array('status' => 2));
 
 
         } elseif ($st == 3) {
-            $re = M('withdraw')->where(array('id' => $id))->save(array('status' => 3));
+            $re = Db::name('withdraw')->where(array('id' => $id))->save(array('status' => 3));
 
         }
 
@@ -517,13 +517,13 @@ class UserController extends AdminController
 
     //提现处理
 
-    public function ewm()
+    public function ewm(Request $request)
     {
 
-        $type = I('type',0,'intval');
+        $type = $request->param('type',0,'intval');
         $type &&  $map['type'] =$type;
         $map['a.user_id'] = ['in', tzUsers()];
-        $userobj = M('gemapay_code');
+        $userobj = Db::name('gemapay_code');
         $count = $userobj->alias('a')
             ->join('left join ' . C("DB_PREFIX") . 'user as b on a.user_id = b.userid')
             ->where($map)->count();
@@ -546,21 +546,21 @@ class UserController extends AdminController
 
     protected function getcodeType()
     {
-        $codeTypes = M('gemapay_code_type')->field('id,type_name')->order('sort asc,id desc')->select();
+        $codeTypes = Db::name('gemapay_code_type')->field('id,type_name')->order('sort asc,id desc')->select()->toArray();
         $this->assign('codeTypes', $codeTypes);
     }
 
 
     //二维码详情
 
-    public function ewminfo()
+    public function ewminfo(Request $request)
     {
         if ($_POST) {
-            $id = trim(I('post.id'));
-            $data["account_name"] = trim(I('post.account_name'));
-            $data["account_number"] = trim(I('post.account_number'));
-            $data["bonus_points"] = trim(I('post.bonus_points'));
-            $data["limit_money"] = trim(I('post.limit_money'));
+            $id = trim($request->param('id'));
+            $data["account_name"] = trim($request->param('account_name'));
+            $data["account_number"] = trim($request->param('account_number'));
+            $data["bonus_points"] = trim($request->param('bonus_points'));
+            $data["limit_money"] = trim($request->param('limit_money'));
             $re = M('gemapay_code')->where(array('id' => $id))->save($data);
             if ($re) {
                 $this->success('操作成功', U('ewm'));
@@ -569,7 +569,7 @@ class UserController extends AdminController
             }
         }
         $this->getcodeType();
-        $id = trim(I('get.id'));
+        $id = trim($request->param('get.id'));
         $ewminfo = M('gemapay_code')->where(array('id' => $id))->find();
         $this->assign('info', $ewminfo);
         $this->display();
@@ -577,9 +577,9 @@ class UserController extends AdminController
 
 
     //删除二维码
-    public function delewm()
+    public function delewm(Request $request)
     {
-        $id = trim(I('get.id'));
+        $id = trim($request->param('get.id'));
         $re = M('ewm')->where(array('id' => $id))->delete();
         if ($re) {
             $this->success('删除成功');
@@ -591,11 +591,11 @@ class UserController extends AdminController
 
 
     //银行卡列表
-    public function bankcard()
+    public function bankcard(Request $request)
     {
-        $querytype = trim(I('get.querytype'));
-        $account = trim(I('get.keyword'));
-        $coinpx = trim(I('get.coinpx'));
+        $querytype = trim($request->param('get.querytype'));
+        $account = trim($request->param('get.keyword'));
+        $coinpx = trim($request->param('get.coinpx'));
 
         if ($querytype != '') {
             if ($querytype == 'mobile') {
@@ -634,11 +634,11 @@ class UserController extends AdminController
 
 
     //冻结会员
-    public function set_status()
+    public function set_status(Request $request)
     {
         if ($_GET) {
-            $userid = trim(I('get.userid'));
-            $st = trim(I('get.st'));
+            $userid = trim($request->param('get.userid'));
+            $st = trim($request->param('get.st'));
             $list = M('user')->where(array('userid' => $userid))->find();
             if (empty($list)) {
                 $this->error('该会员不存在');
@@ -676,26 +676,26 @@ class UserController extends AdminController
      * 编辑用户
      *
      */
-    public function del()
+    public function del(Request $request)
     {
-        $userid = trim(I('get.userid'));
+        $userid = trim($request->param('get.userid'));
         M('user')->where(array('userid' => $userid))->delete();
         $this->success('会员删除成功');
     }
 
 
     //限制出售币和提币
-    public function restrict()
+    public function restrict(Request $request)
     {
-        $userid = trim(I('get.userid'));
+        $userid = trim($request->param('get.userid'));
         $ulist = M('user')->where(array('userid' => $userid))->find();
         if ($_POST) {
 
-            $sell_status = trim(I('post.sell_status'));
+            $sell_status = trim($request->param('sell_status'));
 
-            $tx_status = trim(I('post.tx_status'));
+            $tx_status = trim($request->param('tx_status'));
 
-            $zz_status = trim(I('post.zz_status'));
+            $zz_status = trim($request->param('zz_status'));
 
             if ($ulist['sell_status'] == 1) {
 
@@ -760,7 +760,7 @@ class UserController extends AdminController
      * 设置一条或者多条数据的状态
      *
      */
-    public function setStatus($model = CONTROLLER_NAME)
+    public function setStatus($model )
     {
 
     }
@@ -770,13 +770,13 @@ class UserController extends AdminController
      * 设置会员隐蔽的状态
      *
      */
-    public function setStatus1($model = CONTROLLER_NAME)
+    public function setStatus1($model , Request $request)
     {
-        $id = (int)I('request.id');
-        $userid = (int)I('request.userid');
+        $id = (int)$request->param('request.id');
+        $userid = (int)$request->param('request.userid');
 
-        $user_object = D('User');
-        $result = D('User')->where(array('userid' => $userid))->setField('yinbi', $id);
+        $user_object = DB::name('user');
+        $result = DB::name('User')->where(array('userid' => $userid))->setField('yinbi', $id);
         if ($result) {
             $this->success('更新成功', U('index'));
         } else {
@@ -786,9 +786,9 @@ class UserController extends AdminController
 
 
     //用户登录
-    public function userlogin()
+    public function userlogin(Request $request)
     {
-        $userid = I('userid', 0, 'intval');
+        $userid = $request->param('userid', 0, 'intval');
         $user = D('Home/User');
         $info = $user->find($userid);
         if (empty($info)) {
@@ -807,10 +807,10 @@ class UserController extends AdminController
      * 锁定二维码
      * @param mixed|string $model
      */
-    public function updateLock($model = CONTROLLER_NAME)
+    public function updateLock($model = '', Request $request)
     {
-        $id = I('request.id');
-        $status = I('status');
+        $id = $request->param('request.id');
+        $status = $request->param('status');
         $map = array('id' => $id);
 
         switch ($status) {

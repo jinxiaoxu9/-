@@ -6,7 +6,7 @@ use think\Model;
  * 用户模型
  *
  */
-class User extends Model
+class UserModel extends Model
 {
     protected $pk = 'userid';
 

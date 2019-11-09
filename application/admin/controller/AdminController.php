@@ -44,6 +44,7 @@ class AdminController extends Controller
         $this->assign('s_name_module', $this->s_name_module);
         $this->assign('s_name_controller', $this->s_name_controller);
         $this->assign('s_name_action', $this->s_name_action);
+
         // 权限检测
         $current_url = $this->s_name_module . '/' . $this->s_name_controller . '/' . $this->s_name_action;
         if ('admin/Index/index' !== $current_url &&  $current_url!='admin/Index/editPassword') {

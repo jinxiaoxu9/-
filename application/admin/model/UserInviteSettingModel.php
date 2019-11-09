@@ -6,7 +6,7 @@
 // +----------------------------------------------------------------------
 // | Author: jry <bbs.sasadown.cn>
 // +----------------------------------------------------------------------
-namespace app\admin\Model;
+namespace app\admin\model;
 
 use think\Model;
 
@@ -14,27 +14,12 @@ use think\Model;
  * 部门模型
  * @author jry <bbs.sasadown.cn>
  */
-class UserGroupModel extends Model
+class UserInviteSettingModel extends Model
 {
     /**
      * 数据库表名
      * @author jry <bbs.sasadown.cn>
      */
-    const STATUS_WORK = 1;
+    protected $tableName = 'ysk_user_invite_setting';
 
-    const STATUS_NOT_WORK = 0;
-
-    protected $tableName = 'user_group';
-
-    public function getLevelList($adminId, $level=1)
-    {
-        $where = [];
-        if($adminId != 1)
-        {
-            $where["admin_id"] = $adminId;
-        }
-        $where["level"] = $level;
-
-        return $this->where($where)->select();
-    }
 }

@@ -8,33 +8,18 @@
 // +----------------------------------------------------------------------
 namespace app\admin\Model;
 
+
 use think\Model;
 
 /**
- * 部门模型
+ * 功能模块模型 新闻
  * @author jry <bbs.sasadown.cn>
  */
-class UserGroupModel extends Model
+class NewsModel extends Model
 {
     /**
      * 数据库表名
-     * @author jry <bbs.sasadown.cn>
      */
-    const STATUS_WORK = 1;
+    protected $table = 'ysk_news';
 
-    const STATUS_NOT_WORK = 0;
-
-    protected $tableName = 'user_group';
-
-    public function getLevelList($adminId, $level=1)
-    {
-        $where = [];
-        if($adminId != 1)
-        {
-            $where["admin_id"] = $adminId;
-        }
-        $where["level"] = $level;
-
-        return $this->where($where)->select();
-    }
 }

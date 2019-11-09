@@ -30,7 +30,7 @@
                                     <form class="form" method="get" action="{:url('/admin/Menu/index')}">
                                         菜单组：
                                         <select name="pid" class="lyui-select select">
-                                            <option <?php if(isset($pid) && $pid == 0){ echo "selected";} ?>  value="0">全部</option>
+                                            <option <?php if(isset($pid) && $pid == 0){ echo "selected";} ?>  value="1">全部</option>
                                             {volist name='groups' key='k' id='v'}
                                                 <option  <?php if(isset($pid, $v['id']) && $pid == $v['id']){ echo "selected"; } ?> value="{$v.id}">
                                                     {$v.name}
