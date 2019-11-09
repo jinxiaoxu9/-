@@ -6,49 +6,55 @@
 // +----------------------------------------------------------------------
 // | Author: jry <bbs.sasadown.cn>
 // +----------------------------------------------------------------------
-namespace Admin\Controller;
+namespace app\admin\Controller;
+
+use app\admin\logic\TreeLogic;
+use think\Request;
+use think\Db;
+use Util;
 
 /**
  * 部门控制器
  * @author jry <bbs.sasadown.cn>
  */
-class GroupController extends Admin
+class GroupController extends AdminController
 {
     /**
      * 部门列表
      * @author jry <bbs.sasadown.cn>
      */
-    public function index()
+    public function index(Request $request)
     {
         // 搜索
-        $keyword         = I('keyword', '', 'string');
-        $condition       = array('like', '%' . $keyword . '%');
+        $keyword         = $request->param('keyword', '', 'string');
+        /*$condition       = array('like', '%' . $keyword . '%');
         $map['id|title'] = array(
             $condition,
             $condition,
             '_multi' => true,
-        );
-
+        );*/
+        $map['CONCAT(`id`, `title`)'] = array('like', '%' . $keyword . '%');
         // 获取所有角色
         $map['status'] = array('egt', '0'); //禁用和正常状态
-        $data_list     = D('Group')
+        $data_list     = DB::name('Group')
             ->where($map)
             ->order('sort asc, id asc')
             ->select();
         $this->assign('list',$data_list);
-        $this->display();
+
+        return $this->fetch();
     }
 
     /**
      * 新增部门
      * @author jry <bbs.sasadown.cn>
      */
-    public function add()
+    public function add(Request $request)
     {
-        if (IS_POST) {
+        if ($request->isPost()) {
             $group_object       = D('Group');
-            $_POST['menu_auth'] = implode(',', I('post.menu_auth'));
-            $_POST['hylb'] = implode(',', I('post.hylb'));
+            $_POST['menu_auth'] = implode(',', $request->param('post.menu_auth'));
+            $_POST['hylb'] = implode(',', $request->param('post.hylb'));
             $data               = $group_object->create();
             if ($data) {
                 $id = $group_object->add($data);
@@ -63,9 +69,8 @@ class GroupController extends Admin
         } else {
             $all_module_menu_list=$this->getMenuTree();
             $this->assign('all_module_menu_list', $all_module_menu_list);
-             $hylb=explode(',', trim($info['hylb'],','));
-             $this->assign('hylb', $hylb);
-          $this->display('edit');
+
+            return $this->fetch('add');
         }
     }
 
@@ -73,12 +78,12 @@ class GroupController extends Admin
      * 编辑部门
      * @author jry <bbs.sasadown.cn>
      */
-    public function edit($id)
+    public function edit($id, Request $request)
     {
-        if (IS_POST) {
-            $group_object       = D('Group');
-            $_POST['menu_auth'] = implode(',', I('post.menu_auth'));
-            $_POST['hylb'] = implode(',', I('post.hylb'));
+        if ($request->isPost()) {
+            $group_object       = DB::name('Group');
+            $_POST['menu_auth'] = implode(',', $request->param('post.menu_auth'));
+            $_POST['hylb'] = implode(',', $request->param('post.hylb'));
             $data               = $group_object->create();
             if ($data) {
                 if ($group_object->save($data) !== false) {
@@ -94,7 +99,7 @@ class GroupController extends Admin
         } else {
            //获取角色信息
             $where['id']=$id;
-            $info=D('Group')->find($id);
+            $info=Db::name('Group')->find($id);
 
             // 获取功能模块的后台菜单列表
             $all_module_menu_list=$this->getMenuTree();
@@ -104,7 +109,7 @@ class GroupController extends Admin
             $this->assign('info', $info);
             $this->assign('hylb', $hylb);
             
-            $this->display('edit');
+            return $this->fetch('edit');
         }
     }
 
@@ -114,7 +119,7 @@ class GroupController extends Admin
         $all_module_menu_list = array();
 
         $con['status']     = 1;
-        $menu=D('Menu')->where($con)->order('sort asc,id asc')->select();
+        $menu=Db::name('Menu')->where($con)->order('sort asc,id asc')->select();
         $temp                               = $menu;
         $menu_list_item                     = $tree->list2tree($temp);
         return $menu_list_item;
@@ -125,9 +130,10 @@ class GroupController extends Admin
      * 设置一条或者多条数据的状态
      * @author jry <bbs.sasadown.cn>
      */
-    public function setStatus($model = CONTROLLER_NAME, $script = false)
+    public function setStatus($model = '', $script = false)
     {
-        $ids = I('request.ids');
+        $request = Request::instance();
+        $ids = $request->param('request.ids');
         if (is_array($ids)) {
             if (in_array('1', $ids)) {
                 $this->error('超级管理员组不允许操作');

@@ -24,7 +24,7 @@
                             <li <neq name="type" value="over" >class="active"</neq> >
                                 <a href="{:url('Complaint/index')}">待处理</a>
                             </li>
-                            <li <eq name="type" value="over" >class="active"</eq> >
+                            <li <eq name="type" value="over" >class="active"{/eq} >
                                 <a href="{:url('Complaint/index',array('type'=>'over'))}">已处理</a>
                             </li>
                         </ul>

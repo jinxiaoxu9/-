@@ -2,10 +2,10 @@
 
 namespace app\admin\Controller;
 
+use app\admin\model\GemaPayOrderModel;
 use app\admin\logic\AdminLogic;
 use app\admin\logic\UserLogic;
-use Gemapay\Model\GemapayOrderModel;
-use Gemapay\Logic\GemapayOrderLogic;
+use app\admin\logic\GemaPayOrderLogic;
 use Common\Library\enum\CodeEnum;
 use think\Request;
 use think\Db;
@@ -22,18 +22,18 @@ class GemaController extends AdminController
     //已经完成但是未返款订单
     public function unbackOrder()
     {
-        $status = GemapayOrderModel::PAYED;
-        $isUploadCredentials = GemapayOrderModel::STATUS_NO;
-        $isBack = GemapayOrderModel::STATUS_NO;
+        $status = GemaPayOrderModel::PAYED;
+        $isUploadCredentials = GemaPayOrderModel::STATUS_NO;
+        $isBack = GemaPayOrderModel::STATUS_NO;
         $this->common($status, $isUploadCredentials, $isBack);
     }
 
     //已经返款订单但是没有审核
     public function alreadyBackOrder()
     {
-        $status = GemapayOrderModel::PAYED;
-        $isUploadCredentials = GemapayOrderModel::STATUS_YES;
-        $isBack = GemapayOrderModel::STATUS_NO;
+        $status = GemaPayOrderModel::PAYED;
+        $isUploadCredentials = GemaPayOrderModel::STATUS_YES;
+        $isBack = GemaPayOrderModel::STATUS_NO;
         $this->common($status, $isUploadCredentials, $isBack);
     }
 
@@ -42,8 +42,8 @@ class GemaController extends AdminController
      */
     public function  hadBackOrder()
     {
-        $status = GemapayOrderModel::PAYED;
-        $isBack = GemapayOrderModel::STATUS_YES;
+        $status = GemaPayOrderModel::PAYED;
+        $isBack = GemaPayOrderModel::STATUS_YES;
         $this->common($status, false, $isBack);
     }
 
@@ -159,9 +159,9 @@ class GemaController extends AdminController
 
         $where['id'] = $id;
         $data['is_back'] = 1;
-        $GemapayOrderModel = new GemapayOrderModel();
+        $GemapayOrderModel = new GemaPayOrderModel();
         $order = $GemapayOrderModel->where($where)->find();
-        if ($order['status'] != $GemapayOrderModel::PAYED && $order["is_back"] != $GemapayOrderModel::STATUS_NO) {
+        if ($order['status'] != GemaPayOrderModel::PAYED && $order["is_back"] != GemaPayOrderModel::STATUS_NO) {
             $this->error('失败');
 
         }

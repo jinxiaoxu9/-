@@ -12,7 +12,7 @@
             {foreach $_menu_tab['name'] as $tab_v}
             <li class="text-muted">{$tab_v}</li>
             {/foreach}
-            <li class="text-muted">{:isset($info)?'修改':新增}</li>
+            <li class="text-muted">{:isset($info)?'修改':'新增'}</li>
         </ul>
 
         <!-- 主体内容区域 -->
@@ -28,7 +28,7 @@
                                             <div class="form-group hidden item_id ">
                                                 <label class="left control-label">ID：</label>
                                                 <div class="right">
-                                                    <input type="hidden" class="form-control input" name="id" value="{$info.id}">
+                                                    <input type="hidden" class="form-control input" name="id" value="">
                                                 </div>
                                             </div>
 
@@ -37,11 +37,11 @@
                                                 <label class="left control-label">角色：</label>
                                                 <div class="right">
                                                     <select name="auth_id" class="form-control cui-select select">
-                                                        <empty name="info" >
+                                                        {empty name="info"}
                                                         <option value="">请选择：</option>
                                                         {/empty}
-                                                        <foreach name="role" item="v" >
-                                                        <option <eq name="info['auth_id']" value="$v['id']" >selected="true"</eq> value="{$v.id}">{$v.title}</option>
+                                                        {foreach $role as $v}
+                                                        <option value="{$v.id}">{$v.title}</option>
                                                         {/foreach}.
                                                     </select>
                                                 </div>
@@ -50,20 +50,20 @@
                                             <div class="form-group item_title ">
                                                 <label class="left control-label">昵称：</label>
                                                 <div class="right">
-                                                    <input type="text" class="form-control input" name="nickname" value="{$info.nickname}" placeholder="昵称" >
+                                                    <input type="text" class="form-control input" name="nickname" value="" placeholder="昵称" >
                                                 </div>
                                             </div>
                                             <div class="form-group item_title ">
                                                 <label class="left control-label">用户名：</label>
                                                 <div class="right">
-                                                    <input type="text" class="form-control input" name="username" value="{$info.username}" placeholder="用户名" >
+                                                    <input type="text" class="form-control input" name="username" value="" placeholder="用户名" >
                                                 </div>
                                             </div>
 
                                             <div class="form-group item_title ">
                                                 <label class="left control-label">密码：</label>
                                                 <div class="right">
-                                                    <input type="password" class="form-control input text" name="password" placeholder="<?php if(!$info) echo "密码"; else echo '留空则不做修改'; ?>" >
+                                                    <input type="password" class="form-control input text" name="password" placeholder="留空则不做修改" >
                                                 </div>
                                             </div>
                                              <div class="form-group item_title ">
@@ -76,34 +76,13 @@
                                              <div class="form-group item_title ">
                                                 <label class="left control-label">手机：</label>
                                                 <div class="right">
-                                                    <input type="text" class="form-control input text" name="mobile" value="{$info.mobile}" placeholder="手机">
+                                                    <input type="text" class="form-control input text" name="mobile" value="" placeholder="手机">
                                                 </div>
                                             </div>
-                                            <!-- <div class="form-group item_type ">
-                                                <label class="left control-label">手机绑定：</label>
-                                                <div class="right">
-                                                    <div class="radio-inline cui-control cui-radio">
-                                                        <label for="typelink">
-                                                            <input type="radio" id="typelink" class="radio" name="type" value="link" checked=""> 
-                                                            <span class="cui-control-indicator"></span>
-                                                            <span>已绑定</span>
-                                                        </label>
-                                                    </div>
-                                                    <div class="radio-inline cui-control cui-radio">
-                                                        <label for="typemodule">
-                                                            <input type="radio" id="typemodule" class="radio" name="type" value="module"> 
-                                                            <span class="cui-control-indicator"></span>
-                                                            <span>未绑定</span>
-                                                        </label>
-                                                    </div>
-                                                            
-                                                </div>
-                                            </div> -->
 
-             
                                         <div class="form-group"></div>
                                         <div class="form-group bottom_button_list">
-                                            <a class="btn btn-primary submit ajax-post" type="submit" target-form="form-builder">确定</a>
+                                            <a class="btn btn-primary submit" type="submit" target-form="form-builder">确定</a>
                                             <a class="btn btn-danger return" onclick="javascript:history.back(-1);return false;">取消</a>
                                         </div>
                                     </div>
@@ -118,6 +97,5 @@
 {/block}
 
 {block name="script"}
-    {$extra_html}
     <script type="text/javascript" src="__LYUI__/js/lyui.extend.min.js"></script>
 {/block}

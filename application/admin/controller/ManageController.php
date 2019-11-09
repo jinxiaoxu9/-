@@ -23,77 +23,77 @@ class ManageController extends AdminController
      * 用户列表
      * @author jry <bbs.sasadown.cn>
      */
-    public function index()
+    public function index(Request $request)
     {
         // 搜索
-        $keyword                                  = I('keyword', '', 'string');
-        $condition                                = array('like', '%' . $keyword . '%');
+        $keyword                                  = $request->param('keyword', '', 'string');
+        /*$condition                                = array('like', '%' . $keyword . '%');
         $map['a.id|a.username|a.nickname'] = array(
             $condition,
             $condition,
             $condition,
             '_multi' => true,
-        );
-
+        );*/
+        //$map = 'CONCAT(`a.id`,`a.username`,`a.nickname`) LIKE "%' . $keyword . '%"';
+        $map['CONCAT(a.`id`, a.`username`, a.`nickname`)'] = array('like', '%' . $keyword . '%');
         // 获取所有用户
         $map['a.status'] = array('egt', '0'); // 禁用和正常状态
-        $user_object   = M('admin a')->join(C('DB_PREFIX').'group b ON a.auth_id=b.id','LEFT');
-        //分页
-        $p=getpage($user_object,$map,10);
-        $page=$p->show();  
+        $user_object   = Db::name('admin a')->join('ysk_group b', 'a.auth_id=b.id','LEFT');
 
-        $data_list     = $user_object
+        $listData     = $user_object
             ->field('a.*,b.title')
             ->where($map)
             ->order('a.id asc')
-            ->select();
-       
+            ->paginate(10);
 
-        $this->assign('list',$data_list);
-        $this->assign('table_data_page',$page);
-        $this->display();
+        $list = $listData->items();
+        $page = $listData->render();
+
+        $this->assign('list',$list);
+        $this->assign('page',$page);
+
+        return $this->fetch();
     }
 
     /**
      * 新增用户
      * @author jry <bbs.sasadown.cn>
      */
-    public function add()
+    public function add(Request $request)
     {
-        if (IS_POST) {
+        if ($request->isPost()) {
 
-            $user_object = D('Manage');
-            $data        = $user_object->create();
+            $data        = $request->post();
             if ($data) {
-                $id = $user_object->add($data);
+                $id = Db::name('Manage')->insert($data);
                 if ($id) {
-                    $this->success('新增成功', U('index'));
+                    $this->success('新增成功', url('index'));
                 } else {
                     $this->error('新增失败');
                 }
             } else {
-                $this->error($user_object->getError());
+                $this->error('新增失败');
             }
         } else {
-                $role=D('Group')->where(array('status'=>array('neq',-1)))->field('id,title')->order('id')->select();
-                $this->assign('role',$role);
-                $this->display('add');
+            $role=Db::name('Group')->where(array('status'=>array('neq',-1)))->field('id,title')->order('id')->select();
+            $this->assign('role',$role);
+            return $this->fetch('add');
         }
     }
 
 
-    public function setWorkStatus()
+    public function setWorkStatus(Request $request)
     {
-        $status = I('get.work_status');
-        $id = I('get.id');
+        $status = $request->param('work_status');
+        $id = $request->param('id');
 
         //dazu
         $where["id"] = $id;
         $data["work_status"] = $status;
-        $result = M("admin")->where($where)->save($data);
+        $result = Db::name("admin")->where($where)->update($data);
 
         if ($result) {
-            $this->success('更新成功', U('index'));
+            $this->success('更新成功', url('index'));
         } else {
             $this->error('更新失败');
         }
@@ -104,20 +104,20 @@ class ManageController extends AdminController
      * 编辑用户
      * @author jry <bbs.sasadown.cn>
      */
-    public function edit($id)
+    public function edit($id, Request $request)
     {
-        if (IS_POST) {
+        if ($request->isPost()) {
 
             // 提交数据
-            $user_object = D('Manage');
-            $data        = $user_object->create();
+            $user_object = DB::name('Manage');
+            $data        = $request->post();
             // 密码为空表示不修改密码
             if(!$_POST['password'])
                 unset($data['password']);
             if ($data) {
                 $result = $user_object
-                    ->field('id,nickname,username,password,mobile,auth_id,update_time')
-                    ->save($data);
+                    //->field('id,nickname,username,password,mobile,auth_id,update_time')
+                    ->update($data);
                 if ($result) {
                     $this->success('更新成功', U('index'));
                 } else {
@@ -128,14 +128,14 @@ class ManageController extends AdminController
             }
         } else {
             //角色信息
-            $role=D('Group')->field('id,title')->order('id')->select();
+            $role= DB::name('Group')->field('id,title')->order('id')->select();
             $this->assign('role',$role);
 
             // 获取账号信息
-            $info = D('Manage')->find($id);
+            $info = DB::name('Manage')->find($id);
             unset($info['password']);
             $this->assign('info',$info);
-            $this->display();
+            return $this->fetch();
         }
     }
 
@@ -143,9 +143,10 @@ class ManageController extends AdminController
      * 设置一条或者多条数据的状态
      * @author jry <bbs.sasadown.cn>
      */
-    public function setStatus($model = CONTROLLER_NAME)
+    public function setStatus($model = '', $script = false)
     {
-        $ids = I('request.ids');
+        $request = Request::instance();
+        $ids = $request->param('ids');
         if (is_array($ids)) {
             if (in_array('1', $ids)) {
                 $this->error('超级管理员不允许操作');
@@ -155,6 +156,6 @@ class ManageController extends AdminController
                 $this->error('超级管理员不允许操作');
             }
         }
-        parent::setStatus($model);
+        parent::setStatus($model, $script);
     }
 }

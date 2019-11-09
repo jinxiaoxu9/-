@@ -30,7 +30,7 @@
                                             <label class="left control-label">所属上级：</label>
                                             <div class="right">
                                                 <select name="parentid" class="form-control cui-select select">
-                                                    <empty name="info" >
+                                                    {empty name="info"}
                                                         <option value="0">团长</option>
                                                     {/empty}
                                                     {foreach $data_lists as $v}

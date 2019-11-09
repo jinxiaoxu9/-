@@ -98,7 +98,7 @@
 																<a class="label label-warning-outline label-pill confirm" href="<?php echo url('User/delewm',array('id'=>$v['id']));?>" style="font-size:12px;cursor:pointer;">删除</a>
                                                                 <if condition="$v['is_lock'] == 0">
                                                                     <a name="forbid" title="锁定" class="label label-warning-outline label-pill confirm" href="{:url('User/updateLock',array('status'=>lock,'id'=>$v['id'],'model'=>'GemapayCode'))}">锁定</a>
-                                                                    <else />
+                                                                    {else /}
                                                                     <a name="forbid" title="解锁" class="label label-success-outline label-pill confirm" href="{:url('User/updateLock',array('status'=>unlock,'id'=>$v['id'],'model'=>'GemapayCode'))}">解锁</a>
                                                                 </if>
 															</td>
