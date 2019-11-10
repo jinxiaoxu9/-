@@ -30,6 +30,7 @@ class UserController extends AdminController
             $this->error('参数错误');
         }
         $ulist = Db::name('user')->where(array('userid' => $userid))->find();
+
         $InviteSettingLogic = new InviteSettingLogic();
         $where["admin_id"] = session("user_auth.uid");
         $data_list = Db::name('user_invite_setting')->where($where)->select();
@@ -41,6 +42,7 @@ class UserController extends AdminController
         }
 
         if ($request->isPost()) {
+            $userLogic = new UserLogic();
             $code = trim($request->param('code'));
             $data['username'] = trim($request->param('username'));
             $data['mobile'] = trim($request->param('mobile'));
@@ -56,13 +58,13 @@ class UserController extends AdminController
                 $this->error('邀请费率不能为空,请先添加邀请配置');
             }
             if ($login_pwd != '') {
-                $data['login_pwd'] = pwd_md5($login_pwd, $ulist['login_salt']);
+                $data['login_pwd'] = $userLogic->pwd_md5($login_pwd, $ulist['login_salt']);
             }
 
             $safety_pwd = trim($request->param('safety_pwd'));
-
-            if ($login_pwd != '') {
-                $data['safety_pwd'] = pwd_md5($safety_pwd, $ulist['safety_salt']);
+            //安全密码
+            if ($safety_pwd != '') {
+                $data['security_pwd'] = $userLogic->pwd_md5($safety_pwd, $ulist['security_salt']); //safety_salt
             }
             unset($data['id'], $data['code']);  //id不更新
 
