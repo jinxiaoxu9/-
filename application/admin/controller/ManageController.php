@@ -18,7 +18,6 @@ use think\Db;
 class ManageController extends AdminController
 {
 
-
     /**
      * 用户列表
      * @author jry <bbs.sasadown.cn>

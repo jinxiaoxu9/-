@@ -1,5 +1,5 @@
 {extend name="Public/layout"/}
-{block name="style" }
+{block name="style"}
 <link rel="stylesheet" type="text/css" href="__LYUI__/css/lyui.extend.min.css">
 <link rel="stylesheet" type="text/css" href="__ADMIN_CSS__/style.css">
 {/block}
@@ -17,46 +17,46 @@
 <div class="tab-content ct-tab-content">
 <div class="panel-body">
 <div class="builder formbuilder-box">
-<div class="form-group"></div>
-<!-- 顶部工具栏按钮 -->
-<div class="builder-toolbar">
-    <div class="row">
-        <!-- 搜索框 -->
-        <div style="width: 100%;" class="col-xs-12 col-sm-6 clearfix">
+    <div class="form-group"></div>
+        <!-- 顶部工具栏按钮 -->
+        <div class="builder-toolbar">
+            <div class="row">
+                <!-- 搜索框 -->
+                <div style="width: 100%;" class="col-xs-12 col-sm-6 clearfix">
 
-                <form class="form" method="get" action="{:url('index')}">
-                    用户组：
-                    <select name="group_id" class="lyui-select select">
-                        <option <?php if($groupId == -1){ echo "selected";} ?> value="-1">全部</option>
-                        <option <?php if($groupId == 0){ echo "selected";} ?>  value="0">--未入组成员--</option>
-                        {foreach $groups as $k => $v}
-                            <option  <?php if($groupId == $v['id']){ echo "selected"; } ?> value="{$v.id}">
-                            <?php  echo str_repeat('--',($v['level']-1)); ?>{$v.name}
-                            </option>
-                        {/foreach}
-                    </select>
+                        <form class="form" method="get" action="{:url('index')}">
+                            用户组：
+                            <select name="group_id" class="lyui-select select">
+                                <option {$groupId == -1 ? "selected" : ''} value="-1">全部</option>
+                                <option {$groupId == 0 ? "selected" : ''} value="0">--未入组成员--</option>
+                                {foreach $groups as $k => $v}
+                                    <option  {$groupId == $v['id'] ? "selected" : ''} value="{$v.id}">
+                                    {php}  echo str_repeat('--', ($v['level']-1));{/php}{$v.name}
+                                    </option>
+                                {/foreach}
+                            </select>
 
-                    订单号： <input type="text"  class="lyui-select select" name="order_no" value="{$request->param('order_no','')}">
+                            订单号： <input type="text"  class="lyui-select select" name="order_no" value="{$request->param('order_no','')}">
 
-                    状态：<select  class="lyui-select select" name="status">
-                            <option <?php if($status == -1){ echo "selected";} ?> value="-1">全部</option>
-                            <option <?php if($status == 0){ echo "selected";} ?> value="0">待支付</option>
-                            <option <?php if($status == 1){ echo "selected";} ?> value="1">已支付</option>
-                            <option <?php if($status == 2){ echo "selected";} ?> value="2">已关闭</option>
-                         </select>
+                            状态：<select  class="lyui-select select" name="status">
+                                    <option {php} if($status == -1){ echo "selected";} {/php} value="-1">全部</option>
+                                    <option {php} if($status == 0){ echo "selected";} {/php} value="0">待支付</option>
+                                    <option {php} if($status == 1){ echo "selected";} {/php} value="1">已支付</option>
+                                    <option {php} if($status == 2){ echo "selected";}{/php} value="2">已关闭</option>
+                                 </select>
 
-                    开始时间 ：<input id="start_time"  value="<?php echo $request->param('start_time',date('Y-m-d 00:00:00', time()));?>" class="lyui-select" type="text" name="start_time">
-                    结束时间 ：<input  id="end_time"value="{$request->param('end_time','')}" class="lyui-select select" type="text" name="end_time">
+                            开始时间 ：<input id="start_time"  value="{php} echo $request->param('start_time',date('Y-m-d 00:00:00', time()));{/php}" class="lyui-select" type="text" name="start_time">
+                            结束时间 ：<input  id="end_time"value="{$request->param('end_time','')}" class="lyui-select select" type="text" name="end_time">
 
-                    订单总金额 ：¥ <span style="color: green">{$totalOrderPrice|default=0.00}</span>
-                    订单总提成 ：¥ <span style="color: green">{$totalTc|default=0.00}</span>
-                    <input type="submit"  class="btn btn-primary"  value="搜索"/></button>
-                </form>
+                            订单总金额 ：¥ <span style="color: green">{$totalOrderPrice|default=0.00}</span>
+                            订单总提成 ：¥ <span style="color: green">{$totalTc|default=0.00}</span>
+                            <input type="submit"  class="btn btn-primary"  value="搜索"/></button>
+                        </form>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
-<!-- 数据列表 -->
-<div class="builder-container">
+        <!-- 数据列表 -->
+        <div class="builder-container">
             <div class="row">
                 <div class="col-xs-12">
                     <div class="builder-table">
@@ -85,43 +85,41 @@
                                 </tr>
                             </thead>
                                 <tbody>
-                                {volist name="info" id="data"}
+                                {volist name="list" id="data"}
                                     <tr>
-                                        <td><?php echo $data['account_name'];?></td>
-                                        <td><?php echo $data['order_no'];?></td>
-                                        <td><?php echo $data['mobile'];?></td>
-                                        <td><?php echo $data['adminnickname'];?></td>
-                                        <td><?php echo $data['order_price'];?></td>
-                                        <td><?php echo $data['order_pay_price'];?></td>
-                                        <td><?php echo $data['bonus_fee'];?></td>
-                                        <td><?php if($data['bonus_fee']>0.0){echo sprintf("%.2f",$data['order_price']-$data['bonus_fee']);}else{echo '0.00';}?></td>
-                                        <td><?php echo  $data['s_type_name'];?></td>
-                                        <td> <img onclick="openpic('<?php echo $data['qr_image'];?>')" src="<?php echo $data['qr_image'];?>" style="width:30%"/></td>
-                                        <?php $statusMsg=['未支付','已支付','已关闭'] ?>
-                                        <td><?php echo $statusMsg[$data['status']];?></td>
+                                        <td>{php} echo $data['account_name'];{/php}</td>
+                                        <td>{php} echo $data['order_no'];{/php}</td>
+                                        <td>{php} echo $data['mobile'];{/php}</td>
+                                        <td>{php} echo $data['adminnickname'];{/php}</td>
+                                        <td>{php} echo $data['order_price'];{php}</td>
+                                        <td>{php} echo $data['order_pay_price'];{/php}</td>
+                                        <td>{php} echo $data['bonus_fee'];{/php}</td>
+                                        <td>{php} if($data['bonus_fee']>0.0){echo sprintf("%.2f",$data['order_price']-$data['bonus_fee']);}else{echo '0.00';}{/php}</td>
+                                        <td>{php} echo  $data['s_type_name'];{/php}</td>
+                                        <td> <img onclick="openpic('{php} echo $data.qr_image;{/php}')" src="{php} echo $data.qr_image;{/php}" style="width:30%"/></td>
+                                        {php} $statusMsg=['未支付','已支付','已关闭'] {/php}
+                                        <td>{php} echo $statusMsg[$data['status']];{/php}</td>
 
-                                        <?php $is_upload_credentials_Msg=['否','是'] ?>
-                                        <td><?php echo $is_upload_credentials_Msg[$data['is_upload_credentials']];?></td>
-                                        <td> <img onclick="openpic('<?php echo $data['credentials'];?>','600','650')" src="<?php echo $data['credentials'];?>" style="width:30%"/></td>
+                                        {php} $is_upload_credentials_Msg=['否','是'] {/php}
+                                        <td>{php} echo $is_upload_credentials_Msg[$data['is_upload_credentials']];{/php}</td>
+                                        <td> <img onclick="openpic('{php} echo $data.credentials;{/php}','600','650')" src="{php} echo $data.credentials;{php/}" style="width:30%"/></td>
 
 
 
-                                        <td><?php echo date('Y-m-d H:i:s',$data['add_time']);?></td>
-                                        <td><?php  if($data['pay_time']){ echo date('Y-m-d H:i:s',$data['pay_time']);}?></td>
+                                        <td>{php} echo date('Y-m-d H:i:s',$data['add_time']);{/php}</td>
+                                        <td>{php} if($data['pay_time']){ echo date('Y-m-d H:i:s',$data['pay_time']);}{/php}</td>
                                         <td>
-                                            <?php if($data['status']==1){?>
-
-                                                <?php if($data['is_back']==0){ ?>
+                                            {php} if($data['status']==1){
+                                                  if($data['is_back']==0){ {/php}
                                                     <a style="color: red">未返还</a>
-                                                <?php }else{ ?>
+                                                  {php} }else{ {/php}
                                                     <a style="color: green">已返还</a>
-                                                <?php }?>
-
-                                            <?php }else { ?>
+                                                    {php} }
+                                            }else { {/php}
                                                     ---
-                                            <?php } ?>
+                                            {php} } {/php}
                                         </td>
-                                        <td><?php echo $data['note'];?></td>
+                                        <td>{php} echo $data['note'];{/php}</td>
                                         <td>
                                             <?php if($data['status']==1 && $data['is_back']==0 && $data['is_back']==0){?>
                                                 <a name="delete" title="确认返还" class="label label-primary-outline label-pill confirm" href='<?php echo url("Gema/sureBack",array("id"=>$data["id"]));?>'>确认返还</a>
@@ -131,7 +129,7 @@
                                             <?php }?>
                                     </tr>
                                 {/volist}
-                                {empty name="info"}
+                                {empty name="list"}
                                     <tr class="builder-data-empty">
                                         <td class="text-center empty-info" colspan="20">
                                             <i class="fa fa-database"></i> 暂时没有数据<br>
@@ -144,20 +142,18 @@
                         </div>
 
                         <div class="pagination">{$page|default=''}</div>
-
-
-                             <style>
-                                .pages a,.pages span {display:inline-block;padding:2px 5px;margin:0 1px;border:1px solid #f0f0f0;-webkit-border-radius:3px; -moz-border-radius:3px;border-radius:3px;}
-                                .pages a,.pages li {display:inline-block;list-style: none;text-decoration:none; color:#58A0D3;}
-                                .pages a.first,.pages a.prev,.pages a.next,.pages a.end{ margin:0;}
-                                .pages a:hover{ border-color:#50A8E6;}
-                                .pages span.current{ background:#50A8E6;color:#FFF; font-weight:700;border-color:#50A8E6;}
-                            </style>
+                         <style>
+                            .pages a,.pages span {display:inline-block;padding:2px 5px;margin:0 1px;border:1px solid #f0f0f0;-webkit-border-radius:3px; -moz-border-radius:3px;border-radius:3px;}
+                            .pages a,.pages li {display:inline-block;list-style: none;text-decoration:none; color:#58A0D3;}
+                            .pages a.first,.pages a.prev,.pages a.next,.pages a.end{ margin:0;}
+                            .pages a:hover{ border-color:#50A8E6;}
+                            .pages span.current{ background:#50A8E6;color:#FFF; font-weight:700;border-color:#50A8E6;}
+                        </style>
                     </div>
                 </div>
             </div>
         </div>
-</div>
+    </div>
 </div>
 </div>
 </div>

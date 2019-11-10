@@ -15,8 +15,9 @@ class GemaController extends AdminController
 {
     public function index(Request $request)
     {
-        $status = $request->param('status', -1,'intval'); //状态
-         $this->common($status);
+         $status = $request->param('status', -1,'intval'); //状态
+
+         return $this->common($status);
     }
 
     //已经完成但是未返款订单
@@ -25,7 +26,7 @@ class GemaController extends AdminController
         $status = GemaPayOrderModel::PAYED;
         $isUploadCredentials = GemaPayOrderModel::STATUS_NO;
         $isBack = GemaPayOrderModel::STATUS_NO;
-        $this->common($status, $isUploadCredentials, $isBack);
+        return $this->common($status, $isUploadCredentials, $isBack);
     }
 
     //已经返款订单但是没有审核
@@ -34,7 +35,7 @@ class GemaController extends AdminController
         $status = GemaPayOrderModel::PAYED;
         $isUploadCredentials = GemaPayOrderModel::STATUS_YES;
         $isBack = GemaPayOrderModel::STATUS_NO;
-        $this->common($status, $isUploadCredentials, $isBack);
+        return $this->common($status, $isUploadCredentials, $isBack);
     }
 
     /**
@@ -44,7 +45,7 @@ class GemaController extends AdminController
     {
         $status = GemaPayOrderModel::PAYED;
         $isBack = GemaPayOrderModel::STATUS_YES;
-        $this->common($status, false, $isBack);
+        return $this->common($status, false, $isBack);
     }
 
     public function common($status = -1, $isUploadCredentials = false, $isBack = false)
@@ -118,39 +119,40 @@ class GemaController extends AdminController
             ->join("ysk_admin admin", "admin.id=u.add_admin_id", "left")
             ->where($map)->order('id desc')->paginate(10);
 
-
+// dump(Db::getLastSql());exit();
         //当前条件下订单总金额以及总提成
         $totalOrderPrice = Db::name('gemapay_order')->alias('o')
             ->join("ysk_user u", "o.gema_userid=u.userid", "left")->where($map)->sum('order_price');//订单
         $totalTc = Db::name('gemapay_order')->alias('o')
             ->join("ysk_user u", "o.gema_userid=u.userid", "left")->where($map)->sum('bonus_fee');//提成
         //用户组别
-        //$adminId = session('user_auth.uid');
-        //$adminLogic->checkIstz($adminId) && $_map['admin_id'] = $adminId;
         $groups = Db::name('user_group')->where($_map)->field('id,parentid,name')->select();
 
         $list = $listData->items();
         $count = $listData->count();
+//echo $count;exit();
         $page = $listData->render();
 
         foreach ($list as $key => $vals) {
             $list[$key]['s_type_name'] = Db::name('gemapay_code_type')->where(['id'=>$vals['code_type']])->value('type_name');
         }
         $userLogic = new UserLogic();
-        $this->assign('groups', $userLogic->getCategory($groups));
+        $a_groups = $userLogic->getCategory($groups);
+
+        $this->assign('groups', $a_groups);
         $this->assign('count', $count);
-        $this->assign('info', $list); // 賦值數據集
+        $this->assign('list', $list); // 賦值數據集
 
         $this->assign('totalOrderPrice', $totalOrderPrice);
         $this->assign('totalTc', $totalTc);
-        //todo 重置分页参数 弊端后面子再改
+        // todo 重置分页参数 弊端后面子再改
         //($p->parameter['group_id']==-1) && $p->parameter['group_id']='';
         $groupId = $request->param('groupId');
         $this->assign('groupId', $groupId);
 
         $this->assign('page', $page); // 賦值分頁輸出
 
-        return $this->fetch('gema/index');
+        return $this->fetch('index');
     }
 
     public function sureBack(Request $request)

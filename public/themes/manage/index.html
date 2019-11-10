@@ -82,7 +82,7 @@
                                                             <td>{$data['title']}</td>
                                                             <td>{$data['create_time']|date='Y-m-d',###}</td>
                                                             <td>
-                                                               <eq name="data['status']" value="1" >
+                                                                {eq name="data['status']" value="1" }
                                                                     <i class="fa fa-check text-success"></i>
                                                                {else /}
                                                                     <i class="fa fa-ban text-danger"></i>
@@ -90,9 +90,9 @@
                                                             </td>
 
                                                             <td>
-                                                                <eq name="data['work_status']" value="1" >
+                                                                {eq name="data['work_status']" value="1" }
                                                                     <i class="fa fa-check text-success"></i>
-                                                                    {else /}
+                                                                {else /}
                                                                     <i class="fa fa-ban text-danger"></i>
                                                                 {/eq}
                                                             </td>
@@ -106,15 +106,15 @@
 
 
                                                                  <a name="edit" title="编辑" class="label label-primary-outline label-pill" href="{:url('Manage/edit',array('id'=>$data['id']))}">编辑</a>
-                                                                <neq name="data['id']" value="1" >
-                                                                <eq name="data['status']" value="1" >
+                                                                {neq name="data['id']" value="1" }
+                                                                {eq name="data['status']" value="1" }
                                                                 <a name="forbid" title="禁用" class="label label-warning-outline label-pill confirm" href="{:url('Manage/setStatus',array('status'=>'forbid','ids'=>$data['id'],'model'=>'Manage'))}">禁用</a>
                                                                 {else /}
                                                                 <a name="forbid" title="启用" class="label label-success-outline label-pill confirm" href="{:url('Manage/setStatus',array('status'=>'resume','ids'=>$data['id'],'model'=>'Manage'))}">启用</a>
                                                                 {/eq}
 
                                                                 <a name="delete" title="删除" class="label label-danger-outline label-pill confirm" model="Manage" href="{:url('Manage/setStatus',array('status'=>'delete','ids'=>$data['id'],'model'=>'Manage'))}">删除</a>
-                                                                </neq>
+                                                                {/neq}
                                                         </tr>
                                                     {/volist}
 

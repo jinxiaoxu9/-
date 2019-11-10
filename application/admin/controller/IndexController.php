@@ -2,8 +2,6 @@
 
 namespace app\admin\controller;
 
-
-
 use think\Controller;
 use app\admin\model\GemaPayOrderModel;
 use app\admin\model\UserModel;

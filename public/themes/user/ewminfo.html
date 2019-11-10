@@ -40,7 +40,7 @@
 											 <div class="form-group item_title ">
                                                 <label class="left control-label">二维码类型：</label>
                                                 <div class="right">
-                                                    <input type="text" class="form-control input" readonly="readonly" value="<?php echo  M('gemapay_code_type')->where(['id'=>$info['type']])->getField('type_name');?>" />
+                                                    <input type="text" class="form-control input" readonly="readonly" value="<?php echo  $info['gemapay_code_type_name'];//M('gemapay_code_type')->where(['id'=>$info['type']])->getField('type_name');?>" />
                                                 </div>
                                             </div>
 											 <div class="form-group item_title ">

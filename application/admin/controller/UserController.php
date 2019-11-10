@@ -635,8 +635,15 @@ class UserController extends AdminController
         $this->getcodeType();
         $id = trim($request->param('id'));
         $ewminfo = Db::name('gemapay_code')->where(array('id' => $id))->find();
+        //二微码类型
+        if (isset($ewminfo['type']) && $ewminfo['type']) {
+            $ewminfo['gemapay_code_type_name'] = Db::name('gemapay_code_type')->where('id', $ewminfo['type'])->value('type_name');
+        } else {
+            $ewminfo['gemapay_code_type_name'] = '';
+        }
         $this->assign('info', $ewminfo);
         $this->assign('act', url('ewminfo'));
+
         return $this->fetch();
     }
 

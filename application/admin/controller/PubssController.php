@@ -92,7 +92,7 @@ class PubssController extends Controller
         session('user_auth', null);
         session('user_auth_sign', null);
         session('user_group', null);
-        $this->success('退出成功！', U('login'));
+        $this->success('退出成功！', url('login'));
     }
 
     /**
