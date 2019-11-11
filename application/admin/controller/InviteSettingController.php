@@ -1,6 +1,6 @@
 <?php
 
-namespace app\admin\Controller;
+namespace app\admin\controller;
 
 use app\admin\logic\InviteSettingLogic;
 use app\admin\model\UserInviteSettingModel;
