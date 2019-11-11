@@ -32,7 +32,7 @@ class UserGroupController extends AdminController
         //分页
         $data_list     = $UserGroupModel
             ->where($map)
-            ->select()->toArray();
+            ->select();
         foreach ($data_list as $key=>$data)
         {
             if($data['level']==1)
