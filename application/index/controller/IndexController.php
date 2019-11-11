@@ -35,8 +35,6 @@ class IndexController extends Controller
             $password = $this->request->post('password');
             $IndexLogic = new \app\index\logic\IndexLogic();
             // 验证用户名密码是否正确
-
-
             $res = $IndexLogic->login($account, $password);
             if ($res['code'] == CodeEnum::ERROR)
             {
