@@ -47,11 +47,13 @@ class InviteSettingController extends AdminController
         $page = $data_list->render();
 
         $InviteSettingLogic = new InviteSettingLogic();
-        $codeTypeLists = Db::name('gemapay_order')->select();
+        $codeTypeLists = Db::name('gemapay_code_type')->select();
+        $arr_lists =  filterDataMap($codeTypeLists, "id");
+
         $data_list = $data_list->items();
          //添加描述
          foreach ($data_list as $key => $data) {
-             $data_list[$key]["desc"] = $InviteSettingLogic->getInviteDesc($data["invite_setting"],$codeTypeLists);
+             $data_list[$key]["desc"] = $InviteSettingLogic->getInviteDesc($data["invite_setting"], $arr_lists);
              $data_list[$key]["invite_url"] = $InviteSettingLogic->getInviteLink($data["code"]);
          }
 
