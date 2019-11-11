@@ -29,7 +29,7 @@ class IndexController extends Controller
 
     public function dologin()
     {
-        if ($this->request->isPost()||1)
+        if ($this->request->isPost())
         {
             $account = $this->request->post('account');
             $password = $this->request->post('password');
