@@ -54,7 +54,7 @@ class MenuController extends AdminController
         // 获取分页显示
         $page = $list->render();
 
-        $this->assign('groups', $groups->toArray());
+        $this->assign('groups', $groups);
         $this->assign('list', $list->items());
         $this->assign('count', $count);
         $this->assign('page', $page);
