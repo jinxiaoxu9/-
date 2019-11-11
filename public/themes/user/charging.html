@@ -1,0 +1,202 @@
+{extend name="Public/layout"/}
+{block name="style" }
+    <link rel="stylesheet" type="text/css" href="__LYUI__/css/lyui.extend.min.css">
+    <link rel="stylesheet" type="text/css" href="__ADMIN_CSS__/style.css">
+
+
+{/block}
+
+{block name="main"}
+   <div id="main" class="col-xs-12 col-sm-9 main" style="overflow-y: scroll;">
+        <!-- 面包屑导航 -->
+        <ul class="breadcrumb">
+            <li><i class="fa fa-map-marker"></i></li>
+
+            <li class="text-muted">会员中心 /  充币管理</li>
+
+        </ul>
+
+        <!-- 主体内容区域 -->
+        <div class="tab-content ct-tab-content">
+            <div class="panel-body">
+                <div class="builder formbuilder-box">
+                        
+                        <div class="form-group"></div>
+						
+						
+						 <!-- 顶部工具栏按钮 -->
+                        <div class="builder-toolbar">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-12 clearfix" style="padding-top:0px;padding-bottom:10px;">
+                                        
+                                    <div class="form-group right">
+										<form class="form" method="get" action="">
+                                              <div style="float:left;width:15%;" class="" >
+                                                  <select name="querytype" class="form-control lyui-select select">
+                                                      <option {eq name=":input('get.querytype')" value="2" }selected="true"{/eq}  value="2">ETH以太坊</option>
+                                                      <option {eq name=":input('get.querytype')" value="3" }selected="true"{/eq}  value="3">EOS柚子币</option>
+                                                      <option {eq name=":input('get.querytype')" value="4" }selected="true"{/eq}  value="4">BTC比特币</option>
+                                                  </select>                                            
+                                              </div>
+
+                                              <div style="float:left;width:20%;" class="input-group search-form">
+                                                  <input  type="text" name="coinnum" class="search-input form-control" value="{$_GET.coinnum}" placeholder="输入充币数量">
+                                              </div>
+											  <div style="float:left;width:20%;" class="input-group search-form">
+                                                  <input  type="text" name="account" class="search-input form-control" value="{$_GET.account}" placeholder="会员账号">
+                                                  <span class="input-group-btn"><a class="btn btn-default search-btn" style="background:#2699ed;border:1px solid #2699ed;color:#fff;">确定充值 </a></span>
+                                              </div>
+										 </form>
+										 
+
+                                    </div>
+                                       
+                                 </div>
+                            </div>
+                        </div>
+
+                        <!-- 顶部工具栏按钮 -->
+                        <div class="builder-toolbar">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-12 clearfix" style="padding-top:0px;padding-bottom:10px;">
+                                        
+                                            <div class="form-group right">
+												<form class="form" method="get" action="">
+                                                <div style="float:left;width:15%;" class="" >
+                                                    <select name="querytype" class="form-control lyui-select select">
+                                                        <option  value="userid">按序号</option>
+                                                        <option {eq name=":input('get.querytype')" value="mobile" }selected="true"{/eq}  value="mobile">按账号</option>
+                                                    </select>                                            
+                                                </div>
+
+                                                <div style="float:left;width:30%;" class="input-group search-form">
+                                                    <input  type="text" name="keyword" class="search-input form-control" value="{$_GET.keyword}" placeholder="输入搜索内容">
+                                                    <span class="input-group-btn"><a class="btn btn-default search-btn"><i class="fa fa-search"></i></a></span>
+                                                </div>
+												 </form>
+												 
+												<form class="form" method="get" action="">
+													<div style="float:left;width:10%;" class="input-group search-form" style="" >
+														<input type="hidden" value="1" name="coinpx" />
+														<input type="submit" value="按币种" style="border:none;height:33px;width:80%;background:#2699ed;color:#ffffff;cursor:pointer;"/></button>
+													</div>
+												 </form>
+	
+                                            </div>
+                                       
+                                 </div>
+                            </div>
+                        </div>
+						
+						<div style="width:100%;height:40px;margin-bottom:10px;">
+							<div style="width:20%;height:40px;float:left;margin-right:2%;background:#f7f5f5;">
+								<p style="margin:0px;padding-left:10px;height:20px;line-height:20px;text-align:left;font-size:12px;">ETH充值总数量：<?php if($eth_ztb != '' || $eth_ztb != 0){echo $eth_ztb;}else{echo '0.000000';}?></p>
+								<p style="margin:0px;padding-left:10px;height:20px;line-height:20px;text-align:left;font-size:12px;">ETH充值总单量：<?php if($eth_num != '' || $eth_num != 0){echo $eth_num;}else{echo '0.000000';}?></p>
+							</div>
+							<div style="width:20%;height:40px;float:left;margin-right:2%;background:#f7f5f5;;">
+								<p style="margin:0px;padding-left:10px;height:20px;line-height:20px;text-align:left;font-size:12px;">EOS充值总数量：<?php if($eos_ztb != '' || $eos_ztb != 0){echo $eos_ztb;}else{echo '0.000000';}?></p>
+								<p style="margin:0px;padding-left:10px;height:20px;line-height:20px;text-align:left;font-size:12px;">EOS充值总单量：<?php if($eos_num != '' || $eos_num != 0){echo $eos_num;}else{echo '0.000000';}?></p>
+							</div>
+							<div style="width:20%;height:40px;float:left;margin-right:2%;background:#f7f5f5;;">
+								<p style="margin:0px;padding-left:10px;height:20px;line-height:20px;text-align:left;font-size:12px;">BTC充值总数量：<?php if($btc_ztb != '' || $btc_ztb != 0){echo $btc_ztb;}else{echo '0.000000';}?></p>
+								<p style="margin:0px;padding-left:10px;height:20px;line-height:20px;text-align:left;font-size:12px;">BTC充值总数量：<?php if($btc_num != '' || $btc_num != 0){echo $btc_num;}else{echo '0.000000';}?></p>
+							</div>
+
+						</div>
+                        <style type="text/css">tr,td{margin: 0 !important;padding: 5px 5px !important;}</style>
+
+                        <!-- 数据列表 -->
+                        <div class="builder-container">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="builder-table">
+                                        <div class="panel panel-default table-responsive">
+                                            <table class="table table-bordered table-striped table-hover">
+                                              <thead>
+                                                <tr>
+                                                    <th style="font-size:12px;">序号</th>
+                                                    <th style="font-size:12px;">会员账号</th>
+                                                    <th style="font-size:12px;">会员昵称</th>
+                                                    <th style="font-size:12px;">充值币种</th>
+                                                    <th style="font-size:12px;">充值币量</th>
+                                                    <th style="font-size:12px;">充值时间</th>
+                                                    <th style="font-size:12px;">状态</th>
+
+                                                </tr>
+                                            </thead>
+												<tbody>
+													{empty name="list"}
+														<tr class="builder-data-empty">
+                                                            <td class="text-center empty-info" colspan="20"  style="font-size:12px;">
+                                                                <i class="fa fa-database"></i> 暂时没有数据<br>
+                                                            </td>
+                                                        </tr> 
+													{else/}
+													{foreach $list as $v}
+														<tr>
+															<td style="font-size:12px;"><?php echo $v['id'];?></td>
+															<td style="font-size:12px;"><?php echo getmyphone($v['uid']);?></td>
+															<td style="font-size:12px;"><?php echo getmyname($v['uid']);?></td>
+
+															<td style="font-size:12px;"><?php echo getbclass($v['b_class']);?></td>
+															<td style="font-size:12px;"><?php echo $v['bnum'];?></td>
+															<td style="font-size:12px;"><?php echo date('Y-m-d H:i:s',$v['addtime']);?></td>
+															<td style="font-size:12px;">ok</td>
+
+	
+														</tr>
+													{/foreach}
+													{/empty}
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        
+                                           <style>
+												.pages a,.pages span {display:inline-block;padding:2px 5px;margin:0 1px;border:1px solid #f0f0f0;-webkit-border-radius:3px; -moz-border-radius:3px;border-radius:3px;}
+												.pages a,.pages li {display:inline-block;list-style: none;text-decoration:none; color:#58A0D3;}
+												.pages a.first,.pages a.prev,.pages a.next,.pages a.end{ margin:0;}
+												.pages a:hover{ border-color:#50A8E6;}
+												.pages span.current{ background:#50A8E6;color:#FFF; font-weight:700;border-color:#50A8E6;}
+											</style>
+											<div class="pages"><br /> <div align="right">{$page}</div></div>
+                                    
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                </div>
+            </div>
+    </div>                   
+</div>
+{/block}
+
+{block name="script"}
+<script type="text/javascript">
+    $('.date').datetimepicker({
+        format: 'yyyy-mm-dd',
+        language:"zh-CN",
+        minView:2,
+        autoclose:true,
+        todayBtn:1, //是否显示今日按钮
+    });
+ 
+    $(document).ready(function(){
+  
+    $(".bky").click(function(){
+      
+        this.href="###";
+        alert("您无权限访问");  
+        return false;     
+
+        });
+
+    });
+	
+	
+	
+	
+</script>
+  <!--   <script type="text/javascript" src="__LYUI__/js/lyui.extend.min.js"></script> -->
+{/block}

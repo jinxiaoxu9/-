@@ -6,7 +6,7 @@
 // +----------------------------------------------------------------------
 // | Author: jry <bbs.sasadown.cn>
 // +----------------------------------------------------------------------
-namespace Admin\Model;
+namespace app\admin\Model;
 use think\Model;
 
 /**
@@ -22,30 +22,5 @@ class InviteSettingModel extends Model
     protected $tableName = 'user_invite_setting';
 
 
-    public function getInviteDesc($setting, $codeList)
-    {
-        $desc = "";
-        $s = json_decode($setting, true);
-        if(empty($s))
-        {
-            return $desc;
-        }
-        $codeList = filterDataMap($codeList, "id");
-        $arrString = [];
-        foreach ($s as $key=>$setting)
-        {
 
-            if(!empty($setting))
-            {
-                $arrString[] = $codeList[$key]['type_name']."费率:".$setting/1000;
-            }
-        }
-        $desc = implode($arrString,",");
-        return $desc;
-    }
-
-    public function getInviteLink($code)
-    {
-       return "http://".$_SERVER['HTTP_HOST']."/Login-register.html?code=".$code;
-    }
 }

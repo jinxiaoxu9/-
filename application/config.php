@@ -47,9 +47,9 @@ return [
     // 默认语言
     'default_lang'           => 'zh-cn',
     // 应用类库后缀
-    'class_suffix'           => false,
+    'class_suffix'           => true,
     // 控制器类后缀
-    'controller_suffix'      => false,
+    'controller_suffix'      => true,
 
     // +----------------------------------------------------------------------
     // | 模块设置
@@ -70,7 +70,7 @@ return [
     // 操作方法后缀
     'action_suffix'          => '',
     // 自动搜索控制器
-    'controller_auto_search' => false,
+    'controller_auto_search' => true,
 
     // +----------------------------------------------------------------------
     // | URL设置
@@ -101,7 +101,7 @@ return [
     // 域名根，如thinkphp.cn
     'url_domain_root'        => '',
     // 是否自动转换URL中的控制器和操作名
-    'url_convert'            => true,
+    'url_convert'            => false,
     // 默认的访问控制器层
     'url_controller_layer'   => 'controller',
     // 表单请求类型伪装变量
@@ -168,7 +168,7 @@ return [
     // 错误显示信息,非调试模式有效
     'error_message'          => '页面错误！请稍后再试～',
     // 显示错误信息
-    'show_error_msg'         => false,
+    'show_error_msg'         => true,
     // 异常处理handle类 留空使用 \think\exception\Handle
     'exception_handle'       => '',
 

@@ -6,7 +6,7 @@
 // +----------------------------------------------------------------------
 // | Author: jry <bbs.sasadown.cn>
 // +----------------------------------------------------------------------
-namespace Admin\Model;
+namespace app\admin\Model;
 
 use think\Model;
 

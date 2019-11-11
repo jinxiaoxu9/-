@@ -1,0 +1,75 @@
+{extend name="Public/layout"/}
+{block name="style" }
+    <link rel="stylesheet" type="text/css" href="__LYUI__/css/lyui.extend.min.css">
+    <link rel="stylesheet" type="text/css" href="__ADMIN_CSS__/style.css">
+{/block}
+
+{block name="main"}
+   <div id="main" class="col-xs-12 col-sm-9 main" style="overflow-y: scroll;">
+        <ul class="breadcrumb">
+            <li><i class="fa fa-map-marker"></i></li>
+
+            <li class="text-muted">会员管理 /  增|减授信额度</li>
+        </ul>
+        <!-- 主体内容区域 -->
+        <div class="tab-content ct-tab-content">
+            <div class="panel-body">
+                <div class="builder formbuilder-box">
+                    <div class="form-group"></div>
+                    <div class="builder-container" >
+                            <div class="row" >
+                                <div class="col-xs-12">
+                                    <form action="{:url('changeUserBalance',['userid'=>$request->param('userid')])}" method="post" class="form-horizontal form form-builder">
+                                        <div class="form-type-list">
+                                            <div class="form-group item_title ">
+                                                <label class="left control-label">授信额度：</label>
+                                                <div class="right">
+                                                    <input type="text" disabled class="form-control input text" value="{$curretuserMoney}" >
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group item_title ">
+                                                <label class="left control-label">操作类型：</label>
+                                                <div class="right">
+                                                    <select name="op_type">
+                                                        <option value="1">---增加----</option>
+                                                        <option value="0">---减少----</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group item_title ">
+                                                <label class="left control-label">操作资金：</label>
+                                                <div class="right">
+                                                    <input type="number" class="form-control input" name="money" value=" placeholder="请输入你要操作的资金" >
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group item_title ">
+                                                <label class="left control-label">操作备注：</label>
+                                                <div class="right">
+                                                    <textarea class="form-control input"  name="opInfo">
+
+                                                    </textarea>
+                                                    <!--<input type="number" class="form-control input" name="money" value=" placeholder="请输入你要操作的资金" >-->
+                                                </div>
+                                            </div>
+
+                                        <div class="form-group"></div>
+                                        <div class="form-group bottom_button_list">
+                                            <button class="btn btn-primary submit " type="submit" target-form="form-builder">确定</button>
+                                            <a class="btn btn-danger return" onclick="javascript:history.back(-1);return false;">取消</a>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>    
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>                   
+</div>
+{/block}
+
+{block name="script"}
+    <script type="text/javascript" src="__LYUI__/js/lyui.extend.min.js"></script>
+{/block}

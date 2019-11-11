@@ -1,8 +1,8 @@
 <?php
 namespace app\admin\logic;
 
-use app\admin\model\Admin;
-use app\admin\model\User;
+use app\admin\model\AdminModel AS Admin;
+use app\admin\model\UserModel AS User;
 
 
 class AdminLogic
@@ -40,7 +40,7 @@ class AdminLogic
             $where['add_admin_id'] = $adminId;
         }
         $user = new User();
-        $users = $user->where($where)->field('userid')->select();
+        $users = $user->where($where)->field('userid')->select()->toArray();
 
         $users = array_column($users,'userid');
         $users= (count($users)>0)?$users:'';

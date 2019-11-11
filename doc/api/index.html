@@ -106,7 +106,7 @@
 				runGroup(group);
 				return ;
 			}
-			$('body').append("<script id='"+ group +"' src='/apis/" + group + ".js'><\/script>")
+			$('body').append("<script id='"+ group +"' src='/api/apis/" + group + ".js'><\/script>")
 		});
 
 		$('#api_form').on('submit', function(){
@@ -123,9 +123,9 @@
 				}
 
 				var $btn = $(this).find('.loading-button').button('loading');
-                api.dataType = 'html';
+                api.dataType = 'json';
                 var options = {
-                    url:  "http://www.paofen.com"+api.uri,
+                    url:  "http://paofen.test"+api.uri,
 					type: api.type,
 					dataType: api.dataType,
 					//data:$('#api_form').serialize(),
@@ -134,14 +134,14 @@
 						var result;
 						switch(api.dataType)
 						{
-						   case 'html':
-                               result = data;
-							   result = JSON.stringify(result, null, 4);
-							   if(typeof data.token !== 'undefined')
+						   case 'json':
+							   json = data;
+							   if(typeof json.result.token !== 'undefined')
 							   {
-								   Token = data.token;
+								   Token = json.result.token;
 								   $('input[name="token"]').val(Token);
 							   }
+							   result = JSON.stringify(data, null, 4);
                                break;
 						   case 'text':
 						   	    result = decrypt(data);

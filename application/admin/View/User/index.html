@@ -35,7 +35,7 @@
                     <select name="group_id" class="lyui-select select">
                         <option <?php if($groupId == -1){ echo "selected";} ?> value="-1">全部</option>
                         <option <?php if($groupId == 0){ echo "selected";} ?>  value="0">--未入组成员--</option>
-                        <foreach name="groups" item="v" key="k">
+                        {foreach $groups as $k => $v}
                             <option  <?php if($groupId == $v['id']){ echo "selected"; } ?> value="{$v.id}">
                             <?php  echo str_repeat('--',($v['level']-1)); ?>{$v.name}
                             </option>
