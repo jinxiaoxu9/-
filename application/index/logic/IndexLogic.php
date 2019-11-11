@@ -3,8 +3,8 @@
 namespace app\index\logic;
 
 use app\common\library\enum\CodeEnum;
-use app\index\model\User;
-use app\index\model\UserInviteSetting;
+use app\index\model\UserInviteSettingModel;
+use app\index\model\UserModel;
 
 class IndexLogic
 {
@@ -26,7 +26,8 @@ class IndexLogic
 
         $map['mobile|account'] = array('eq', $account, 'or');
 
-        $UserModel =  new User();
+        $UserModel =  new UserModel();
+
         $user_info = $UserModel->where($map)->find();
         if (!$user_info)
         {
@@ -54,7 +55,7 @@ class IndexLogic
 
     public function register($mobile, $username, $login_pwd, $inventCode)
     {
-        $UserInviteSetting = new UserInviteSetting();
+        $UserInviteSetting = new UserInviteSettingModel();
         $setting = $UserInviteSetting->where(array('code'=>$inventCode))->find();
 
         if(empty($setting)){

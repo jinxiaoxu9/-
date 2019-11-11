@@ -15,11 +15,11 @@ return [
     // 服务器地址
     'hostname'        => '127.0.0.1',
     // 数据库名
-    'database'        => 'www_pf_com',
+    'database'        => 'tp5peofen.com',
     // 用户名
-    'username'        => 'www_pf_com',
+    'username'        => 'root',
     // 密码
-    'password'        => 'www_pf_com',
+    'password'        => 'root',
     // 端口
     'hostport'        => '',
     // 连接dsn
@@ -43,7 +43,7 @@ return [
     // 是否严格检查字段是否存在
     'fields_strict'   => true,
     // 数据集返回类型
-    'resultset_type'  => '\think\Collection',
+    'resultset_type'  => 'array',
     // 自动写入时间戳字段
     'auto_timestamp'  => false,
     // 时间字段取出后的默认时间格式

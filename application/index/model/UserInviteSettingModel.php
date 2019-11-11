@@ -13,7 +13,7 @@ use think\Model;
  * 部门模型
  * @author jry <bbs.sasadown.cn>
  */
-class UserInviteSetting extends Model
+class UserInviteSettingModel extends Model
 {
     public function getInviteDesc($setting, $codeList)
     {
