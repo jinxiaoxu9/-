@@ -1,12 +1,10 @@
 apiSelect["order"] = {
     login: {
         title: '订单列表',
-        uri: '/index/index/dologin',
+        uri: '/index/order/oderList',
         type: 'post',
         dataType: 'json',
         params:{
-            'account': 'username',
-            'password':'password',
         },
         comment:{
             status : 1,

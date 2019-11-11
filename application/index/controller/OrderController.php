@@ -1,12 +1,16 @@
 <?php
-namespace app\index\Controller;
+namespace app\index\controller;
 
-use Gemapay\Logic\GemapayOrderLogic;
-use think\Request;
-use think\db;
+use app\index\logic\OrderLogic;
 
 class OrderController extends CommonController
 {
+    public function oderList()
+    {
+        $OrderLogic = new OrderLogic();
+        $orderList = $OrderLogic->getList($this->user_id);
+    }
+
     /**
      * 用户确认收款回调到支付平台
      */

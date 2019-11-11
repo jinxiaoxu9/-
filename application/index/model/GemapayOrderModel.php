@@ -53,11 +53,11 @@ class GemapayOrderModel extends Model
         //$where['add_time'] = array('between', array($starttime,time()));
         $userOrder = $this->alias('a')
             ->field('a.*,code_id,b.account_name,c.type_name,c.type_logo')
-            ->join(C('DB_PREFIX').'gemapay_code b on a.code_id=b.id', "left")
-            ->join(C('DB_PREFIX').'gemapay_code_type c on a.code_type=c.id', "left")
+            ->join('ysk_gemapay_code b on a.code_id=b.id', "left")
+            ->join('ysk_gemapay_code_type c on a.code_type=c.id', "left")
             ->where($where)
             ->order("add_time desc")
-            ->page($_GET['p'],"{$page}")
+            ->page(1,"{$page}")
             ->select();
         return $userOrder;
     }

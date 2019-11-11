@@ -1,8 +1,6 @@
 <?php
-
-namespace app\index\Controller;;
-
-use app\index\model\User;
+namespace app\index\controller;
+use app\index\model\UserModel;
 use think\Controller;
 
 class CommonController extends Controller {
@@ -16,28 +14,16 @@ class CommonController extends Controller {
     }
 
     protected function is_user(){
-        $UserModel =  new User();
-        $this->user_id = session('user_id');
-        if(!$this->user_id)
+        $UserModel =  new UserModel();
+        $token = $this->request->post("token");
+        $where['token'] = $token;
+        $userInfo = $UserModel->where($where)->find();
+
+        if(!$userInfo)
         {
-            $this->redirect('/Login/login');
-            exit();
+            ajaxReturn('请先登录,您被迫下线',0);
         }
-
-        $where['userid']=$this->user_id;
-        $u_info=$UserModel->where($where)->field('status,session_id')->find();
-        //判断用户是否在他处已登录
-        $session_id=session_id();
-        if($session_id != $u_info['session_id']){
-           if(IS_AJAX){
-                ajaxReturn('您的账号在他处登录，您被迫下线',0);
-            }else{
-                success_alert('您的账号在他处登录，您被迫下线',U('Login/logout'));
-                exit();
-            }
-        }
+        $this->user_id = $userInfo->userid;
     }
-
-
 }
 
