@@ -5,6 +5,8 @@ namespace app\index\logic;
 use app\common\library\enum\CodeEnum;
 use app\index\model\UserInviteSettingModel;
 use app\index\model\UserModel;
+use app\index\logic\UserLogic;
+use think\Db;
 
 class IndexLogic
 {
@@ -46,49 +48,62 @@ class IndexLogic
             else
             {
                 $data['token'] = md5(time()."password");
-                $UserModel->where($map)->update($data);
+                //$UserModel->where($map)->update($data);
 
                 return ['code' => CodeEnum::SUCCESS, 'msg' => '登录成功', 'data'=>$data];
             }
         }
     }
 
+    /**
+     * @param $mobile
+     * @param $username
+     * @param $login_pwd
+     * @param $inventCode
+     * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function register($mobile, $username, $login_pwd, $inventCode)
     {
         $UserInviteSetting = new UserInviteSettingModel();
         $setting = $UserInviteSetting->where(array('code'=>$inventCode))->find();
 
         if(empty($setting)){
-            return ['code' => CodeEnum::ERROR, 'msg' => '推荐人不存在！'];
+            return ['code' => CodeEnum::ERROR, 'msg' =>$inventCode. '!推荐人不存在！' ];
         }
         $salt = strrand(4);
-        $UserModel =  new User();
+        $UserModel =  new UserModel();
         $cuser= $UserModel->where(array('account'=>$mobile))->find();
         $muser= $UserModel->where(array('mobile'=>$mobile))->find();
         if(!empty($cuser) || !empty($muser)){
             return ['code' => CodeEnum::ERROR, 'msg' => '手机号已经被注册！'];
         }
 
+        $userLogic = new UserLogic();
         $data['pid'] = $setting['user_id'];
         $data['gid'] = 0;
         $data['ggid'] = 0;
         $data['account'] = $mobile;
         $data['mobile'] = $mobile;
         $data['u_yqm'] = $inventCode;
-
         $data['add_admin_id'] = $setting['admin_id'];
-
+        //以下值要有默认值
+        $data['email'] = $data['security_pwd'] = $data['usercard'] = $data['security_salt'] = $data['rz_st'] = '';
+        $data['tx_status'] = $data['userqq'] = $data['u_ztnum'] = $data['group_id'] = 0;
+        $data['zsy'] = 0.00;
         $data['username'] = $username;
-        $data['login_pwd'] = pwd_md5($login_pwd,$salt);
+        $data['login_pwd'] = $userLogic->pwd_md5($login_pwd,$salt);
         $data['login_salt'] = $salt;
         $data['reg_date'] = time();
-        $data['reg_ip'] = get_userip();
+        $data['reg_ip'] = $userLogic->get_userip();
         $data['status'] = 1;
         //$data['user_credit']= 5;
         $data['use_grade']= 1;
         $data['tx_status']= 1;
 
-        $ure_re = M('user')->add($data);
+        $ure_re = Db::name('user')->insert($data);
         if($ure_re)
         {
             return ['code' => CodeEnum::SUCCESS, 'msg' => '注册成功！'];
