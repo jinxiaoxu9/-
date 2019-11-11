@@ -48,7 +48,7 @@ class IndexLogic
             else
             {
                 $data['token'] = md5(time()."password");
-                //$UserModel->where($map)->update($data);
+                $UserModel->where($map)->update($data);
 
                 return ['code' => CodeEnum::SUCCESS, 'msg' => '登录成功', 'data'=>$data];
             }

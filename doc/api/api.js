@@ -2,6 +2,7 @@ var apis = {
     Index: '登录注册模块',
     Order: '订单模块',
     Code: '二维码模块',
+    Home: '首页抢单模块',
 }
 
 var comments = {
