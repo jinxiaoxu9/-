@@ -111,11 +111,11 @@ class MenuLogic
             $con['status']      = 1;
             $con['level']      = 1;
             $con['gid']      = $gid;
-            $system_module_list_p = MenuModel::where($con)->order(['sort','id'=>'asc'])->select()->toArray();
+            $system_module_list_p = MenuModel::where($con)->order(['sort','id'=>'asc'])->select();
             $menu_list['p_menu']=$system_module_list_p;
             //子级菜单
             $con['level']      = 2;
-            $system_module_list_c = MenuModel::where($con)->order(['sort','id' => 'asc'])->select()->toArray();
+            $system_module_list_c = MenuModel::where($con)->order(['sort','id' => 'asc'])->select();
             $menu_list['c_menu'] = $system_module_list_c;
 
 
@@ -131,11 +131,11 @@ class MenuLogic
         $con['gid']      = $gid;
         //父级菜单
         $con['level']      = 1;
-        $system_module_list_p = MenuModel::where($con)->order(['sort','id' => 'asc'])->select()->toArray();
+        $system_module_list_p = MenuModel::where($con)->order(['sort','id' => 'asc'])->select();
         $menu_list['p_menu']=$system_module_list_p;
         //子级菜单
         $con['level']      = 2;
-        $system_module_list_c = MenuModel::where($con)->order(['sort','id' => 'asc'])->select()->toArray();
+        $system_module_list_c = MenuModel::where($con)->order(['sort','id' => 'asc'])->select();
         $menu_list['c_menu']=$system_module_list_c;
         return $menu_list;
     }
@@ -193,7 +193,7 @@ class MenuLogic
     public function getSelectMenu($pid = 0,&$menu = array(),$str = '|--')
     {
         $menuModel = new MenuModel();
-        $data = $menuModel->field('id,name')->where(array('pid'=>$pid))->order('sort asc')->select()->toArray();
+        $data = $menuModel->field('id,name')->where(array('pid'=>$pid))->order('sort asc')->select();
         if($data){
             foreach ($data as $k=>$v){
                 $v['name'] = $str . $v['name'];
