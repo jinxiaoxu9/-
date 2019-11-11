@@ -96,7 +96,7 @@ class UserLogic
         //转账身份检测
         if ($user) {  //当前用户状态正常
             $moneys = ($add_subtract == 1) ? $money : 0 - $money;
-            $updateBalanceRes = $UserModel->where(['userid' => $uid])->setField('money', $moneys);
+            $updateBalanceRes = $UserModel->where(['userid' => $uid])->setInc('money', $moneys);
             if ($updateBalanceRes) {
                 //记录流水
                 $insert['uid'] = $uid;
