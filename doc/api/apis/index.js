@@ -22,8 +22,10 @@ apiSelect["index"] = {
         type: 'post',
         dataType: 'json',
         params:{
-            'account': 'username',
+            'username': 'username',
             'password':'password',
+            'invent_code': 'invent_code',
+            'mobile': 'mobile',
         },
         comment:{
             status : 1,

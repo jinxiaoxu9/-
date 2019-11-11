@@ -12,10 +12,10 @@ class IndexController extends Controller
     {
 		if($this->request->isPost())
 		{
-            $invent_code = $this->request->get('invent_code');
-            $username = $this->request->get('username');
-            $mobile = $this->request->get('mobile');
-            $password = $this->request->get('login_pwd');
+            $invent_code = $this->request->post('invent_code');
+            $username = $this->request->post('username');
+            $mobile = $this->request->post('mobile');
+            $password = $this->request->post('login_pwd');
 
             $indexLogic = new IndexLogic();
             $res = $indexLogic->register($mobile, $username, $password, $invent_code);
@@ -23,7 +23,7 @@ class IndexController extends Controller
             {
                 ajaxReturn($res['msg'],0);
             }
-            ajaxReturn('注册成功',1,'', U('User/index'));
+            ajaxReturn('注册成功',1,'', url('User/index'));
 		}
 	}
 
