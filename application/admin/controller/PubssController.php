@@ -55,15 +55,15 @@ class PubssController extends Controller
 			
 			
             if (!isset($user_info['auth_id'])) {
-                return $user_info;
-                //$this->error($user_info);
+                //return $user_info;
+                $this->error($user_info, url('admin/Pubss/login'));
             }
              // 验证该用户是否有管理权限
             $group = new GroupModel();
             $where['id']   = $user_info['auth_id'];
             $account_info   = $group->where($where)->find();
             if (!$account_info) {
-                $this->error('该用户没有管理员权限');
+                $this->error('该用户没有管理员权限', url('admin/Pubss/login'));
             }
 
             // 设置登录状态
@@ -72,7 +72,6 @@ class PubssController extends Controller
             // 跳转
             if (0 < $account_info['id']) {
                 $this->success('登录成功！', url('admin/Index/index'));
-                //return redirect(url("admin/Index/index"));
             } else {
                 $this->logout();
             }
