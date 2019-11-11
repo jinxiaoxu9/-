@@ -1,5 +1,5 @@
 var apis = {
-    Index: '用户个人中心模块',
+    Index: '登录注册模块',
     Order: '订单模块',
 }
 

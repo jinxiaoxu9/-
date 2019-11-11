@@ -123,7 +123,7 @@
 				}
 
 				var $btn = $(this).find('.loading-button').button('loading');
-                api.dataType = 'html';
+                api.dataType = 'json';
                 var options = {
                     url:  "http://www.paofen.com"+api.uri,
 					type: api.type,
@@ -134,14 +134,14 @@
 						var result;
 						switch(api.dataType)
 						{
-						   case 'html':
-                               result = data;
-							   result = JSON.stringify(result, null, 4);
-							   if(typeof data.token !== 'undefined')
+						   case 'json':
+							   json = data;
+							   if(typeof json.result.token !== 'undefined')
 							   {
-								   Token = data.token;
+								   Token = json.result.token;
 								   $('input[name="token"]').val(Token);
 							   }
+							   result = JSON.stringify(data, null, 4);
                                break;
 						   case 'text':
 						   	    result = decrypt(data);
