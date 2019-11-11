@@ -2,23 +2,29 @@
 
 namespace app\index\logic;
 use Admin\Model\UserInviteSetting;
+use app\common\model\GemapayCodeTypeModel;
+use app\index\model\UserInviteSettingModel;
+use app\index\model\UserModel;
 use Common\Library\enum\CodeEnum;
-use Gemapay\Model\GemapayCodeTypeModel;
-use app\index\model\GemapayCodeModel;
+use Gemapay\Model\GemapayCodeModel;
 use app\index\model\User;
 
-class GemaCodeLogic
+class CodeLogic
 {
     public function getcodeTypes($userId)
     {
-        $UserModel = new User();
-        $InviteSettingModel = new UserInviteSetting();
+        $UserModel = new UserModel();
+        $InviteSettingModel = new UserInviteSettingModel();
         $GemapayCodeTypeModel = new GemapayCodeTypeModel();
         $userinfo = $UserModel->find($userId);
         $inviteSetting = $InviteSettingModel->where(array('code' => $userinfo["u_yqm"]))->find();
         $setting = json_decode($inviteSetting["invite_setting"]);
 
         $typeIds = [];
+        if(empty($setting))
+        {
+            return [];
+        }
         foreach ($setting as $key => $s) {
             if (!empty($s)) {
                 $typeIds[] = $key;
@@ -41,8 +47,8 @@ class GemaCodeLogic
     public function addQRcode($userId, $codeType, $imgs, $accountName, $accountNumber, $security)
     {
         $UserModel = new User();
-        $InviteSettingModel = new UserInviteSetting();
-        $GemapayCodeModel = new GemapayCodeModel();
+        $InviteSettingModel = new UserInviteSettingModel();
+        $GemapayCodeModel = new \app\index\model\GemapayCodeModel();
         $SecurityLogic = new SecurityLogic();
         $userInfo = $UserModel->find($userId);
 
@@ -84,12 +90,12 @@ class GemaCodeLogic
         $data['limit_money'] = 10000;
         $data['create_time'] = time();
 
-        $result = $GemapayCodeModel->add($data);
+        $result = $GemapayCodeModel->insert($data);
         if(!$result)
         {
-            return ['code' => CodeEnum::ERROR, 'msg' => '保存失败,请一会儿再试'];
+            return ['code' => \app\common\library\enum\CodeEnum::ERROR, 'msg' => '保存失败,请一会儿再试'];
         }
 
-        return ['code' => CodeEnum::SUCCESS, 'msg' => '修改成功'];
+        return ['code' => \app\common\library\enum\CodeEnum::SUCCESS, 'msg' => '修改成功'];
     }
 }

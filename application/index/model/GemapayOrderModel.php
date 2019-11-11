@@ -46,25 +46,19 @@ class GemapayOrderModel extends Model
      * @return mixed
      */
     public function getUserCodeOrder($userId=0,$status=null,$page=10){
-        $userId && $where['a.gema_userid']=$userId;
-        (!is_null($status)) && $where['a.status']=$status;
+        $userId && $where['order.gema_userid']=$userId;
+        (!is_null($status)) && $where['order.status']=$status;
         //获取两个小时内的书
         $starttime=time()-7200;
         //$where['add_time'] = array('between', array($starttime,time()));
-        $userOrder = $this->alias('a')
-            ->field('a.*,code_id,b.account_name,c.type_name,c.type_logo')
-            ->join('ysk_gemapay_code b on a.code_id=b.id', "left")
-            ->join('ysk_gemapay_code_type c on a.code_type=c.id', "left")
+        $userOrder = $this->alias('order')
+            ->field('order.*,code_id,code.account_name,c.type_name,c.type_logo')
+            ->join('ysk_gemapay_code code', "order.code_id = code.id","left")
+            ->join('ysk_gemapay_code_type c', "order.code_type=c.id","left")
             ->where($where)
             ->order("add_time desc")
             ->page(1,"{$page}")
             ->select();
         return $userOrder;
     }
-
-
-
-
-
-
 }

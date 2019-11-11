@@ -5,9 +5,8 @@
  * Date: 19-3-11
  * Time: 上午10:38
  */
-namespace Gemapay\Model;
+namespace app\common\model;
 
-use http\Client\Request;
 use Think\Model;
 class GemapayOrderModel extends Model
 {
@@ -93,12 +92,6 @@ class GemapayOrderModel extends Model
         return $Page;
     }
 
-
-
-
-
-
-
     public function setOrderSucess($orderId, $note = "", $fee = 0.00)
     {
         $where['id'] = $orderId;
@@ -107,7 +100,7 @@ class GemapayOrderModel extends Model
         $data['pay_time'] = time();
         $data['note'] = $note;
         $data['sure_ip'] = get_userip();
-        return $this->where($where)->save($data);
+        return $this->where($where)->update($data);
     }
 
     public function getUnpayOrder($orderId)

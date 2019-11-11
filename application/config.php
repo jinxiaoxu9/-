@@ -250,4 +250,7 @@ return [
         'var_page'  => 'page',
         'list_rows' => 15,
     ],
+
+    'not_send_bonus' => 0,
+    'notify_url' => 'http://www.a.com',
 ];

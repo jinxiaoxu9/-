@@ -6,7 +6,6 @@
  * Time: 12:44 AM
  */
 
-namespace Gemapay\Controller;
 
 use Common\Library\enum\CodeEnum;
 use Gemapay\Logic\GemapayOrderLogic;

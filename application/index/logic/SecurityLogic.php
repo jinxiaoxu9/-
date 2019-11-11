@@ -1,8 +1,10 @@
 <?php
 
 namespace app\index\logic;
-use Common\Library\enum\CodeEnum;
+
+use app\common\library\enum\CodeEnum;
 use app\index\model\User;
+use app\index\model\UserModel;
 
 class SecurityLogic
 {
@@ -18,7 +20,7 @@ class SecurityLogic
             return ['code' => CodeEnum::ERROR, 'msg' => '安全码不能为空'];
         }
 
-        $UserModel = new User();
+        $UserModel = new UserModel();
         $userInfo = $UserModel->find($userId);
         if(empty($userInfo['security_pwd']))
         {

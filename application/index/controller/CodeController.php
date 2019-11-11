@@ -1,41 +1,32 @@
 <?php
-namespace app\index\Controller;
+namespace app\index\controller;
 
+use app\index\logic\CodeLogic;
 use Common\Library\enum\CodeEnum;
 use Home\Logic\GemaCodeLogic;
 use think\Request;
 use think\db;
 
 
-class GemaCodeController extends CommonController
+class CodeController extends CommonController
 {
 
-    //添加二维码页面
-    public function adderweima()
+    //获取个码收款二维码类型
+    public function codeTypes()
     {
         //获取个码收款二维码类型
-        $UserGemaCodeLogic =  new GemaCodeLogic();
+        $UserGemaCodeLogic =  new CodeLogic();
         $codeTypes = $UserGemaCodeLogic->getcodeTypes($this->user_id);
+        $data['codeTypes'] = $codeTypes;
 
-        $this->assign('codeTypes', $codeTypes);
-        return $this->fetch();
+        ajaxReturn('成功',1,'', $data);
     }
 
-    //二维码管理
-    public function erweima()
-    {
-        //获取个码收款二维码类型
-        $UserGemaCodeLogic =  new GemaCodeLogic();
-        $codeTypes = $UserGemaCodeLogic->getcodeTypes($this->user_id);
-
-        $this->assign('codeTypes', $codeTypes);
-        return $this->fetch();
-    }
     
     /**
      * 用户个码二维码列表
      */
-    public function gemaCodelist()
+    public function codeList()
     {
         $uid = $this->user_id;
         $codeTypeId = input('code_type_id', 1, 'intval');
@@ -47,7 +38,7 @@ class GemaCodeController extends CommonController
     /**
      *
      */
-    public function ewmup(Request $request)
+    public function addCode(Request $request)
     {
         if ($request->isPost())
         {
@@ -78,4 +69,18 @@ class GemaCodeController extends CommonController
         return $this->fetch();
     }
 
+    public function delCode()
+    {
+
+    }
+
+    public function disactiveCode()
+    {
+
+    }
+
+    public function activeCode()
+    {
+
+    }
 }

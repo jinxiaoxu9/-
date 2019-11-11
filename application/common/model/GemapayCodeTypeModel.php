@@ -5,7 +5,7 @@
  * Date: 19-3-11
  * Time: 上午10:38
  */
-namespace Gemapay\Model;
+namespace app\common\model;
 
 use think\Model;
 class GemapayCodeTypeModel extends Model

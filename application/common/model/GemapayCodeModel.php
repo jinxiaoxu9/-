@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Gemapay\Model;
+namespace app\common\model;
 
 use Think\Model;
 

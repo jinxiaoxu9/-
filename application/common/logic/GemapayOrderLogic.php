@@ -3,18 +3,18 @@
  *
  */
 
-namespace Gemapay\Logic;
+namespace app\common\logic;
 
-use Common\Library\enum\CodeEnum;
+use app\common\library\enum\CodeEnum;
+use app\index\logic\SecurityLogic;
 use Common\Logic\BaseLogic;
 use Gemapay\Model\GemapayCodeModel;
 use Gemapay\Model\GemapayCodeMoneyPayingModel;
 use Gemapay\Model\GemapayCodeTypeModel;
 use Gemapay\Model\GemapayOrderModel;
-use Home\Logic\SecurityLogic;
 use Think\Db;
 use Think\Cache;
-class GemapayOrderLogic extends BaseLogic
+class GemapayOrderLogic
 {
 
     /**
@@ -222,7 +222,7 @@ class GemapayOrderLogic extends BaseLogic
     public function setOrderSucessByUser($orderId, $userid, $security)
     {
         //判断订单状态
-        $GemaPayOrder = new GemapayOrderModel();
+        $GemaPayOrder = new \app\index\model\GemapayOrderModel();
         $SecurityLogic = new SecurityLogic();
         //判断交易密码
         $result = $SecurityLogic->checkSecurityByUserId($userid, $security);
@@ -230,7 +230,6 @@ class GemapayOrderLogic extends BaseLogic
         {
            // return $result;
         }
-
         //判断订单是否属于用户
         $where['id'] = $orderId;
         $where['status'] = $GemaPayOrder::WAITEPAY;
@@ -277,11 +276,9 @@ class GemapayOrderLogic extends BaseLogic
      */
     public function setOrderSucess($orderInfo, $note)
     {
-        $GemaPayOrder = new GemapayOrderModel();
-        $GemapayCodeModel = new GemapayCodeModel();
-        $GemapayCodeTypeModel = new GemapayCodeTypeModel();
-
-
+        $GemapayCodeModel = new \app\common\model\GemapayCodeModel();
+        $GemapayCodeTypeModel = new \app\common\model\GemapayCodeTypeModel();
+        $GemapayOrderModel = new \app\common\model\GemapayOrderModel();
         $codeInfo = $GemapayCodeModel->find($orderInfo["code_id"]);
         if(empty($codeInfo))
         {
@@ -307,51 +304,49 @@ class GemapayOrderLogic extends BaseLogic
 
 
         $bonus = $orderInfo["order_price"] * $bonusPrecent;
-
-        DB::startTrans();
-
-        if(!empty($bonus) && empty(C('not_send_bonus')))
+        Db::startTrans();
+        $notSendBonus = config('not_send_bonus');
+        if(!empty($bonus) && empty($notSendBonus))
         {
             $message = "订单完成,增加佣金";
             $res = accountLog($orderInfo['gema_userid'],7,1, $bonus, $message);
             if($res == false)
             {
-                DB::rollback();
+                Db::rollback();
                 return ['code' => CodeEnum::ERROR, 'msg' => '更新数据失败'];
             }
         }
 
-        if($orderInfo['status'] == $GemaPayOrder::CLOSED)
+        if($orderInfo['status'] == $GemapayOrderModel::CLOSED)
         {
             $message = "后台强制完成订单,扣除佣金";
             $res = accountLog($orderInfo['gema_userid'],8,0, $orderInfo["order_price"], $message);
             if($res == false)
             {
-                DB::rollback();
+                Db::rollback();
                 return ['code' => CodeEnum::ERROR, 'msg' => '更新数据失败'];
             }
         }
 
 
 
-        $res = $GemaPayOrder->setOrderSucess($orderInfo['id'], $note, $bonus);
-
+        $res = $GemapayOrderModel->setOrderSucess($orderInfo['id'], $note, $bonus);
         if($res == false)
         {
-            DB::rollback();
+            Db::rollback();
             return ['code' => CodeEnum::ERROR, 'msg' => '更新数据失败'];
         }
 
         $postData['out_trade_no']= $orderInfo['out_trade_no'];//这是第三方提交过来的订单号回传过去
         //向回调地址发起请求
-        $ret = httpRequest(C('notify_url')."/api/notify/notify?channel=GumaPay",'post',$postData);
+        $ret = httpRequest(config('notify_url')."/api/notify/notify?channel=GumaPay",'post',$postData);
         if($ret == false)
         {
-            DB::rollback();
+            Db::rollback();
             return ['code' => CodeEnum::ERROR, 'msg' => '网络错误'];
         }
 
-        DB::commit();
+        Db::commit();
 
         return ['code' => CodeEnum::SUCCESS, 'msg' => '数据更新成功'];
     }

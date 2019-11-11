@@ -1,27 +1,54 @@
 <?php
 namespace app\index\controller;
 
-use app\index\logic\OrderLogic;
+use app\common\library\enum\CodeEnum;
+use app\common\model\GemapayOrderModel;
 
 class OrderController extends CommonController
 {
     public function oderList()
     {
-        $OrderLogic = new OrderLogic();
+        $OrderLogic = new \app\index\logic\OrderLogic();
         $orderList = $OrderLogic->getList($this->user_id);
+
+        $data['order'] = $orderList;
+        ajaxReturn('成功',1,'', $orderList);
     }
 
     /**
      * 用户确认收款回调到支付平台
      */
-    public function sureSk(Request $request)
+    public function sureSk()
     {
-        $orderId = $request->param('id');
-        $security = $request->param('security');
-
-        $GemaOrder = new GemapayOrderLogic();
+        $orderId = $this->request->post('order_id');
+        $security = $this->request->post('security');
+        $GemaOrder = new \app\common\logic\GemapayOrderLogic();
         $res = $GemaOrder->setOrderSucessByUser($orderId,  $this->user_id, $security);
-        exit(json_encode($res));
+
+        if ($res['code'] == CodeEnum::ERROR)
+        {
+            ajaxReturn($res['msg'],0);
+        }
+        ajaxReturn('操作成功',1,'');
+    }
+
+
+    /**
+     * 上传转款凭证
+     * @return mixed
+     */
+    public function uplaodCredentials()
+    {
+        $orderId = $this->request->post('order_id');
+        $credentials = $this->request->post('credentials');
+
+        $OrderLogic = new \app\index\logic\OrderLogic();
+        $res = $OrderLogic->uplaodCredentials($this->user_id, $orderId, $credentials);
+        if ($res['code'] == CodeEnum::ERROR)
+        {
+            ajaxReturn($res['msg'],0);
+        }
+        ajaxReturn('操作成功',1,'');
     }
 
     /*
@@ -35,29 +62,6 @@ class OrderController extends CommonController
         $this->assign('todayCodeOrder', $ret);
         return $this->fetch();
     }
-
-
-    /**
-     * 当前用户个码订单列表
-     */
-    public function shoudan()
-    {
-        $GemapayOrderModel = new GemapayOrderModel();
-        if (isAjax()) {
-            $ret = $GemapayOrderModel->getUserCodeOrder($this->user_id, null, 10);
-            if (!empty($ret)) {
-                $statusMs = ['未支付', '已支付', '已关闭'];
-                foreach ($ret as $k => $V) {
-                    $ret[$k]['status'] = $statusMs[$V['status']];
-                    $ret[$k]['order_no'] = '****' . mb_substr($V['order_no'], -4);
-                }
-            }
-            // dd($ret);
-            ajaxReturn($ret);
-        }
-        return $this->fetch();
-    }
-
 
     /**
      * 我的二维码
@@ -238,33 +242,4 @@ class OrderController extends CommonController
     }
 
 
-    /**
-     * 上传转款凭证
-     * @return mixed
-     */
-    public function uplaodCredentials()
-    {
-        $orderId = input('order_id');
-        $GemapayOrderModel = new GemapayOrderModel();
-        if (empty($orderId)) {
-            $this->error('参数错误');
-        }
-        $orderInfo = $GemapayOrderModel->where(['id' => $orderId])->find();
-        if ($_POST) {
-            $data = I('post.');
-            //再校验一下
-            if ($orderInfo['status'] == 1 && $orderInfo['credentials'] == 0) {
-                $update['credentials'] = $data['icon'];
-                $update['is_upload_credentials'] = 1;
-                $ret = Db::name('gemapay_order')->where(['id' => $orderId])->update($update);
-                if ($ret !== false) {
-                    $this->success('操作成功');
-                }
-                $this->error('操作失败');
-            }
-            $this->error('参数错误');
-        }
-        $this->assign('order', $orderInfo);
-        return $this->fetch();
-    }
 }
