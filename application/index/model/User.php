@@ -9,5 +9,9 @@ use think\Model;
  */
 class User extends Model
 {
-
+    /**
+     * 数据库表名
+     * @author jry <bbs.sasadown.cn>
+     */
+    protected $tableName = 'ysk_user';
 }

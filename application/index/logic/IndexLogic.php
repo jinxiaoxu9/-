@@ -24,7 +24,8 @@ class IndexLogic
             return ['code' => CodeEnum::ERROR, 'msg' => '密码不能为空'];
         }
 
-        $map['mobile|account'] = array('eq', $account);
+        $map['mobile|account'] = array('eq', $account, 'or');
+
         $UserModel =  new User();
         $user_info = $UserModel->where($map)->find();
         if (!$user_info)
