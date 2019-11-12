@@ -6,7 +6,7 @@
 // +----------------------------------------------------------------------
 // | Author: jry <bbs.sasadown.cn>
 // +----------------------------------------------------------------------
-namespace app\admin\Controller;
+namespace app\admin\controller;
 
 use app\admin\logic\AdminLogic;
 use think\Request;

@@ -27,7 +27,7 @@ class SecurityLogic
             return ['code' => CodeEnum::ERROR, 'msg' => '请先前往个人资料设置安全码'];
         }
 
-        if((pwdMd5($security.$userInfo['security_salt']) != $userInfo['security_pwd']))
+        if((pwdMd5($security,$userInfo['security_salt']) != $userInfo['security_pwd']))
         {
             return ['code' => CodeEnum::ERROR, 'msg' => '安全码错误'];
         }

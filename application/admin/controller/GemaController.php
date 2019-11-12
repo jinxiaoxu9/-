@@ -1,6 +1,6 @@
 <?php
 
-namespace app\admin\Controller;
+namespace app\admin\controller;
 
 use app\admin\model\GemaPayOrderModel;
 use app\admin\logic\AdminLogic;

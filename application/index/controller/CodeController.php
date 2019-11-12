@@ -22,65 +22,104 @@ class CodeController extends CommonController
         ajaxReturn('成功',1,'', $data);
     }
 
-    
     /**
      * 用户个码二维码列表
      */
     public function codeList()
     {
-        $uid = $this->user_id;
-        $codeTypeId = input('code_type_id', 1, 'intval');
-        $ret = Db::name('gemapay_code')->where(array('user_id' => $uid, 'type' => $codeTypeId))->select();
-        $this->assign('codeLists', $ret);
-        return $this->fetch('gema_code_list');
+        $page = $this->request->post("page", 1);
+        $UserGemaCodeLogic =  new CodeLogic();
+        $codeLists = $UserGemaCodeLogic->getCodeList($this->user_id, $page);
+        $data['code_list'] = $codeLists;
+        ajaxReturn('成功',1,'', $data);
     }
 
     /**
-     *
+     *　添加二维码
      */
-    public function addCode(Request $request)
+    public function addCode()
     {
-        if ($request->isPost())
-        {
-            $codeTypeId = trim($request->param('ewmclass'));
-            $imgs = trim($request->param('icon'));
-            $accountName = trim($request->param('account_name'));
-            $accountNumber = trim($request->param('account_number'));
-            $security = trim($request->param('security'));
-            $GemaCodeLogic = new GemaCodeLogic();
-            $result = $GemaCodeLogic->addQRcode($this->user_id, $codeTypeId, $imgs, $accountName, $accountNumber, $security);
-            if ($result['code'] == CodeEnum::ERROR)
-            {
-                ajaxReturn("上传失败,".$result['msg']);
-                exit;
-            }
-            else
-            {
-                ajaxReturn("ok", 1, url('User/index'));
-                exit;
-            }
+        $accountName = $this->request->post('account_name');
+        $type = $this->request->post('type');
+        $imageLink = $this->request->post('image_link');
+        $rawImageLink = $this->request->post('raw_image_link');
 
+        $bankerName = $this->request->post('banker_name');
+        $bankAccountName = $this->request->post('bank_account_name');
+        $bankAccountNumber = $this->request->post('bank_account_number');
+        $security = $this->request->post('security');
+
+        $accountNumber = "";
+        $imgs = "";
+
+        if($type == 3)
+        {
+            $accountNumber = $bankerName.",".$bankAccountName.','.$bankAccountNumber;
         }
         else
         {
-            ajaxReturn("上传失败");
+            $imgs = $imageLink."?".$rawImageLink;
+        }
+
+        $CodeLogic =  new CodeLogic();
+        $result = $CodeLogic->addQRcode($this->user_id, $type, $imgs, $accountName, $accountNumber, $security);
+        if ($result['code'] == \app\common\library\enum\CodeEnum::ERROR)
+        {
+            ajaxReturn("上传失败,".$result['msg']);
             exit;
         }
-        return $this->fetch();
+        else
+        {
+            ajaxReturn("ok", 1);
+            exit;
+        }
     }
 
+    /**
+     * 删除二维码
+     */
     public function delCode()
     {
+        $codeTypeId = $this->request->post('code_id');
 
+        $CodeLogic =  new CodeLogic();
+        $res = $CodeLogic->delCode($this->user_id, $codeTypeId);
+        if ($res['code'] == \app\common\library\enum\CodeEnum::ERROR)
+        {
+            ajaxReturn($res['msg'],0);
+        }
+        ajaxReturn($res['msg'],1,'');
     }
 
+    /**
+     * 冻结二维码
+     */
     public function disactiveCode()
     {
+        $codeTypeId = $this->request->post('code_id');
 
+        $CodeLogic =  new CodeLogic();
+        $res = $CodeLogic->disactiveCode($this->user_id, $codeTypeId);
+        if ($res['code'] == \app\common\library\enum\CodeEnum::ERROR)
+        {
+            ajaxReturn($res['msg'],0);
+        }
+        ajaxReturn($res['msg'],1,'');
     }
 
+    /**
+     *　激活二维码
+     */
     public function activeCode()
     {
+        $codeTypeId = $this->request->post('code_id');
 
+        $CodeLogic =  new CodeLogic();
+        $res = $CodeLogic->activeCode($this->user_id, $codeTypeId);
+        if ($res['code'] == \app\common\library\enum\CodeEnum::ERROR)
+        {
+            ajaxReturn($res['msg'],0);
+        }
+        ajaxReturn($res['msg'],1,'');
     }
 }

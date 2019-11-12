@@ -13,7 +13,7 @@ class InviteSettingLogic
         {
             return $desc;
         }
-        $codeList = filterDataMap($codeList, "id");
+        //$codeList = $this->filterDataMap($codeList, "id");
         $arrString = [];
         foreach ($s as $key=>$setting)
         {
@@ -29,4 +29,5 @@ class InviteSettingLogic
     {
         return "http://".$_SERVER['HTTP_HOST']."/Login-register.html?code=".$code;
     }
+
 }

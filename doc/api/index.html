@@ -106,7 +106,7 @@
 				runGroup(group);
 				return ;
 			}
-			$('body').append("<script id='"+ group +"' src='/api/apis/" + group + ".js'><\/script>")
+			$('body').append("<script id='"+ group +"' src='/apis/" + group + ".js'><\/script>")
 		});
 
 		$('#api_form').on('submit', function(){
@@ -125,7 +125,7 @@
 				var $btn = $(this).find('.loading-button').button('loading');
                 api.dataType = 'json';
                 var options = {
-                    url:  "http://paofen.test"+api.uri,
+                    url:  "http://www.t.com"+api.uri,
 					type: api.type,
 					dataType: api.dataType,
 					//data:$('#api_form').serialize(),
