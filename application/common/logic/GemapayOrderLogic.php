@@ -6,6 +6,7 @@
 namespace app\common\logic;
 
 use app\common\library\enum\CodeEnum;
+use app\common\library\enum\MoneyOrderTypes;
 use app\index\logic\SecurityLogic;
 use Common\Logic\BaseLogic;
 use Gemapay\Model\GemapayCodeModel;
@@ -309,7 +310,8 @@ class GemapayOrderLogic
         if(!empty($bonus) && empty($notSendBonus))
         {
             $message = "订单完成,增加佣金";
-            $res = accountLog($orderInfo['gema_userid'],7,1, $bonus, $message);
+            $res = accountLog($orderInfo['gema_userid'], \app\common\library\enum\MoneyOrderTypes::ORDER_BONUS,
+                \app\common\library\enum\MoneyOrderTypes::OP_ADD, $bonus, $message);
             if($res == false)
             {
                 Db::rollback();
@@ -320,7 +322,8 @@ class GemapayOrderLogic
         if($orderInfo['status'] == $GemapayOrderModel::CLOSED)
         {
             $message = "后台强制完成订单,扣除佣金";
-            $res = accountLog($orderInfo['gema_userid'],8,0, $orderInfo["order_price"], $message);
+            $res = accountLog($orderInfo['gema_userid'], \app\common\library\enum\MoneyOrderTypes::ORDER_FORCE_FINISH,
+                \app\common\library\enum\MoneyOrderTypes::OP_SUB, $orderInfo["order_price"], $message);
             if($res == false)
             {
                 Db::rollback();

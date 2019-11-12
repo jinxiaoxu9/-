@@ -5,8 +5,8 @@ apiSelect["index"] = {
         type: 'post',
         dataType: 'json',
         params:{
-            'account': 'username',
-            'password':'password',
+            'account': 'username(用户名)',
+            'password':'password(密码)',
         },
         comment:{
             status : 1,
@@ -22,10 +22,10 @@ apiSelect["index"] = {
         type: 'post',
         dataType: 'json',
         params:{
-            'username': 'username',
-            'password':'password',
-            'invent_code': 'invent_code',
-            'mobile': 'mobile',
+            'username': 'username(用户名)',
+            'password':'password(密码)',
+            'invent_code': 'invent_code(邀请码)',
+            'mobile': 'mobile(手机号码)',
         },
         comment:{
             status : 1,

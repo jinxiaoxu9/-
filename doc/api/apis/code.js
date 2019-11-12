@@ -37,9 +37,12 @@ apiSelect["code"] = {
         type: 'post',
         dataType: 'json',
         params:{
-            'account_name': 'account_name',
-            'type': 'type',
-            'code_link':'code_link',
+            'account_name': 'account_name(账户号,用于识别)',
+            'type': 'type(添加类型)',
+            'code_link':'code_link(二维码链接，,当type=1,2的时候显示)',
+            'banker_name':'banker_name(开户银行名称,当type=3的时候显示)',
+            'bank_account_name':'bank_account_name(开户姓名,当type=3的时候显示)',
+            'bank_account_number':'bank_account_number(开户卡号,当type=3的时候显示)',
         },
         comment:{
             status : 1,
@@ -56,7 +59,7 @@ apiSelect["code"] = {
         type: 'post',
         dataType: 'json',
         params:{
-            'code_id': 'code_id',
+            'code_id': 'code_id(二维码id)',
         },
         comment:{
             status : 1,
@@ -69,7 +72,7 @@ apiSelect["code"] = {
 
     activeCode: {
         title: '激活二维码',
-        uri: '/index/order/activeCode',
+        uri: '/index/order/activeCode(二维码id)',
         type: 'post',
         dataType: 'json',
         params:{
@@ -86,7 +89,7 @@ apiSelect["code"] = {
 
     disactiveCode: {
         title: '冻结二维码',
-        uri: '/index/order/disactiveCode',
+        uri: '/index/order/disactiveCode(二维码id)',
         type: 'post',
         dataType: 'json',
         params:{
