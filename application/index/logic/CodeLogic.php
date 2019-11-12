@@ -27,7 +27,6 @@ class CodeLogic
         $userinfo = $UserModel->find($userId);
         $inviteSetting = $InviteSettingModel->where(array('code' => $userinfo["u_yqm"]))->find();
         $setting = json_decode($inviteSetting["invite_setting"]);
-
         $typeIds = [];
         if(empty($setting))
         {
@@ -43,9 +42,12 @@ class CodeLogic
             $codeTypes = [];
         } else {
             $where["id"] = array("in", $typeIds);
-            $codeTypes = $GemapayCodeTypeModel->where($where)->field('id,type_name,limit_money')->order('sort asc,id desc')->select();
+            $codeTypes = $GemapayCodeTypeModel->where($where)->field('id,type_name')->order('sort asc,id desc')->select();
         }
-
+        foreach ($codeTypes as $key=>$codeType)
+        {
+            $codeTypes[$key]['rate'] = $setting[$key];
+        }
         return $codeTypes;
     }
 
