@@ -10,6 +10,7 @@ namespace app\admin\controller;
 
 use think\Controller;
 use think\Request;
+use think\Db;
 
 /**
  * 后台公共控制器
@@ -90,15 +91,16 @@ class AdminController extends Controller
      */
     public function setStatus($model = '', $script = false)
     {
-        $request = Request::instance()->param();
-        $ids    = $request['ids'];
-        $status = $request['status'];
+        $request = Request::instance();
+        $ids    = $request->param('ids');
+        $status = $request->param('status');
 
         if (empty($ids)) {
             $this->error('请选择要操作的数据');
         }
-        $model = new $model();
-        $model_primary_key       = $model->getPk();
+        $modelOjb = model("app\admin\model\{$model}");
+
+        $model_primary_key       = $modelOjb->getPk();
         $map[$model_primary_key] = array('in', $ids);
         $adminLogic = new \app\admin\logic\AdminLogic();
         if ($script) {
@@ -144,7 +146,7 @@ class AdminController extends Controller
                 );
                 break;
             case 'delete': // 删除条目
-                $result = $model->where($map)->delete();
+                $result = $modelOjb->where($map)->delete();
                 if ($result) {
                     $this->success('删除成功，不可恢复！');
                 } else {
@@ -173,13 +175,15 @@ class AdminController extends Controller
      */
     final protected function editRow($model, $data, $map, $msg)
     {
-        $model = new $model();
+        //$model = new $model();
+        $request = Request::instance();
+        $modelOjb = model("app\admin\model\{$model}");
         $request = Request::instance()->param();
-        $id = array_unique((array) $request['id']);
+        $id = array_unique((array) $request->param('id'));
 
         $id = is_array($id) ? implode(',', $id) : $id;
         //如存在id字段，则加入该条件
-        $fields = $model->getDbFields();
+        $fields = $model->getTableInfo('');
         if (in_array('id', $fields) && !empty($id)) {
             $where = array_merge(
                 array('id' => array('in', $id)),
@@ -191,11 +195,11 @@ class AdminController extends Controller
                 'success' => '操作成功！',
                 'error'   => '操作失败！',
                 'url'     => ' ',
-                'ajax'    => IS_AJAX,
+                'ajax'    => $request->isAjax(),
             ),
             (array) $msg
         );
-        $result = $model->where($map)->update($data);
+        $result = $modelOjb->where($map)->update($data);
         if ($result != false) {
             $this->success($msg['success'], $msg['url'], $msg['ajax']);
         } else {
@@ -210,9 +214,9 @@ class AdminController extends Controller
     public function module_config()
     {
         $module = new Module();
-        if (IS_POST) {
-            $request = Request::instance()->param();
-            $id     = (int) $request['id'];
+        $request = Request::instance()->param();
+        $id     = (int) $request->param('id');
+        if ($request->isPost()) {
             $config = $request['config'];
             $flag   = $module->where("id={$id}")
                 ->setField('config', json_encode($config));

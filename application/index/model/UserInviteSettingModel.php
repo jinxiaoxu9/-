@@ -7,13 +7,14 @@
 // | Author: jry <bbs.sasadown.cn>
 // +----------------------------------------------------------------------
 namespace app\index\model;
+use app\common\model\BaseModel;
 use think\Model;
 
 /**
  * 部门模型
  * @author jry <bbs.sasadown.cn>
  */
-class UserInviteSettingModel extends Model
+class UserInviteSettingModel extends BaseModel
 {
     public function getInviteDesc($setting, $codeList)
     {
@@ -41,4 +42,18 @@ class UserInviteSettingModel extends Model
     {
        return "http://".$_SERVER['HTTP_HOST']."/Login-register.html?code=".$code;
     }
+
+
+
+    public function  getInviteSetting($where = [], $field = true){
+        return $this->getInfo($where,$field);
+    }
+
+
+
+
+
+
+
+
 }

@@ -6,9 +6,9 @@
  * Time: 上午10:38
  */
 namespace app\index\model;
+use app\common\model\BaseModel;
 
-use Think\Model;
-class GemapayOrderModel extends Model
+class GemapayOrderModel extends BaseModel
 {
     const WAITEPAY = 0;
     const PAYED = 1;
@@ -61,4 +61,18 @@ class GemapayOrderModel extends Model
             ->select();
         return $userOrder;
     }
+
+    /**
+     * @param array $where
+     * @param bool $field
+     * @return mixed
+     */
+    public function  getGemapayOrder($where = [], $field = true){
+        return $this->getInfo($where,$field);
+    }
+
+
+
+
+
 }

@@ -12,32 +12,16 @@
  *  +----------------------------------------------------------------------
  */
 
-namespace app\common\library\enum;
+namespace app\index\logic;
+
+
+use \app\common\model\BaseModel;
 
 /**
- * Class CodeEnum
- *  基础状态码
- * @author 勇敢的小笨羊 <brianwaring98@gmail.com>
- *
+ * 接口逻辑处理基类
+ * Class BaseLogic
+ * @package app\index\logic
  */
-class CodeEnum
+class BaseLogic extends BaseModel
 {
-    // 异常
-    const EXPITION = 999;
-
-    // 成功
-    const SUCCESS = 1;
-
-    // 失败
-    const ERROR = 0;
-
-    const  LOST_PARAM = 404;
-
-
-    const  EMPTY_PARAM = 405;
-
-
-    const FORBId  =403;
-
-
 }

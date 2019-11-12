@@ -20,8 +20,8 @@ apiSelect["order"] = {
         type: 'post',
         dataType: 'json',
         params:{
-            'order_id': 'order_id',
-            'security':'security',
+            'order_id': 'order_id(订单id)',
+            'security':'security(安全码)',
         },
         comment:{
             status : 1,
@@ -38,8 +38,8 @@ apiSelect["order"] = {
         type: 'post',
         dataType: 'json',
         params:{
-            'order_id': 'order_id',
-            'credentials':'credentials',
+            'order_id': 'order_id(订单id)',
+            'credentials':'credentials(凭证图片的路径)',
         },
         comment:{
             status : 1,

@@ -6,13 +6,14 @@
 // +----------------------------------------------------------------------
 // | Author: jry <bbs.sasadown.cn>
 // +----------------------------------------------------------------------
-namespace Common\Model;
+namespace app\common\model;
+use think\Model;
 
 /**
  * 公共模型
  * @author jry <bbs.sasadown.cn>
  */
-class ModelModel extends \Think\Model
+class ModelModel  extends  Model
 {
 
 }

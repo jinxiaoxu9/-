@@ -31,6 +31,10 @@ use think\model\relation\MorphTo;
  */
 abstract class Model implements \JsonSerializable, \ArrayAccess
 {
+    const STATUS_YES = 1;
+
+    const STATUS_NO = 0;
+
     // 数据库对象池
     protected static $links = [];
     // 数据库配置

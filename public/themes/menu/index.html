@@ -77,13 +77,13 @@
                                                         </tr>
                                                         </thead>
                                                         <tbody>
-                                                        {notempty name = 'list'}
+                                                        {empty name = 'list'}
                                                             <tr class="builder-data-empty">
                                                                 <td class="text-center empty-info" colspan="20"  style="font-size:12px;">
                                                                     <i class="fa fa-database"></i> 暂时没有数据<br>
                                                                 </td>
                                                             </tr>
-                                                            {else/}
+                                                         {else/}
                                                             {volist name="list" id="vals"}
                                                                 <tr>
                                                                     <td style="font-size:12px;"><?php echo $vals['name'];?></td>
@@ -97,7 +97,7 @@
                                                                     </td>
                                                                 </tr>
                                                             {/volist}
-                                                        {/notempty}
+                                                        {/empty}
                                                         </tbody>
                                                     </table>
                                                 </div>

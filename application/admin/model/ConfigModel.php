@@ -6,7 +6,7 @@
 // +----------------------------------------------------------------------
 // | Author: jry <bbs.sasadown.cn>
 // +----------------------------------------------------------------------
-namespace Admin\Model;
+namespace app\admin\Model;
 
 
 use think\Model;
@@ -21,12 +21,12 @@ class ConfigModel extends Model
      * 数据库表名
      * @author jry <bbs.sasadown.cn>
      */
-    protected $tableName = 'config';
+    protected $tableName = 'ysk_config';
 
     /**
      * 自动验证规则
      * @author jry <bbs.sasadown.cn>
-     */
+
     protected $_validate = array(
         array('group', 'require', '配置分组不能为空', self::MUST_VALIDATE, 'regex', self::MODEL_BOTH),
         array('type', 'require', '配置类型不能为空', self::MUST_VALIDATE, 'regex', self::MODEL_BOTH),
@@ -37,16 +37,16 @@ class ConfigModel extends Model
         array('title', '1,32', '配置标题长度为1-32个字符', self::EXISTS_VALIDATE, 'length', self::MODEL_BOTH),
         array('title', '', '配置标题已经存在', self::VALUE_VALIDATE, 'unique', self::MODEL_BOTH),
     );
-
+*/
     /**
      * 自动完成规则
      * @author jry <bbs.sasadown.cn>
-     */
+
     protected $_auto = array(
         array('create_time', 'time', self::MODEL_INSERT, 'function'),
         array('update_time', 'time', self::MODEL_BOTH, 'function'),
         array('status', '1', self::MODEL_BOTH),
-    );
+    );*/
 
     /**
      * 获取配置列表与ThinkPHP配置合并

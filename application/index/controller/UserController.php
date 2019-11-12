@@ -3,18 +3,84 @@
 namespace app\index\controller;
 
 
-use Home\Logic\QrLogic;
-use Home\Logic\SecurityLogic;
-use Home\Logic\UserLogic;
-use app\index\model\GemapayCodeModel;
-use Vendor\TTKClient;
-use Think\Upload;
-use Admin\Model\UserInviteSetting;
-use Gemapay\Model\GemapayCodeTypeModel;
-use Common\Library\enum\CodeEnum;
+use app\common\library\enum\CodeEnum;
 
 class UserController extends CommonController
 {
+
+    /*
+     * 用户注册
+     */
+    public function register()
+    {
+        if ($this->request->isPost()) {
+            $params = $this->request->post('');
+            //基本参数校验
+            $checkParams = $this->validParams($params, ['invent_code', 'username', 'mobile', 'login_pwd']);
+            if($checkParams['status'] != 1){
+                ajaxReturn($checkParams['message'], $checkParams['status']);
+            }
+
+            $logicRet  = $this->logicUser->register($params);
+            ajaxReturn($logicRet['message'],$logicRet['status']);
+        }
+    }
+
+
+    /**
+     * 用户登录
+     */
+    public function  login(){
+        if ($this->request->isPost())
+        {
+            $params = $this->request->post('');
+            //基本参数校验
+            $checkParams = $this->validParams($params, ['account', 'password']);
+            if($checkParams['status'] != 1){
+                ajaxReturn($checkParams['message'], $checkParams['status']);
+            }
+
+            $logicRet  = $this->logicUser->login($params['account'],$params['password']);
+            if ($logicRet['code'] == CodeEnum::ERROR)
+            {
+                ajaxReturn($logicRet['msg'],0);
+            }
+            ajaxReturn('登录成功',1,'', $logicRet['data']);
+        }
+    }
+
+    /**
+     * 获取用户基本信息
+     */
+    public function  userBasicInfo(){
+        $uid = $this->user_id;
+        $fields  ='userid,mobile,money,work_status,status,username,wx_no,activate,alipay,truename,email,userqq,add_admin_id,group_id,token' ;
+        $user  = $this->modelUser->getUser(['userid' =>$uid ],$fields);
+        ajaxReturn('success',CodeEnum::SUCCESS,'',$user);
+    }
+
+
+
+
+
+
+
+
+
+    /****************************************end******************************************/
+
+
+
+
+
+
+
+    public function test()
+    {
+        echo LOGIC_LAYER_NAME;
+    }
+
+
     public function index()
     {
         $UserLogic = new UserLogic();
@@ -141,8 +207,7 @@ class UserController extends CommonController
     //重置密码
     public function set_password()
     {
-        if ($_POST)
-        {
+        if ($_POST) {
 
             $uid = $this->user_id;
             $ulist = M('user')->where(array('userid' => $uid))->find();
@@ -215,7 +280,7 @@ class UserController extends CommonController
 
     public function yinhangka()
     {
-        $uid =$this->user_id;
+        $uid = $this->user_id;
         $clist = M('bankcard')->where(array('uid' => $uid))->order('id desc')->select();
         $this->assign("clist", $clist);
         $this->display();
@@ -284,17 +349,15 @@ class UserController extends CommonController
 
     public function updatesSecurity()
     {
-        if ($_POST)
-        {
+        if ($_POST) {
             $SecurityLogic = new SecurityLogic();
             $security = trim(I('post.new_security'));
             $re_security = trim(I('post.re_new_security'));
             $old_security = trim(I('post.old_security'));
             $res = $SecurityLogic->changeSecurity($this->user_id, $security, $re_security, $old_security);
-            if($res['code'] == CodeEnum::ERROR)
-            {
+            if ($res['code'] == CodeEnum::ERROR) {
                 $data['status'] = 0;
-                $data['msg'] = '保存失败,'.$res['msg'];
+                $data['msg'] = '保存失败,' . $res['msg'];
                 ajaxReturn($data);
             }
             $data['status'] = 1;
@@ -362,12 +425,12 @@ class UserController extends CommonController
         $setting = json_decode($setting["invite_setting"]);
 
         if ($_POST) {
-          /*  if (empty($userinfo["rz_st"])) {
-                $data['status'] = 0;
-                $data['msg'] = '用户未认证,或者系统未开通认证功能';
-                ajaxReturn($data);
-                exit;
-            }*/
+            /*  if (empty($userinfo["rz_st"])) {
+                  $data['status'] = 0;
+                  $data['msg'] = '用户未认证,或者系统未开通认证功能';
+                  ajaxReturn($data);
+                  exit;
+              }*/
             $CodeTypeList = new GemapayCodeTypeModel();
             $codeTypeLists = $CodeTypeList->getAllType();
             $psetting = [];
@@ -438,7 +501,6 @@ class UserController extends CommonController
     }
 
 
-
     public function wxerweima()
     {
         $uid = $this->user_id;
@@ -454,7 +516,6 @@ class UserController extends CommonController
         $this->assign('wxlist', $wxlist);
         $this->display();
     }
-
 
 
     public function yhkerweima()
@@ -882,29 +943,29 @@ class UserController extends CommonController
 
     public function orders()
     {
-        $where['o.status'] = ['neq','1,2'];
-        $where['o.add_time'] = ['gt',time()- 3*60];
+        $where['o.status'] = ['neq', '1,2'];
+        $where['o.add_time'] = ['gt', time() - 3 * 60];
         $where['o.gema_userid'] = $this->user_id;
-        $data  = M('gemapay_order')->alias('o')->field('o.*')
+        $data = M('gemapay_order')->alias('o')->field('o.*')
             ->order(['add_time' => 'desc'])
             ->where($where)
             ->limit(0, 10)
             ->select();
-        foreach ($data as $key=> $d)
-        {
+        foreach ($data as $key => $d) {
             $data[$key]['date'] = date("H:i", $d['add_time']);
         }
-        echo  json_encode($data);
+        echo json_encode($data);
 
     }
 
     /**
      * 得到用户最新的一条订单
      */
-    public function  getLastorderId(){
+    public function getLastorderId()
+    {
         $where['o.gema_userid'] = $this->user_id;
-        $lastOrderId =M('gemapay_order')->alias('o')->where($where)->order(['id'=>'desc'])->getField('id');
-         echo  json_encode(['last_order_id'=>$lastOrderId]);
+        $lastOrderId = M('gemapay_order')->alias('o')->where($where)->order(['id' => 'desc'])->getField('id');
+        echo json_encode(['last_order_id' => $lastOrderId]);
     }
 
 }
