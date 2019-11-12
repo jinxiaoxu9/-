@@ -52,14 +52,21 @@ class GroupController extends AdminController
     public function add(Request $request)
     {
         if ($request->isPost()) {
-            $group_object       = D('Group');
-            $_POST['menu_auth'] = implode(',', $request->param('post.menu_auth'));
+            $group_object       = Db::name('Group');
+            /*$_POST['menu_auth'] = implode(',', $request->param('post.menu_auth'));
             $_POST['hylb'] = implode(',', $request->param('post.hylb'));
-            $data               = $group_object->create();
+            $data               = $group_object->create();*/
+            $data               = $request->post();
+            if( isset($data['menu_auth']) && $data['menu_auth'] ){
+                $data['menu_auth'] = implode(',', $data['menu_auth']);
+            }
+            if(isset($data['hylb']) && $data['hylb']) {
+                $data['hylb'] = implode(',', $data['hylb']);
+            }
             if ($data) {
-                $id = $group_object->add($data);
+                $id = $group_object->insert($data);
                 if ($id) {
-                    $this->success('新增成功', U('index'));
+                    $this->success('新增成功', url('index'));
                 } else {
                     $this->error('新增失败');
                 }
@@ -82,12 +89,18 @@ class GroupController extends AdminController
     {
         if ($request->isPost()) {
             $group_object       = DB::name('Group');
-            $_POST['menu_auth'] = implode(',', $request->param('post.menu_auth'));
-            $_POST['hylb'] = implode(',', $request->param('post.hylb'));
-            $data               = $group_object->create();
+            $data               = $request->post();
+            if( isset($data['menu_auth']) && $data['menu_auth'] ){
+                $data['menu_auth'] = implode(',', $data['menu_auth']);
+            }
+            if(isset($data['hylb']) && $data['hylb']) {
+                $data['hylb'] = implode(',', $data['hylb']);
+            }
+            $id = $data['id'];
+            unset($data['id']);
             if ($data) {
-                if ($group_object->save($data) !== false) {
-                    $this->success('更新成功', U('index'));
+                if ($group_object->where('id', $id)->update($data) !== false) {
+                    $this->success('更新成功', url('index'));
                 } else {
                     $this->error('更新失败');
                 }
@@ -104,8 +117,12 @@ class GroupController extends AdminController
             // 获取功能模块的后台菜单列表
             $all_module_menu_list=$this->getMenuTree();
             $this->assign('all_module_menu_list', $all_module_menu_list);
-            $info['menu_auth']=explode(',', trim($info['menu_auth'],','));
-            $hylb=explode(',', trim($info['hylb'],','));
+            if($info['menu_auth']) {
+                $info['menu_auth'] = explode(',', trim($info['menu_auth'],','));
+            }
+            if($info['hylb']) {
+                $hylb=explode(',', trim($info['hylb'],','));
+            }
             $this->assign('info', $info);
             $this->assign('hylb', $hylb);
             
@@ -115,7 +132,7 @@ class GroupController extends AdminController
 
      // 获取功能模块的后台菜单列表
     private function getMenuTree(){
-        $tree                 = new Tree();
+        $tree                 = new TreeLogic();
         $all_module_menu_list = array();
 
         $con['status']     = 1;
@@ -133,7 +150,7 @@ class GroupController extends AdminController
     public function setStatus($model = '', $script = false)
     {
         $request = Request::instance();
-        $ids = $request->param('request.ids');
+        $ids = $request->param('ids');
         if (is_array($ids)) {
             if (in_array('1', $ids)) {
                 $this->error('超级管理员组不允许操作');
@@ -143,6 +160,7 @@ class GroupController extends AdminController
                 $this->error('超级管理员组不允许操作');
             }
         }
+        $model = 'Group';
         parent::setStatus($model);
     }
 }
