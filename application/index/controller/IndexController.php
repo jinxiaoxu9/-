@@ -8,6 +8,10 @@ use app\index\logic\IndexLogic;
 
 class IndexController extends Controller
 {
+    public function index()
+    {
+        ajaxReturn('test',1,'', '');
+    }
 	public function doregister()
     {
 		if($this->request->isPost())
