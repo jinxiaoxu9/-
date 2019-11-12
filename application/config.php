@@ -253,4 +253,6 @@ return [
 
     'not_send_bonus' => 0,
     'notify_url' => 'http://www.a.com',
+
+    'uploads'=>['size'=>505678,'ext'=>'jpg,png','root_path'=>ROOT_PATH . 'public/uploads' . DS ],
 ];

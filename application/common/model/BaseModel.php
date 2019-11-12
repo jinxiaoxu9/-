@@ -12,11 +12,11 @@
  *  +----------------------------------------------------------------------
  */
 
-namespace Common\Model;
+namespace app\common\model;
 
-use Think\Db;
-use Think\Log;
-use Think\Model;
+use think\Db;
+use think\Log;
+use think\Model;
 
 /**
  * Class BaseModel
@@ -27,7 +27,7 @@ use Think\Model;
 class BaseModel extends ModelModel
 {
     // 是否需要自动写入时间戳 如果设置为字符串 则表示时间字段的类型
-    protected $autoWriteTimestamp = true;
+    protected $autoWriteTimestamp = false;
     // 创建时间字段
     protected $createTime = 'create_time';
     // 更新时间字段
@@ -68,7 +68,7 @@ class BaseModel extends ModelModel
 
             $this->allowField(true)->save($data, $where);
 
-            return $this->getQuery()->getLastInsID();
+            return $this->getLastInsID();
 
         } else {
 
@@ -94,7 +94,7 @@ class BaseModel extends ModelModel
     final protected function updateInfo($where = [], $data = [])
     {
 
-        $data['update_time'] = time();
+//        $data['update_time'] = time();
 
         return $this->allowField(true)->isUpdate(true)->save($data, $where);
     }
@@ -277,11 +277,11 @@ class BaseModel extends ModelModel
     final protected function getList($where = [], $field = true, $order = '', $paginate = 0)
     {
 
-        empty($this->join) && !isset($where['status']) && $where['status'] = ['neq', -1];
+        //empty($this->join) && !isset($where['status']) && $where['status'] = ['neq', -1];
 
         if (empty($this->join)) {
 
-            !isset($where['status']) && $where['status'] = ['neq', -1];
+            //!isset($where['status']) && $where['status'] = ['neq', -1];
 
             $query = $this;
 

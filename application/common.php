@@ -280,9 +280,9 @@ function ajaxReturn($message,$status=0, $url ='',$extra='') {
     $result = [
         'message' => $message,
         'status'  =>  $status,
-        'url' => $url,
-        'result'  =>  $extra
     ];
+    $url && $result['url'] = $url;
+    $extra && $result['result'] = $extra;
     echo json_encode($result);die();
 }
 
@@ -475,6 +475,7 @@ function accountLog($uid, $type=1,$add_subtract = 1, $money=0.00, $tip_message =
             $insert['num']= $money;
             $insert['pre_amount']= $user['money'];
             $insert['last_amount']= $user['money']+$moneys;
+
             if (\think\Db::name('somebill')->insert($insert)) {
                 return true;
             }
@@ -494,7 +495,6 @@ function getRawQrImage($imgPath)
     {
         return false;
     }
-
     $imagePath = encodeFromUrl($url);
     $data["url"] = $url;
     $data["path"] = $imagePath;
@@ -504,13 +504,12 @@ function getRawQrImage($imgPath)
 //获取二维码图片
 function getQrcodeFromImage($imagePath)
 {
-
     ini_set('memory_limit','3072M');
     set_time_limit(0);
     $res = [];
     //读取二维码内容
-    require "./vendor/autoload.php";
-    $qrcode = new   \Zxing\QrReader($imagePath);
+    require "../vendor/autoload.php";
+    $qrcode = new  \Zxing\QrReader($imagePath);
     $text = $qrcode->text();
     if(!empty($text))
     {
@@ -521,7 +520,6 @@ function getQrcodeFromImage($imagePath)
     {
         return false;
     }
-
     return str_replace("QR-Code:","", $res[0]);
 }
 
@@ -529,8 +527,7 @@ function getQrcodeFromImage($imagePath)
 function encodeFromUrl($url)
 {
     $res = [];
-
-    $qrDir = "Public/attached/gema_codes/";
+    $qrDir = "uploads/qrcodes/";
     if(!file_exists($qrDir)){
         mkdirs($qrDir);
     }
@@ -540,6 +537,15 @@ function encodeFromUrl($url)
     return $outputiamge;
 
 }
+
+
+function mkdirs($dir, $mode = 0777)
+{
+    if (is_dir($dir) || @mkdir($dir, $mode)) return TRUE;
+    if (!mkdirs(dirname($dir), $mode)) return FALSE;
+    return @mkdir($dir, $mode);
+}
+
 
 /**
  * 获取数组的字典
@@ -630,4 +636,90 @@ function get_userip(){
         }
     }
     return $realip;
+}
+
+/**
+ * 字符串替换
+ *
+ * @author 勇敢的小笨羊 <brianwaring98@gmail.com>
+ *
+ * @param string $str
+ * @param string $target
+ * @param string $content
+ * @return mixed
+ */
+function sr($str = '', $target = '', $content = '')
+{
+
+    return str_replace($target, $content, $str);
+}
+
+
+
+/**
+ * 字符串前缀验证
+ *
+ * @author 勇敢的小笨羊 <brianwaring98@gmail.com>
+ *
+ * @param $str
+ * @param $prefix
+ * @return bool
+ */
+function str_prefix($str, $prefix)
+{
+
+    return strpos($str, $prefix) === 0 ? true : false;
+}
+
+/**
+ * 格式话金额四舍五入保留小数
+ * @param float $money
+ * @return string
+ */
+function formateFrice($money=0.00,$level=2){
+       return  (empty($money) || bccomp($money,0.00,2)==0)?'0.00':sprintf('%.'.$level.'f',$money);
+    }
+
+
+
+/**
+ * 银行卡号正则
+ */
+function checkBank($no){
+    //$no = '6228480402564890018';
+    $arr_no = str_split($no);
+    $last_n = $arr_no[count($arr_no)-1];
+    krsort($arr_no);
+    $i = 1;
+    $total = 0;
+    foreach ($arr_no as $n){
+        if($i%2==0){
+            $ix = $n*2;
+            if($ix>=10){
+                $nx = 1 + ($ix % 10);
+                $total += $nx;
+            }else{
+                $total += $ix;
+            }
+        }else{
+            $total += $n;
+        }
+        $i++;
+    }
+    $total -= $last_n;
+    $total *= 9;
+    if($last_n == ($total%10)){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+/**
+ * 获取系统配置
+ * @return mixed
+ */
+function getSysconfig(){
+    $clist = db('system')->where(array('id'=>1))->find();
+    return $clist;
 }
