@@ -253,6 +253,7 @@ return [
 
     'not_send_bonus' => 0,
     'notify_url' => 'http://www.a.com',
+    'online_time_toqiangdan' => 20*60,
 
     'uploads'=>['size'=>505678,'ext'=>'jpg,png','root_path'=>ROOT_PATH . 'public/uploads' . DS ],
 ];
