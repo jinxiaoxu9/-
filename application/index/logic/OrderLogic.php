@@ -13,7 +13,8 @@ class OrderLogic
     public function getList($userId)
     {
         $GemapayOrderModel = new GemapayOrderModel();
-        $lists = $GemapayOrderModel->getUserCodeOrder($userId);
+        $where['gema_userid'] = $userId;
+        $lists =  $GemapayOrderModel->getList($where ,'*','add_time desc' ,10);
 
         if (!empty($lists))
         {

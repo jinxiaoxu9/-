@@ -15,7 +15,6 @@
 namespace app\common\model;
 
 use think\Db;
-use think\Log;
 use think\Model;
 
 /**
@@ -274,7 +273,7 @@ class BaseModel extends ModelModel
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
-    final protected function getList($where = [], $field = true, $order = '', $paginate = 0)
+    function getList($where = [], $field = true, $order = '', $paginate = 0)
     {
 
         //empty($this->join) && !isset($where['status']) && $where['status'] = ['neq', -1];
