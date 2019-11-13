@@ -64,7 +64,7 @@ class ManageController extends AdminController
 
             $data        = $request->post();
             if ($data) {
-                $id = Db::name('Manage')->insert($data);
+                $id = Db::name('admin')->insert($data);
                 if ($id) {
                     $this->success('新增成功', url('index'));
                 } else {
@@ -108,19 +108,22 @@ class ManageController extends AdminController
         if ($request->isPost()) {
 
             // 提交数据
-            $user_object = DB::name('Manage');
+            $user_object = DB::name('admin');
             $data        = $request->post();
             // 密码为空表示不修改密码
-            if(!$_POST['password'])
-                unset($data['password']);
+            if(!$_POST['password']) {
+                unset($data['password'],$data['repassword']);
+            }
+
             if ($data) {
+                unset($data['repassword']);
                 $result = $user_object
                     //->field('id,nickname,username,password,mobile,auth_id,update_time')
                     ->update($data);
                 if ($result) {
-                    $this->success('更新成功', U('index'));
+                    $this->success('更新成功', url('index'));
                 } else {
-                    $this->error('更新失败', $user_object->getError());
+                    $this->error('更新失败');
                 }
             } else {
                 $this->error($user_object->getError());
@@ -131,7 +134,7 @@ class ManageController extends AdminController
             $this->assign('role',$role);
 
             // 获取账号信息
-            $info = DB::name('Manage')->find($id);
+            $info = DB::name('admin')->find($id);
             unset($info['password']);
             $this->assign('info',$info);
             return $this->fetch();
