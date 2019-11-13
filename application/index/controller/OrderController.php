@@ -9,7 +9,8 @@ class OrderController extends CommonController
     public function oderList()
     {
         $OrderLogic = new \app\index\logic\OrderLogic();
-        $orderList = $OrderLogic->getList($this->user_id);
+        $status = $this->request->post('status', '-1');
+        $orderList = $OrderLogic->getList($this->user_id, $status);
 
         $data['order'] = $orderList;
         ajaxReturn('成功',1,'', $orderList);

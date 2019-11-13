@@ -55,18 +55,11 @@ class AdminLogic
     {
         //去除前后空格
         $username = trim($username);
-        //匹配登录方式
-        if (preg_match("/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/", $username)) {
-            $map['email'] = array('eq', $username); // 邮箱登陆
-        } elseif (preg_match("/^1\d{10}$/", $username)) {
-            $map['mobile'] = array('eq', $username); // 手机号登陆
-        } else {
-            $map['username'] = array('eq', $username); // 用户名登陆
-        }
+
+        $map['username'] = array('eq', $username);
         $map['status'] = array('eq', 1);
         $admin = new Admin();
         $user_info     = $admin->where($map)->find(); //查找用户
-
         if (!$user_info) {
             return '用户不存在或被禁用！';
         } else {

@@ -10,9 +10,13 @@ use think\Db;
 
 class OrderLogic
 {
-    public function getList($userId)
+    public function getList($userId, $status)
     {
         $GemapayOrderModel = new GemapayOrderModel();
+        if($status != -1)
+        {
+            $where['status'] = $status;
+        }
         $where['gema_userid'] = $userId;
         $lists =  $GemapayOrderModel->getList($where ,'*','add_time desc' ,10);
 

@@ -6,6 +6,7 @@ apiSelect["order"] = {
         dataType: 'json',
         params:{
             'page': 'page(第几页)',
+            'status': '0:wating 1:sucess 2:close, -1: all',
         },
         comment:{
             status : 1,
