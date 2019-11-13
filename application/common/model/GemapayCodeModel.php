@@ -3,7 +3,8 @@
 
 namespace app\common\model;
 
-use Think\Model;
+
+use think\Model;
 
 class GemapayCodeModel extends Model
 {
@@ -68,22 +69,22 @@ class GemapayCodeModel extends Model
             $ids = array_unique($ids);
             if(!empty($ids))
             {
-                $where["a.id"] = array("not in", $ids);
+                $where["code.id"] = array("not in", $ids);
             }
         }
 
         //20分钟在线
-        $bt=time()-C('online_time_toqiangdan');
+        $bt=time()-config('online_time_toqiangdan');
         //最近20分钟在线
-//        $where["a.last_online_time"] = array('gt',$bt);
+//        $where["code.last_online_time"] = array('gt',$bt);
         //二维码类型
-        $where["a.type"] = $type;
+        $where["code.type"] = $type;
 
         //二维码状态正常
-        $where["a.status"] = self::STATUS_ON;
+        $where["code.status"] = self::STATUS_ON;
 
         //二维码没有被锁定
-        $where["a.is_lock"] = self::STATUS_NO;
+        $where["code.is_lock"] = self::STATUS_NO;
 
         //余额足够
         $where["u.money"] = array('gt',$money);
@@ -106,27 +107,17 @@ class GemapayCodeModel extends Model
         {
             $order = "last_online_time desc";
         }
-        
+
         //选内容
         $fileds = [
-            "a.*",
+            "code.*",
         ];
-        $this->join(C('DB_PREFIX').'user u on u.userid=a.user_id', "left");
-        $this->join(C('DB_PREFIX').'admin adm on adm.id=u.add_admin_id', "left");
-        $data =  $this->alias('a')->field($fileds)->where($where)->order($order)->select();
-       //echo $this->getLastSql();die();
+
+        $this->join('ysk_user u', "u.userid=code.user_id", "LEFT");
+        $this->join('ysk_admin adm', "adm.id=u.add_admin_id", "LEFT");
+        $data =  $this->alias('code')->field($fileds)->where($where)->order($order)->select();
         return $data;
-       /* $tprefix =C('DB_PREFIX');
-        $chooseStatus = self::STATUS_ON;
-        $maxCodeMadeOrderNum = self::LIMIT_NUM;
-        $sqlFindCode=" SELECT `{$tprefix}gemapay_code`.`qr_image`,`{$tprefix}gemapay_code`.`id`,`{$tprefix}gemapay_code`.`user_id`,`{$tprefix}gemapay_code`.`user_name`,{$tprefix}gemapay_code.type as int_type FROM `{$tprefix}gemapay_code` 
-LEFT JOIN `{$tprefix}gemapay_code_money_paying` ON `{$tprefix}gemapay_code_money_paying`.`code_id`={$tprefix}gemapay_code.id 
-AND {$tprefix}gemapay_code_money_paying.money = {$money} 
-WHERE  (  {$tprefix}gemapay_code.type = '{$type}' AND  {$tprefix}gemapay_code.last_online_time>'{$bt}'  AND {$tprefix}gemapay_code.status = '{$chooseStatus}' AND {$tprefix}gemapay_code.paying_num < '{$maxCodeMadeOrderNum}' AND (({$tprefix}gemapay_code_money_paying.paying_num < '10' AND {$tprefix}gemapay_code_money_paying.money = '{$money}') OR {$tprefix}gemapay_code_money_paying.money is null) ) 
-ORDER BY `{$tprefix}gemapay_code`.`paying_num` ASC,`last_online_time` DESC limit 1";
-        $ret = M()->query($sqlFindCode);
-        return $ret;*/
-      }
+    }
 
     public function getOnlineCodes($adminId, $type = false)
     {

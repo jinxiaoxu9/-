@@ -6,18 +6,13 @@
 namespace app\common\logic;
 
 use app\common\library\enum\CodeEnum;
-use app\common\library\enum\MoneyOrderTypes;
+use app\common\model\GemapayCodeModel;
+use app\common\model\GemapayOrderModel;
 use app\index\logic\SecurityLogic;
-use Common\Logic\BaseLogic;
-use Gemapay\Model\GemapayCodeModel;
-use Gemapay\Model\GemapayCodeMoneyPayingModel;
-use Gemapay\Model\GemapayCodeTypeModel;
-use Gemapay\Model\GemapayOrderModel;
 use Think\Db;
 use Think\Cache;
 class GemapayOrderLogic
 {
-
     /**
      * 生成訂單
      * @param $money
@@ -30,188 +25,81 @@ class GemapayOrderLogic
     {
         $GemapayCode = new GemapayCodeModel();
         $GemaPayOrder = new GemapayOrderModel();
-        M()->startTrans();
+        $GemapayCode->startTrans();
+
         //获取可以使用二维码
         $codeInfos = $GemapayCode->getAviableCode($money, $codeType);
-
         //如果匹配不到整数,去匹配小数点
-        if(empty($codeInfos))
-        {
+        if (empty($codeInfos)) {
             $payPrices = $this->getAvaibleMoneys($money);
-            foreach ($payPrices as $price)
-            {
+            foreach ($payPrices as $price) {
                 $codeInfos = $GemapayCode->getAviableCode($price, $codeType);
-                if(!empty($codeInfos))
-                {
+                if (!empty($codeInfos)) {
                     $reallPayMoney = $price;
                     break;
                 }
             }
 
-            if(empty($codeInfos))
-            {
-                M()->rollback();
-                return ['code' =>CodeEnum::ERROR, 'msg' => '没有可用二维码'];
+            if (empty($codeInfos)) {
+                $GemapayCode->rollback();
+                return ['code' => CodeEnum::ERROR, 'msg' => '没有可用二维码'];
             }
-        }
-        else
-        {
+        } else {
             $reallPayMoney = $money;
         }
-        $userIds=[];
-        foreach ($codeInfos as $code)
-        {
+        $userIds = [];
+        foreach ($codeInfos as $code) {
             $userIds[] = $code['user_id'];
         }
 
-
-
         $userIds = array_unique($userIds);
         sort($userIds);
-        $lastUserId = Cache::getInstance()->get('last_userid');
-
-        if(empty($lastUserId))
-        {
+        $lastUserId = cache("last_userid");
+        if (empty($lastUserId)) {
             $lastUserId = $userIds[0];
-        }
-        else
-        {
+        } else {
             $flag = false;
-            foreach ($userIds as $key=>$userId)
-            {
-                if($userId > $lastUserId)
-                {
+            foreach ($userIds as $key => $userId) {
+                if ($userId > $lastUserId) {
 
                     $flag = true;
                     $lastUserId = $userId;
                     break;
                 }
             }
-            if($flag==false)
-            {
+            if ($flag == false) {
                 $lastUserId = $userIds[0];
             }
         }
-        foreach ($codeInfos as $code)
-        {
-            if($code['user_id']== $lastUserId)
-            {
+        foreach ($codeInfos as $code) {
+            if ($code['user_id'] == $lastUserId) {
                 $codeInfo = $code;
                 break;
             }
         }
-        Cache::getInstance()->set('last_userid', $lastUserId);
+        cache('last_userid', $lastUserId);
         $insId = $GemaPayOrder->addGemaPayOrder($codeInfo['user_id'], $money, $tradeNo, $codeInfo['id'], $reallPayMoney, $codeInfo['qr_image'], $codeInfo['user_name'], $codeInfo['type'], $tradeNo);
-        $GemapayCodeModel= new GemapayCodeModel();
-        if(!empty($codeInfo['id']))
-        {
+        $GemapayCodeModel = new GemapayCodeModel();
+        if (!empty($codeInfo['id'])) {
             $GemapayCodeModel->incTodayOrder($codeInfo['id']);
         }
-        if(empty($insId))
-        {
-            M()->rollback();
-            return ['code' =>CodeEnum::ERROR, 'msg' => '更新订单数据失败'];
+        if (empty($insId)) {
+            $GemapayCode->rollback();
+            return ['code' => CodeEnum::ERROR, 'msg' => '更新订单数据失败'];
         }
         //抢单成功,扣除余额
         $message = "抢单成功,扣除余额";
-        if(false == accountLog($codeInfo['user_id'],7,0, $money, $message))
-        {
-            DB::rollback();
+        if (false == accountLog($codeInfo['user_id'], 7, 0, $money, $message)) {
+            $GemapayCode->rollback();
             return ['code' => CodeEnum::ERROR, 'msg' => '更新数据失败'];
         }
-
-        M()->commit();
+        $GemapayCode->commit();
         //匹配收款二维码
-        $payImage = "http://".$_SERVER['HTTP_HOST']."/";
-        $ret['id']=$insId;
-        $ret['pay_image']=$payImage.$codeInfo['raw_qr_image'];
-        $ret['reall_pay_amount']= $reallPayMoney;
-        return ['code' => CodeEnum::SUCCESS, 'msg' => 'SUCCESS','data'=>$ret];
-    }
-
-    /**
-     * 更新该二维码支付个数 code表和codepaying表的PayingNum
-     * @param $codeId
-     * @param $money
-     * @return bool
-     */
-    protected function updateCodePayingNum($codeId, $money)
-    {
-        //更新code数据表PayingNum
-        $GemapayCode = new GemapayCodeModel();
-        $res = $GemapayCode->incCodePayingNum($codeId);
-        if($res == false)
-        {
-            return false;
-        }
-        //更新paying code数据表PayingNum
-        $GemapayCodeMoneyPaying = new GemapayCodeMoneyPayingModel();
-        $res = $GemapayCodeMoneyPaying->incCodePayingNum($codeId, $money);
-        if($res == false)
-        {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * 更新该二维码支付个数 code表和codepaying表的PayingNum
-     * @param $codeId
-     * @param $money
-     * @return bool
-     */
-    protected function decCodePayingNum($codeId, $money)
-    {
-        //更新code数据表PayingNum
-        $GemapayCode = new GemapayCodeModel();
-        $res = $GemapayCode->decCodePayingNum($codeId);
-
-        if($res == false)
-        {
-            return false;
-        }
-
-        //更新paying code数据表PayingNum
-        $GemapayCodeMoneyPaying = new GemapayCodeMoneyPayingModel();
-        $res = $GemapayCodeMoneyPaying->decCodePayingNum($codeId, $money);
-        if($res == false)
-        {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * 获取可以使用的金额
-     * @param $codeId　
-     * @return float
-     */
-    protected function getAvaiblePayPrice($codeId, $price)
-    {
-        $GemaPayOrder = new GemapayOrderModel();
-        $payingList = $GemaPayOrder->getPayingMoneyList($codeId, $price);
-        $moneys = $this->getAvaibleMoneys($price);
-
-        foreach ($moneys as $money)
-        {
-            $flag = true;
-            foreach ($payingList as $p)
-            {
-                //要精确２位不然99.96 就不等于99.96
-                if(round($p['order_pay_price'],2) == round($money, 2))
-                {
-                    $flag = false;
-                    break;
-                }
-            }
-
-            if($flag)
-            {
-                return $money;
-            }
-        }
+        $payImage = "http://" . $_SERVER['HTTP_HOST'] . "/";
+        $ret['id'] = $insId;
+        $ret['pay_image'] = $payImage . $codeInfo['raw_qr_image'];
+        $ret['reall_pay_amount'] = $reallPayMoney;
+        return ['code' => CodeEnum::SUCCESS, 'msg' => 'SUCCESS', 'data' => $ret];
     }
 
     /**
@@ -354,18 +242,6 @@ class GemapayOrderLogic
         return ['code' => CodeEnum::SUCCESS, 'msg' => '数据更新成功'];
     }
 
-    public function setOrderSucessByAuto($userId, $type, $money)
-    {
-        $GemaPayOrder = new \app\gemapay\model\GemapayOrder();
-        $orderId = $GemaPayOrder->getOrderId($userId, $type, $money);
-
-        if(empty($orderId))
-        {
-            return ['code' => enum\CodeEnum::ERROR, 'msg' => '订单数据不存在'];
-        }
-        return $this->setOrderSucess($orderId);
-    }
-
     public function getPaylink($id)
     {
         return config('custom.gumapay_link')."?id=".$id;
@@ -377,12 +253,20 @@ class GemapayOrderLogic
      * @param $order
      */
     public function  cancleOrder($order){
+        $GemapayOrderModel = new GemapayOrderModel();
+        $where["order_no"] = $order;
+        $order = $GemapayOrderModel->where($where)->find();
+        if(empty($order) || $order['status'] != $GemapayOrderModel::WAITEPAY)
+        {
+            return false;
+        }
           //取消订单
-        $statusRet = M('gemapay_order')->where(['id'=>$order['id']])->setField('status',2);
+        $statusRet = $GemapayOrderModel->where(['id'=>$order['id']])->setField('status',2);
         if($statusRet!==false){
             //记录日志
             $message ="关闭订单：".$order['order_no'];
-            return accountLog($order['gema_userid'],7,1,$order['order_pay_price'],$message);
+            return accountLog($order['gema_userid'], \app\common\library\enum\MoneyOrderTypes::ORDER_FORCE_FINISH,
+                \app\common\library\enum\MoneyOrderTypes::OP_ADD,$order['order_pay_price'],$message);
 
         }
         return false;

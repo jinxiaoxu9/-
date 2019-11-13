@@ -13,7 +13,7 @@
 return [
     // 应用初始化
     'app_init'     => [
-        'app\\common\\behavior\\InitApp'
+       'app\\common\\behavior\\InitApp'
     ],
     // 应用开始
     'app_begin'    => [],
