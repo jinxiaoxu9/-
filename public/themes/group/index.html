@@ -90,12 +90,12 @@
                                                                 <a name="edit" title="编辑" class="label label-primary-outline label-pill" href="{:url('Group/edit',array('id'=>$data['id']))}">编辑</a>
 
                                                                     {eq name="data['status']" value="1" }
-                                                                <a name="forbid" title="禁用" class="label label-warning-outline label-pill ajax-get confirm" href="{:url('Group/setStatus',array('status'=>'forbid','ids'=>$data['id'],'model'=>'Group'))}">禁用</a>
+                                                                <a name="forbid" title="禁用" class="label label-warning-outline label-pill confirm" href="{:url('Group/setStatus',array('status'=>'forbid','ids'=>$data['id'],'model'=>'Group'))}">禁用</a>
                                                                 {else /}
-                                                                <a name="forbid" title="启用" class="label label-success-outline label-pill ajax-get confirm" href="{:url('Group/setStatus',array('status'=>'resume','ids'=>$data['id'],'model'=>'Group'))}">启用</a>
+                                                                <a name="forbid" title="启用" class="label label-success-outline label-pill confirm" href="{:url('Group/setStatus',array('status'=>'resume','ids'=>$data['id'],'model'=>'Group'))}">启用</a>
                                                                 {/eq}
 
-                                                                <a name="delete" title="回收" class="label label-danger-outline label-pill ajax-get confirm" model="Group" href="{:url('Group/setStatus',array('status'=>'recycle','ids'=>$data['id'],'model'=>'Group'))}">回收</a>
+                                                                <a name="delete" title="回收" class="label label-danger-outline label-pill confirm" model="Group" href="{:url('Group/setStatus',array('status'=>'recycle','ids'=>$data['id'],'model'=>'Group'))}">回收</a>
                                                                 {/eq}
                                                         </tr>
                                                     {/volist}

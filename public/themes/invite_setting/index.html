@@ -73,7 +73,7 @@
                                                                     复制分享链接
                                                                 </a>
                                                                 <a name="edit" title="编辑" class="label label-primary-outline label-pill" href="{:url('InviteSetting/editInviteSetting',array('id'=>$data['id']))}">编辑</a>
-                                                                <a name="delete" title="删除" class="label label-danger-outline label-pill ajax-get confirm" model="News" href="{:url('News/setStatus',array('status'=>'delete','ids'=>$data['id'],'model'=>'News'))}">删除</a>
+                                                                <a name="delete" title="删除" class="label label-danger-outline label-pill confirm" model="News" href="{:url('News/setStatus',array('status'=>'delete','ids'=>$data['id'],'model'=>'News'))}">删除</a>
                                                         </tr>
                                                     {/volist}
 

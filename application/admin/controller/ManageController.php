@@ -158,6 +158,8 @@ class ManageController extends AdminController
                 $this->error('超级管理员不允许操作');
             }
         }
+        $model = 'admin';
+
         parent::setStatus($model, $script);
     }
 }
