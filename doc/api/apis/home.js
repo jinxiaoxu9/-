@@ -1,14 +1,13 @@
 apiSelect["home"] = {
-    login: {
+    index: {
         title: '获取工作信息',
         uri: '/index/home/index',
         type: 'post',
         dataType: 'json',
-        params:{
-        },
-        comment:{
-            status : 1,
-            msg : "消息",
+        params: {},
+        comment: {
+            status: 1,
+            msg: "消息",
             url: "",
             result: {
                 "info": {
@@ -43,6 +42,7 @@ apiSelect["home"] = {
                     "unread": '未读消息',
                     "today_success_rate": "10.00%今日成功率"
                 }
+            }
         },
     },
 
