@@ -28,8 +28,8 @@
                                     <div class="col-xs-12 col-sm-8 button-list clearfix">
                                         <div class="form-group">
                                             <a title="新增" class="btn btn-primary-outline btn-pill" href="{:url('UserGroup/addGroup')}">新增</a>&nbsp;
-                                            <a title="全员开工" class="btn btn-primary-outline btn-pill ajax-get confirm" href="{:url('UserGroup/setAllWorkStatus',array('work_status'=>1))}">全员开工</a>&nbsp;
-                                            <a title="全员禁工" class="btn btn-primary-outline btn-pill ajax-get confirm" href="{:url('UserGroup/setAllWorkStatus',array('work_status'=>0))}">全员禁工</a>&nbsp;
+                                            <a title="全员开工" class="btn btn-primary-outline btn-pill confirm" href="{:url('UserGroup/setAllWorkStatus',array('work_status'=>1))}">全员开工</a>&nbsp;
+                                            <a title="全员禁工" class="btn btn-primary-outline btn-pill confirm" href="{:url('UserGroup/setAllWorkStatus',array('work_status'=>0))}">全员禁工</a>&nbsp;
                                         </div>
                                     </div>
 
@@ -73,13 +73,13 @@
                                                             <th>{$data['note']}</th>
                                                             <td>
                                                                 <?php if($data['work_status']==1){ ?>
-                                                                <a name="work" title="禁止工作" class="label label-danger-outline label-pill ajax-get confirm" href="{:url('UserGroup/setWorkStatus',array('work_status'=>0,'ids'=>$data['id']))}">禁止工作</a>
+                                                                <a name="work" title="禁止工作" class="label label-danger-outline label-pill confirm" href="{:url('UserGroup/setWorkStatus',array('work_status'=>0,'ids'=>$data['id']))}">禁止工作</a>
                                                                 <?php }?>
                                                                 <?php if($data['work_status']==0){ ?>
-                                                                <a name="notwork" title="开启工作" class="label label-primary-outline label-pill ajax-get confirm" href="{:url('UserGroup/setWorkStatus',array('work_status'=>1,'ids'=>$data['id']))}">开启工作</a>
+                                                                <a name="notwork" title="开启工作" class="label label-primary-outline label-pill confirm" href="{:url('UserGroup/setWorkStatus',array('work_status'=>1,'ids'=>$data['id']))}">开启工作</a>
                                                                 <?php }?>
                                                                 <a name="edit" title="编辑" class="label label-primary-outline label-pill" href="{:url('UserGroup/editGroup',array('id'=>$data['id']))}">编辑</a>
-                                                                <a name="delete" title="删除" class="label label-danger-outline label-pill ajax-get confirm" model="News" href="{:url('UserGroup/delGroup',array('id'=>$data['id']))}">删除</a>
+                                                                <a name="delete" title="删除" class="label label-danger-outline label-pill confirm" model="News" href="{:url('UserGroup/delGroup',array('id'=>$data['id']))}">删除</a>
                                                         </tr>
                                                     {/volist}
 

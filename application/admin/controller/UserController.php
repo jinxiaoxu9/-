@@ -586,7 +586,11 @@ class UserController extends AdminController
         $adminLogic = new AdminLogic();
         $type = $request->param('type',0,'intval');
         $type &&  $map['type'] =$type;
-        $map['a.user_id'] = ['in', $adminLogic->tzUsers()];
+        $a_tz_users = $adminLogic->tzUsers();
+        $map = [];
+        if($a_tz_users) {
+            $map['a.user_id'] = ['in', $a_tz_users];
+        }
 
         $gemapayCode = Db::name('gemapay_code');
         $listGemaPayCode = $gemapayCode->alias('a')->field('a.*,b.account,b.username,c.type_name')
@@ -657,7 +661,7 @@ class UserController extends AdminController
     public function delewm(Request $request)
     {
         $id = trim($request->param('id'));
-        $re = M('ewm')->where(array('id' => $id))->delete();
+        $re = Db::name('gemapay_code')->where(array('id' => $id))->delete();
         if ($re) {
             $this->success('删除成功');
         } else {
@@ -876,8 +880,11 @@ class UserController extends AdminController
      */
     public function updateLock($model = '', Request $request)
     {
-        $id = $request->param('request.id');
+        $id = $request->param('id');
         $status = $request->param('status');
+        if($request->param('model')) {
+            $model = $request->param('model');
+        }
         $map = array('id' => $id);
 
         switch ($status) {
@@ -887,8 +894,9 @@ class UserController extends AdminController
                     $model,
                     $data,
                     $map,
-                    array('success' => '锁定成功', 'error' => '锁定失败')
+                    array('success' => '锁定成功', 'error' => '锁定失败', 'url' => url('User/ewm'))
                 );
+
                 break;
             case 'unlock': // 解锁
                 $data = array('is_lock' => 0);
@@ -896,7 +904,7 @@ class UserController extends AdminController
                     $model,
                     $data,
                     $map,
-                    array('success' => '解锁成功', 'error' => '解锁失败')
+                    array('success' => '解锁成功', 'error' => '解锁失败', 'url' => url('User/ewm'))
                 );
                 break;
         }

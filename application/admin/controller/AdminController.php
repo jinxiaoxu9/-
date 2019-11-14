@@ -92,13 +92,15 @@ class AdminController extends Controller
     public function setStatus($model = '', $script = false)
     {
         $request = Request::instance();
-        $ids    = $request->param('ids');
+        $ids    = $request->param('ids/a');
         $status = $request->param('status');
 
         if (empty($ids)) {
             $this->error('请选择要操作的数据');
         }
-        $modelOjb = model("app\admin\model\{$model}");
+        //$modelOjb = model("app\admin\model\{$model}");
+        $s_model = 'app\admin\model\\' . $model . 'Model';
+        $modelOjb = new $s_model();
 
         $model_primary_key       = $modelOjb->getPk();
         $map[$model_primary_key] = array('in', $ids);
@@ -113,7 +115,7 @@ class AdminController extends Controller
                     $model,
                     $data,
                     $map,
-                    array('success' => '禁用成功', 'error' => '禁用失败')
+                    array('success' => '禁用成功', 'error' => '禁用失败', 'url' => url('index'))
                 );
                 break;
             case 'resume': // 启用条目
@@ -123,7 +125,7 @@ class AdminController extends Controller
                     $model,
                     $data,
                     $map,
-                    array('success' => '启用成功', 'error' => '启用失败')
+                    array('success' => '启用成功', 'error' => '启用失败', 'url' => url('index'))
                 );
                 break;
             case 'recycle': // 移动至回收站
@@ -175,35 +177,36 @@ class AdminController extends Controller
      */
     final protected function editRow($model, $data, $map, $msg)
     {
-        //$model = new $model();
+
+        $model = 'app\admin\model\\' . $model . 'Model';
+        $modelOjb = new $model();
+
         $request = Request::instance();
-        $modelOjb = model("app\admin\model\{$model}");
-        $request = Request::instance()->param();
-        $id = array_unique((array) $request->param('id'));
+        $id = $request->param('id');
 
         $id = is_array($id) ? implode(',', $id) : $id;
         //如存在id字段，则加入该条件
-        $fields = $model->getTableInfo('');
-        if (in_array('id', $fields) && !empty($id)) {
+        /*$options['table'] = $model->table;
+        $fields = Db::name($model->table)->getTableFields($options);
+        dump($fields);exit();
+        if (in_array('id', $fields) && !empty($id)) {*/
             $where = array_merge(
                 array('id' => array('in', $id)),
                 (array) $map
             );
-        }
+        //}
         $msg = array_merge(
             array(
                 'success' => '操作成功！',
-                'error'   => '操作失败！',
-                'url'     => ' ',
-                'ajax'    => $request->isAjax(),
+                'error'   => '操作失败！'
             ),
             (array) $msg
         );
-        $result = $modelOjb->where($map)->update($data);
+        $result = $modelOjb->where($where)->update($data);
         if ($result != false) {
-            $this->success($msg['success'], $msg['url'], $msg['ajax']);
+            $this->success($msg['success'], $msg['url']);
         } else {
-            $this->error($msg['error'], $msg['url'], $msg['ajax']);
+            $this->error($msg['error'], $msg['url']);
         }
     }
 
