@@ -1,3 +1,8 @@
+ALTER TABLE `ysk_recharge`
+ADD COLUMN `account_name` VARCHAR(225) NOT NULL AFTER `marker`,
+ADD COLUMN `account_num` VARCHAR(225) NOT NULL AFTER `account_name`,
+ADD COLUMN `bank_name` VARCHAR(225) NOT NULL AFTER `account_num`;
+
 CREATE TABLE `ysk_user_message` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int(10) unsigned NOT NULL DEFAULT '0',
