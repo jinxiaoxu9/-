@@ -1,0 +1,99 @@
+{extend name="public/layout"/}
+{block name="style" }
+    <link rel="stylesheet" type="text/css" href="__LYUI__/css/lyui.extend.min.css">
+    <link rel="stylesheet" type="text/css" href="__ADMIN_CSS__/style.css">
+{/block}
+
+{block name="main"}
+   <div id="main" class="col-xs-12 col-sm-9 main" style="overflow-y: scroll;">
+        <!-- 面包屑导航 -->
+        <ul class="breadcrumb">
+            <li><i class="fa fa-map-marker"></i></li>
+            {foreach $_menu_tab['name'] as $tab_v}
+            <li class="text-muted">{$tab_v}</li>
+            {/foreach}
+        </ul>
+
+        <!-- 主体内容区域 -->
+        <div class="tab-content ct-tab-content">
+            <div class="panel-body">
+                <div class="builder formbuilder-box">
+
+                        <div class="form-group"></div>
+
+
+                        <!-- 数据列表 -->
+                        <div class="builder-container">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="builder-table">
+                                        <div class="panel panel-default table-responsive">
+                                            <table class="table table-bordered table-striped table-hover">
+                                              <thead>
+                                                <tr>
+                                                    <th>商品订单号</th>
+                                                    <th>商店订单类型</th>
+                                                    <th>上传时间</th>
+                                                    <th>所属用户</th>
+                                                    <th>微信h5链接</th>
+                                                    <th>支付宝ｈ５链接</th>
+                                                    <th>微信ｐｃ支付链接</th>
+                                                    <th>支付宝ｐｃ支付链接</th>
+                                                    <th>商品金额</th>
+                                                    <th>状态</th>
+                                                    <th>上传原始文件</th>
+                                                    <th>被支付了多少次</th>
+                                                    <th>支付完成时间</th>
+                                                     <th>过期时间</th>
+                                                     <th>是否被删除</th>
+                                                    <th>操作</th>
+                                                </tr>
+                                            </thead>
+                                                <tbody>
+                                                    {volist name="list" id="data"}
+                                                        <tr>
+                                                            <td>{$data['shop_order_no']}</td>
+                                                            <td>{:isset($shop_type[$data['shop_type']]) ? $shop_type[$data['shop_type']] : ''}</td>
+                                                            <td>{$data['create_time']|date='Y-m-d H:i:s',###}</td>
+                                                            <td>{$data['pid_account']}</td>
+                                                            <td><a href="{$data['vx_pay_h5_link']}" title="微信h5链接"> 微信h5链接 </a></td>
+                                                            <td><a href="{$data['zfb_pay_h5_link']}" title="支付宝h5链接"> 支付宝h5链接 </a></td>
+                                                            <td><a href="{$data['vx_pay_pc_link']}" title="微信pc支付链接"> 微信pc支付链接 </a></td>
+                                                            <td><a href="{$data['zfb_pay_pc_link']}" title="支付宝pc支付链接"> 支付宝pc支付链接 </a></td>
+                                                            <td>{$data['price']}</td>
+                                                            <td>{:isset($status_type[$data['status']]) ? $status_type[$data['status']] : ''}</td>
+                                                            <td>{$data['upload_file']}</td>
+                                                            <td>{$data['pay_times']}</td>
+                                                            <td>{$data['finish_time']|date='Y-m-d H:i:s',###}</td>
+                                                            <td>{$data['create_time']|date='Y-m-d H:i:s',###}</td>
+                                                            <td>{{$data['is_delete'] ? "是":"否"}}</td>
+                                                            <td><a name="show" title="查看" class="label label-primary-outline label-pill" href="{:url('show',array('id'=>$data['id']))}">查看</a>
+                                                        </tr>
+                                                    {/volist}
+
+                                                    {empty name="list"}
+                                                        <tr class="builder-data-empty">
+                                                            <td class="text-center empty-info" colspan="20">
+                                                                <i class="fa fa-database"></i> 暂时没有数据<br>
+                                                            </td>
+                                                        </tr>
+                                                    {/empty}
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div class="pagination">{$page|default=''}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                </div>
+            </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+    <script type="text/javascript" src="__LYUI__/js/lyui.extend.min.js"></script>
+{/block}

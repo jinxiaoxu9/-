@@ -68,6 +68,18 @@
                                         </div>
                                     </div>
                                     <div class="form-group item_title ">
+                                        <label class="left control-label">ICON图标：</label>
+                                        <div class="right">
+                                            <input type="text" class="form-control input" name="icon" value="{:isset($info.icon) ? $info.icon : ''}" placeholder="ICON图标" >
+                                        </div>
+                                    </div>
+                                    <div class="form-group item_title ">
+                                        <label class="left control-label">显示：</label>
+                                        <div class="right">
+                                            <input type="checkbox" class="checkbox" name="status" value="{:isset($info.status) ? $info.status : 1}" placeholder="显示状态" >
+                                        </div>
+                                    </div>
+                                    <div class="form-group item_title ">
                                         <label class="left control-label">排序：</label>
                                         <div class="right">
                                             <input type="text" class="form-control input" name="sort" value="{:isset($info.sort) ? $info.sort : ''}" placeholder="排序" >
