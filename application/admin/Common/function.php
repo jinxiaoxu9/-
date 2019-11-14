@@ -190,11 +190,7 @@ function getpagee($count, $pagesize = 10) {
 	$p->lastSuffix = false;//最后一页不显示为总页数
 	return $p;
 }
-//密码加密
-function pwd_md5($value, $salt){
-	$user_pwd = md5(md5($value) . $salt);
-	return $user_pwd;
-}
+
 //获取 会员昵称
 function getmyname($id){
 	$list = M('user')->where(array('userid'=>$id))->find();

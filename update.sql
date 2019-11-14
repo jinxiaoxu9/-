@@ -1,3 +1,16 @@
+CREATE TABLE `ysk_user_message` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `title` varchar(32) NOT NULL DEFAULT '' COMMENT '标题',
+  `content` text NOT NULL COMMENT '内容',
+  `add_time` int(10) unsigned NOT NULL DEFAULT '0',
+  `read_time` int(11) unsigned NOT NULL DEFAULT '0',
+  `is_read` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '是否已读',
+  `is_system` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '是否是系统公告',
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `idx` (`user_id`,`add_time`,`is_read`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=693 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='站内信';
+
 CREATE TABLE `ysk_shop_order` (
   `id` INT UNSIGNED NULL AUTO_INCREMENT,
   `user_id` INT UNSIGNED NULL COMMENT '所属用户',
@@ -19,8 +32,6 @@ CREATE TABLE `ysk_shop_order` (
 
 ALTER TABLE `ysk_withdraw`
 ADD COLUMN `bankcard_id` int(11) NOT NULL default 0 AFTER `status`;
-
-
 
 ALTER TABLE `ysk_user`
 ADD COLUMN `token` VARCHAR(45) NOT NULL AFTER `security_pwd`;

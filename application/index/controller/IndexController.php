@@ -19,7 +19,7 @@ class IndexController extends Controller
             $invent_code = $this->request->post('invent_code');
             $username = $this->request->post('username');
             $mobile = $this->request->post('mobile');
-            $password = $this->request->post('login_pwd');
+            $password = $this->request->post('password');
 
             $indexLogic = new IndexLogic();
             $res = $indexLogic->register($mobile, $username, $password, $invent_code);
