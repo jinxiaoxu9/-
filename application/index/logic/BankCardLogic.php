@@ -3,6 +3,7 @@
 namespace app\index\logic;
 
 use app\common\library\enum\CodeEnum;
+use app\index\model\BankcardModel;
 use think\Db;
 //use app\index\model\ConfigModel;
 use app\index\model\User;
@@ -34,6 +35,29 @@ class BankCardLogic extends BaseLogic
      }
 
 
+    /**
+     * 删除银行卡
+     * @param $userId
+     * @param $messageId
+     * @return array
+     */
+    public function delBank($userId, $bankId)
+    {
+        $BankcardModel = new BankcardModel();
+        if (empty($bankId))
+        {
+            return ['code' => CodeEnum::ERROR, 'msg' => '参数错误'];
+        }
+
+        $ret = $BankcardModel->where(['id' => $bankId, 'uid' => $userId])->delete();
+
+        //再校验一下
+        if ($ret == false)
+        {
+            return ['code' => CodeEnum::ERROR, 'msg' => '操作失败'];
+        }
+        return ['code' => CodeEnum::SUCCESS, 'msg' => '操作成功'];
+    }
 
 
 

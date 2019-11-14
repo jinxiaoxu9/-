@@ -4,6 +4,7 @@ namespace app\index\controller;
 
 
 use app\common\library\enum\CodeEnum;
+use app\index\logic\BankCardLogic;
 
 
 /**
@@ -13,7 +14,6 @@ use app\common\library\enum\CodeEnum;
  */
 class BankCardController extends CommonController
 {
-
 
     /**
      * 添加提现银行卡
@@ -36,11 +36,23 @@ class BankCardController extends CommonController
      */
     public function index()
     {
-        $ret = $this->modelBankcard->getBankCards(['uid' => $this->user_id]);
-        ajaxReturn('success', CodeEnum::SUCCESS, '', $ret);
+        $list = $this->modelBankcard->getBankCards(['uid' => $this->user_id]);
+        $data['bank_list'] = $list;
+        ajaxReturn('success', CodeEnum::SUCCESS, '', $data);
     }
 
-
-
-
+    /**
+     * 删除银行卡
+     */
+    public function delBank()
+    {
+        $bankId = $this->request->post('bank_id');
+        $BankCardLogic = new BankCardLogic();
+        $res = $BankCardLogic->delBank($this->user_id, $bankId);
+        if ($res['code'] == CodeEnum::ERROR)
+        {
+            ajaxReturn($res['msg'],0);
+        }
+        ajaxReturn('操作成功',1,'');
+    }
 }

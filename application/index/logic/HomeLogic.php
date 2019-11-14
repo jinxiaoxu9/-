@@ -11,10 +11,11 @@ class HomeLogic
         $UserModel = new \app\index\model\UserModel();
         $UserGemaCodeLogic =  new CodeLogic();
         $codeTypes = $UserGemaCodeLogic->getcodeTypes($userId);
-        var_dump($codeTypes);die();
         $where['userid'] = $userId;
         $userInfo = $UserModel->find($where);
 
+        //
+        $data["code_infos"] = $codeTypes;
         //工作状态
         $data["work_status"] = $userInfo['work_status'];
         //用户余额
@@ -27,6 +28,8 @@ class HomeLogic
         $data["today_finish_order"] = 10;
         //今日总订单数量
         $data["today_total_order"] = 100;
+        //未读消息
+        $data["unread"] = 3;
         //今日成功率
         $data["today_success_rate"] = sprintf("%.2f", ($data["today_finish_order"]*100)/$data["today_total_order"])."%";
 

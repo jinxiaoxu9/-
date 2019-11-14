@@ -10,16 +10,25 @@ apiSelect["BankCard"] = {
             'banknum':'banknum(银行卡卡号)',
         },
         comment:{
-            "message": "登录成功",
+            "message": "添加成功",
             "status": 1,
-            "result":{
-                "message": "银行卡添加成功",
-                "status": 1
-            }
         },
 
     },
-    register: {
+    delBank: {
+        title: '删除银行卡',
+        uri: '/index/BankCard/delBank',
+        type: 'post',
+        dataType: 'json',
+        params:{
+            'bank_id': 'bank_id(银行卡id)'
+        },
+        comment:{
+            "message": "删除成功",
+            "status": 1,
+        },
+    },
+    bankindex: {
         title: '用户银行卡列表',
         uri: '/index/BankCard/index',
         type: 'post',
@@ -37,7 +46,7 @@ apiSelect["BankCard"] = {
                         "uid": 1752,
                         "name": "李健芸",
                         "bankname": "传达银行",
-                        "banknum": "6228484098313873077333",
+                        "banknum": "848409831377333",
                         "addtime": "1573544295"
                     },
                     {
@@ -45,7 +54,7 @@ apiSelect["BankCard"] = {
                         "uid": 1752,
                         "name": "李健芸",
                         "bankname": "中国农业银行",
-                        "banknum": "622848409522124588",
+                        "banknum": "62284840924588",
                         "addtime": "1573544370"
                     },
                     {
@@ -53,7 +62,7 @@ apiSelect["BankCard"] = {
                         "uid": 1752,
                         "name": "李健芸",
                         "bankname": "中国信业银行",
-                        "banknum": "6228484098324512477",
+                        "banknum": "62284840512477",
                         "addtime": "1573544387"
                     }
                 ]

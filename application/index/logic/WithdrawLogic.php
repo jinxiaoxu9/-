@@ -3,6 +3,8 @@
 namespace app\index\logic;
 
 use app\common\library\enum\CodeEnum;
+use app\index\model\BankcardModel;
+use app\index\model\WithdrawModel;
 use think\Db;
 //use app\index\model\ConfigModel;
 use app\index\model\User;
@@ -17,9 +19,10 @@ class WithdrawLogic extends BaseLogic
 
     public function add($param = [])
     {
+        $BankcardModel = new BankcardModel();
+        $bankInfo = $BankcardModel->getBankCardInfo(['id' => $param['bankcard_id'],'uid'=>$param['uid']], '*');
 
-        $count = $this->modelBankcard->getBankCardCount(['id' => $param['bankcard_id']], 'id');
-        if ($count == 0) {
+        if (empty($bankInfo)) {
             return ['status' => CodeEnum::ERROR, 'message' => '银行卡号不存在'];
         }
         if (bccomp($param['price'], 0.00, 2) != 1) {
@@ -39,6 +42,9 @@ class WithdrawLogic extends BaseLogic
         if ($param['price'] > $user['money']) {
             return ['status' => CodeEnum::ERROR, 'message' => '您最多可提现' . $user['money'] . '元'];
         }
+        $param['account'] = $bankInfo['banknum'];
+        $param['name'] = $bankInfo['name'];
+        $param['way'] = $bankInfo['bankname'];
         $param['addtime'] =time();
         $ret  = $this->modelWithdraw->setWithdraw($param);
 
@@ -49,5 +55,11 @@ class WithdrawLogic extends BaseLogic
         return ['status' => CodeEnum::ERROR, 'message' => '提现失败'];
     }
 
-
+    public function getLists($userId)
+    {
+        $RechargeModel = new WithdrawModel();
+        $where['uid'] = $userId;
+        $lists =  $RechargeModel->getList($where ,'*','addtime desc' ,10);
+        return $lists;
+    }
 }

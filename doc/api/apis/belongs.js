@@ -56,7 +56,7 @@ apiSelect["belongs"] = {
     },
     changeLog: {
         title: '资产变动记录',
-        uri: '/index/user/changeLog',
+        uri: '/index/Belongs/changeLog',
         type: 'post',
         dataType: 'json',
         comment:{

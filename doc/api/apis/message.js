@@ -31,7 +31,7 @@ apiSelect["message"] = {
         },
     },
     readMessage: {
-        title: '删阅读消息',
+        title: '阅读消息',
         uri: '/index/message/readMessage',
         type: 'post',
         dataType: 'json',

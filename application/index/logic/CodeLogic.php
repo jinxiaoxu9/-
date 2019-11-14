@@ -46,7 +46,7 @@ class CodeLogic
         }
         foreach ($codeTypes as $key=>$codeType)
         {
-            $codeTypes[$key]['rate'] = $setting[$key];
+            $codeTypes[$key]['rate'] = $setting->$codeType["id"];
         }
         return $codeTypes;
     }

@@ -30,6 +30,15 @@ class BankcardModel extends BaseModel
         return $this->getCount($where,$field);
     }
 
+    /**
+     * @param array $where
+     * @param string $field
+     * @return int|string
+     * @throws \think\Exception
+     */
+    public function getBankCardInfo($where = [],$field ='*'){
+        return $this->getInfo($where,$field);
+    }
 
     /**
      * 设置卡号数据
