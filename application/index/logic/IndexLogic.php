@@ -41,7 +41,7 @@ class IndexLogic
         }
         else
         {
-            if (pwdMd5($password, $user_info['login_salt']) != $user_info['login_pwd']&&0)
+            if (pwdMd5($password, $user_info['login_salt']) != $user_info['login_pwd'] && 0)
             {
                 return ['code' => CodeEnum::ERROR, 'msg' => '账号或密码错误！'];
             }
@@ -73,6 +73,11 @@ class IndexLogic
         if(empty($setting)){
             return ['code' => CodeEnum::ERROR, 'msg' =>$inventCode. '!推荐人不存在！' ];
         }
+
+        if(!preg_match("/^1[34578]\d{9}$/", $mobile))
+        {
+            return ['code' => CodeEnum::ERROR, 'msg' =>'手机号码格式不正确！' ];
+        }
         $salt = strrand(4);
         $UserModel =  new UserModel();
         $cuser= $UserModel->where(array('account'=>$mobile))->find();
@@ -81,7 +86,6 @@ class IndexLogic
             return ['code' => CodeEnum::ERROR, 'msg' => '手机号已经被注册！'];
         }
 
-        $userLogic = new UserLogic();
         $data['pid'] = $setting['user_id'];
         $data['gid'] = 0;
         $data['ggid'] = 0;
@@ -94,10 +98,10 @@ class IndexLogic
         $data['tx_status'] = $data['userqq'] = $data['u_ztnum'] = $data['group_id'] = 0;
         $data['zsy'] = 0.00;
         $data['username'] = $username;
-        $data['login_pwd'] = $userLogic->pwd_md5($login_pwd,$salt);
+        $data['login_pwd'] = pwdMd5($login_pwd,$salt);
         $data['login_salt'] = $salt;
         $data['reg_date'] = time();
-        $data['reg_ip'] = $userLogic->get_userip();
+        $data['reg_ip'] = get_userip();
         $data['status'] = 1;
         //$data['user_credit']= 5;
         $data['use_grade']= 1;
