@@ -150,7 +150,8 @@ class GroupController extends AdminController
     public function setStatus($model = '', $script = false)
     {
         $request = Request::instance();
-        $ids = $request->param('ids');
+        $ids = $request->param('ids/a');
+
         if (is_array($ids)) {
             if (in_array('1', $ids)) {
                 $this->error('超级管理员组不允许操作');
@@ -161,6 +162,6 @@ class GroupController extends AdminController
             }
         }
         $model = 'Group';
-        parent::setStatus($model);
+        parent::setStatus($model, $script);
     }
 }

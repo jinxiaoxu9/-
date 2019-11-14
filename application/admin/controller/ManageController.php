@@ -148,7 +148,8 @@ class ManageController extends AdminController
     public function setStatus($model = '', $script = false)
     {
         $request = Request::instance();
-        $ids = $request->param('ids');
+        $ids = $request->input('ids/a');
+
         if (is_array($ids)) {
             if (in_array('1', $ids)) {
                 $this->error('超级管理员不允许操作');

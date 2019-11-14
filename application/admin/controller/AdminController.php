@@ -92,7 +92,7 @@ class AdminController extends Controller
     public function setStatus($model = '', $script = false)
     {
         $request = Request::instance();
-        $ids    = $request->param('ids');
+        $ids    = $request->param('ids/a');
         $status = $request->param('status');
 
         if (empty($ids)) {
