@@ -21,7 +21,6 @@ class CodeTypeController extends AdminController
      */
     public function index()
     {
-        $table = Db::name('gemapay_code_type');
 
         $listData = Db::name('gemapay_code_type')
             ->order('sort asc,id desc')
@@ -31,7 +30,7 @@ class CodeTypeController extends AdminController
         $page = $listData->render();
 
         $this->assign('list', $list);
-        $this->assign('table_data_page', $page);
+        $this->assign('page', $page);
 
         return $this->fetch('code_type/index');
     }
