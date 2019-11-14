@@ -1,6 +1,6 @@
 <?php
 
-namespace app\index\Controller;
+namespace app\index\controller;
 
 use app\common\library\enum\CodeEnum;
 use app\index\logic\MessageLogic;

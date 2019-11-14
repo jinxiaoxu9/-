@@ -2,7 +2,6 @@
 
 namespace app\index\logic;
 
-use Admin\Model\AdminBankModel;
 use app\index\model\RechargeModel;
 
 class DepositLogic
@@ -11,7 +10,7 @@ class DepositLogic
     {
         $RechargeModel = new RechargeModel();
         $where['uid'] = $userId;
-        $lists =  $RechargeModel->getList($where ,'*','add_time desc' ,10);
+        $lists =  $RechargeModel->getList($where ,'*','addtime desc' ,10);
         return $lists;
     }
 
@@ -24,13 +23,30 @@ class DepositLogic
         $data['name'] = $name;
         $data['addtime'] = request()->time();
 
+        $data['account_name'] = $bankAccount;
+        $data['account_num'] = $bankNumber;
+        $data['bank_name'] = $bankName;
+        $res  = $RechargeModel->save($data);
+        if($res)
+        {
+            return ['code' => \app\common\library\enum\CodeEnum::SUCCESS, 'msg' => '成功！'];
+        }
+        else
+        {
+            return ['code' => \app\common\library\enum\CodeEnum::ERROR, 'msg' => '网络错误！'];
+        }
     }
 
     public function getDepositBankInfo()
     {
-        $AdminBankModel = new AdminBankModel();
+        $AdminBankModel = new \app\index\model\AdminBankModel();
         $where['admin_id'] = 1;
-        $bankInfo = $AdminBankModel->where($where)->find();
+        $filelds= [
+            "account_name",
+            "account_num",
+            "bank_name"
+        ];
+        $bankInfo = $AdminBankModel->field($filelds)->where($where)->find();
         return $bankInfo;
     }
 

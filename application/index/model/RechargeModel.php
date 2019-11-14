@@ -15,4 +15,16 @@ class RechargeModel extends BaseModel
      * @author jry <bbs.sasadown.cn>
      */
     protected $tableName = 'ysk_recharge';
+
+    //充值中
+    const STATUS_ING = 0;
+
+    //已经关闭
+    const STATUS_CLOSE = 2;
+
+    //充值完成
+    const STATUS_OK = 2;
+
+    //充值失败
+    const STATUS_FAILED = 3;
 }
