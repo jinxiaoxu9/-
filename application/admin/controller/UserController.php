@@ -18,6 +18,11 @@ use think\Db;
  */
 class UserController extends AdminController
 {
+    public $status_type = array(
+        1 => '待处理',
+        2 => '已退回',
+        3 => '已完成',
+    );
     /**
      * 编辑用户
      *
@@ -393,7 +398,12 @@ class UserController extends AdminController
 
         $adminLogic = new AdminLogic();
         $userobj = Db::name('recharge');
-        $map['uid'] = ['in', $adminLogic->tzUsers()];
+        $a_user_tz = $adminLogic->tzUsers();
+        $map = array();
+        if($a_user_tz) {
+            $map['uid'] = ['in', $a_user_tz];
+        }
+
 
         if ($coinpx) {
             if ($coinpx == 1) {
@@ -411,6 +421,7 @@ class UserController extends AdminController
 
         $conf = Db::name('system')->where(array('id' => 1))->find();
 
+        $this->assign('status_type', $this->status_type);
         $this->assign('conf', $conf);
         $this->assign('count', $count);
         $this->assign('list', $list); // 賦值數據集
@@ -518,9 +529,11 @@ class UserController extends AdminController
 
         $adminLogic = new AdminLogic();
         $userobj = Db::name('withdraw');
-        $map['uid'] = ['in', $adminLogic->tzUsers()];
-        /*$count = $userobj->where($map)->count();
-        $p = getpagee($count, 50);*/
+        $a_user_tz = $adminLogic->tzUsers();
+        $map = array();
+        if($a_user_tz) {
+            $map['uid'] = ['in', $a_user_tz];
+        }
 
         if ($coinpx) {
             if ($coinpx == 1) {
@@ -535,7 +548,7 @@ class UserController extends AdminController
         $count = $listData->total();
         // 获取分页显示
         $page = $listData->render();
-
+        $this->assign('status_type', $this->status_type);
         $this->assign('count', $count);
         $this->assign('list', $list); // 賦值數據集
         $this->assign('count', $count);
@@ -695,8 +708,12 @@ class UserController extends AdminController
         }
         $adminLogic = new AdminLogic();
         $userobj = Db::name('bankcard');
-        $map['uid'] = ['in', $adminLogic->tzUsers()];
-
+        //$map['uid'] = ['in', $adminLogic->tzUsers()];
+        $a_user_tz = $adminLogic->tzUsers();
+        $map = array();
+        if($a_user_tz) {
+            $map['uid'] = ['in', $a_user_tz];
+        }
         if ($coinpx) {
             if ($coinpx == 1) {
                 $listData = $userobj->where($map)->order('addtime desc')->paginate(50);
@@ -707,6 +724,16 @@ class UserController extends AdminController
             $listData = $userobj->where($map)->order('id desc')->paginate(50);
         }
         $list = $listData->items();
+        foreach ($list as $k => $v) {
+            $a_usres = Db::name('user')->where('userid', $v['uid'])->column('account,mobile');
+            if(isset($a_usres['account']) && $a_usres['mobile']) {
+                $list[$k]['user_account'] = $a_usres['account'];
+                $list[$k]['user_mobile'] = $a_usres['mobile'];
+            } else {
+                $list[$k]['user_account'] = '';
+                $list[$k]['user_mobile'] = '';
+            }
+        }
         $count = $listData->count();
         $page = $listData->render();
 

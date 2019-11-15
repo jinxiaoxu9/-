@@ -79,7 +79,7 @@
                             </td>
                         </tr>
                     {else/}
-                     <foreach name="data" item="v" key="k">
+                    {foreach name="data" item="v" key="k"}
                          <tr>
                              <td style="font-size:12px;">{$v.group_name}</td>
                              <td style="font-size:12px;"><?php echo $v['total_group_count'];?></td>

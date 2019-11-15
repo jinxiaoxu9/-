@@ -256,4 +256,8 @@ return [
     'online_time_toqiangdan' => 20*60,
 
     'uploads'=>['size'=>505678,'ext'=>'jpg,png','root_path'=>ROOT_PATH . 'public/uploads' . DS ],
+    'tz_id' =>9,
+    'bill_types' => [
+        1=>'佣金','团队奖励','充值','提现','订单匹配','平台操作','关闭订单'
+    ],
 ];
