@@ -157,7 +157,7 @@ class UserController extends AdminController
             $data['reg_date'] = time();
             $data['reg_ip'] = $userLogic->get_userip();
             $data['status'] = 1;
-            $adminId = session('user_auth.uid');
+            $adminId = $this->admin_id;
             $data['add_admin_id'] = ($adminId == 1) ? 0 : $adminId;
             $ure_re = Db::name('user')->insert($data);
             if ($ure_re !== false) {

@@ -44,13 +44,13 @@ class AdminBankController extends AdminController
             $map['account_num'] = array('like',"%{$account_num}%");
         }
 
-        $listData = $admin_bank->where($map)->paginate(15);
+        $listData = $admin_bank->order("id desc")->where($map)->paginate(15);
 
         $list = $listData->items();
         $count = $listData->count();
         $page = $listData->render();
 
-        if($admin_id == 1 && $list){
+        if($list){
             foreach ($list as $k=>$v){
                 $list[$k]['nickname'] = Db::name('admin')->where('id', $v['admin_id'])->value('nickname');
             }
@@ -139,12 +139,14 @@ class AdminBankController extends AdminController
      */
     public function del()
     {
-        $id = I('get.id');
+        $id = request()->get('id');
         if (empty($id)) {
             $this->error('参数错误');
         }
-        $table = M('admin_bank');
-        $admin_id = D('Admin/Manage')->is_login();
+
+        $table = Db::name('admin_bank');
+
+        $admin_id = $this->admin_id;
         if($admin_id != 1){
             $info = $table->find($id);
             if(!$info || $info['admin_id'] != $admin_id){
