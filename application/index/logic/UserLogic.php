@@ -3,6 +3,7 @@
 namespace app\index\logic;
 
 use app\common\library\enum\CodeEnum;
+use app\index\model\UserModel;
 use think\Db;
 //use app\index\model\ConfigModel;
 use app\index\model\User;
@@ -115,38 +116,6 @@ class UserLogic extends BaseLogic
     }
 
 
-//密码加密
-    public  function pwd_md5($value, $salt){
-        $user_pwd = md5(md5($value) . $salt);
-        return $user_pwd;
-    }
-
-
-//获取设备IP
-  public function get_userip(){
-        //判断服务器是否允许$_SERVER
-        if(isset($_SERVER)){
-            if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])){
-                $realip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-            }elseif(isset($_SERVER['HTTP_CLIENT_IP'])) {
-                $realip = $_SERVER['HTTP_CLIENT_IP'];
-            }else{
-                $realip = $_SERVER['REMOTE_ADDR'];
-            }
-        }else{
-            //不允许就使用getenv获取
-            if(getenv("HTTP_X_FORWARDED_FOR")){
-                $realip = getenv( "HTTP_X_FORWARDED_FOR");
-            }elseif(getenv("HTTP_CLIENT_IP")) {
-                $realip = getenv("HTTP_CLIENT_IP");
-            }else{
-                $realip = getenv("REMOTE_ADDR");
-            }
-        }
-        return $realip;
-    }
-
-
 
 
     /*****************************************************************************/
@@ -163,5 +132,52 @@ class UserLogic extends BaseLogic
         $data['config'] = json_decode($conf['value'], true);
         $data['userinfo'] = $userInfo;
         return $data;
+    }
+
+    public function updateLoginPassword($userId, $oldPassword, $newPassword, $newRePassword)
+    {
+        if (empty($oldPassword))
+        {
+            return ['code' => \app\common\library\enum\CodeEnum::ERROR, 'msg' => '请输入登录密码'];
+        }
+
+        if (empty($newPassword))
+        {
+            return ['code' => \app\common\library\enum\CodeEnum::ERROR, 'msg' => '请输入要修改的密码'];
+        }
+
+        if ($newPassword != $newRePassword) {
+            return ['code' => \app\common\library\enum\CodeEnum::ERROR, 'msg' => '两次输入登录密码不一致'];
+        }
+
+        $User = new UserModel();
+        $User->startTrans();
+
+        //验证旧密码
+        if (!$User->check_pwd_one($oldPassword, $userId))
+        {
+            return ['code' => \app\common\library\enum\CodeEnum::ERROR, 'msg' => '旧登录密码错误'];
+        }
+
+        //=============登录密码加密==============
+        if ($newPassword)
+        {
+            $salt = substr(md5(time()), 0, 3);
+            $data['login_salt'] = $salt;
+            $data['login_pwd'] = pwdMd5($newPassword, $salt);
+        }
+
+        $where['userid'] = $userId;
+        $res = $User->isUpdate(true,$where)->save($data);
+        if($res)
+        {
+            $User->commit();
+            return ['code' => \app\common\library\enum\CodeEnum::SUCCESS, 'msg' => '修改成功'];
+        }
+        else
+        {
+            $User->rollback();
+            return ['code' => \app\common\library\enum\CodeEnum::ERROR, 'msg' => '修改失败'];
+        }
     }
 }

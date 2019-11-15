@@ -52,7 +52,7 @@ class SecurityLogic
                 return ['code' => CodeEnum::ERROR, 'msg' => '请输入旧安全码'];
             }
 
-            if(pwdMd5($old_security.$userInfo['security_salt']) != $userInfo['security_pwd'])
+            if(pwdMd5($old_security ,$userInfo['security_salt']) != $userInfo['security_pwd'])
             {
                 return ['code' => CodeEnum::ERROR, 'msg' => '旧安全码错误'];
             }
@@ -71,7 +71,7 @@ class SecurityLogic
 
         $where['userid'] = $userId;
         $data['security_salt'] = strrand(4);
-        $data['security_pwd'] = pwdMd5($re_security.$data['security_salt']);
+        $data['security_pwd'] = pwdMd5($re_security, $data['security_salt']);
 
         $ret = $UserModel->where($where)->save($data);
         if(!$ret)
@@ -89,7 +89,7 @@ class SecurityLogic
      */
     public function checkHadSetSecurity($userId)
     {
-        $UserModel = new User();
+        $UserModel = new UserModel();
         $userInfo = $UserModel->find($userId);
         if(empty($userInfo['security_pwd']))
         {
