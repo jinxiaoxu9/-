@@ -148,7 +148,8 @@ class GemapayOrderLogic
         $where['id'] = $orderId;
         $where['status'] = ['neq', $GemaPayOrder::PAYED];
 
-        $orderInfo = $GemaPayOrder->where($where)->find();
+        $orderInfo = DB::name('gemapayOrder')->where($where)->find();
+
         if(empty($orderInfo))
         {
             return ['code' => CodeEnum::ERROR, 'msg' => '订单信息有误'];
@@ -157,6 +158,44 @@ class GemapayOrderLogic
         return $this->setOrderSucess($orderInfo, "后台管理员补单");
     }
 
+    /**
+     * @param $uid  uwer_id
+     * @param int $type   资金操作类型对应数据库中jl_class
+     * @param int $add_subtract  添加或者减少
+     * @param float $money    操作金额
+     * @param string $tip_message    资金流水备注
+     * @return bool
+     */
+    function accountLogUser($uid, $type=1,$add_subtract = 1, $money=0.00, $tip_message = '')
+    {
+        $userTable = new \app\index\model\UserModel();
+        $user=Db::name('user')->where(['userid'=>$uid])->find();
+        //转账身份检测
+        if ($user) {  //当前用户状态正常
+            $moneys = ($add_subtract == 1) ? $money : 0 - $money;
+            $updateBalanceRes = $userTable->where(['userid' => $uid])->setInc('money', $moneys);
+
+            if ($updateBalanceRes) {
+                //记录流水
+                $insert['uid'] = $uid;
+                $insert['jl_class'] = $type;
+                $insert['info'] = $tip_message;
+                $insert['addtime']= time();
+                $insert['jc_class']= ($add_subtract)?"+":"-";
+                $insert['num']= $money;
+                $insert['pre_amount']= $user['money'];
+                $insert['last_amount']= $user['money']+$moneys;
+
+                if (\think\Db::name('somebill')->insert($insert)) {
+                    return true;
+                }
+                return false;
+            } else {
+                return false;
+            }
+        }
+        return false;
+    }
     /**
      * 设置订单为成功状态
      * @param $orderId
@@ -198,24 +237,25 @@ class GemapayOrderLogic
         if(!empty($bonus) && empty($notSendBonus))
         {
             $message = "订单完成,增加佣金";
-            $res = accountLog($orderInfo['gema_userid'], \app\common\library\enum\MoneyOrderTypes::ORDER_BONUS,
+
+            $res = $this->accountLogUser($orderInfo['gema_userid'], \app\common\library\enum\MoneyOrderTypes::ORDER_BONUS,
                 \app\common\library\enum\MoneyOrderTypes::OP_ADD, $bonus, $message);
             if($res == false)
             {
                 Db::rollback();
-                return ['code' => CodeEnum::ERROR, 'msg' => '更新数据失败'];
+                return ['code' => CodeEnum::ERROR, 'msg' => '更新数据失败!'];
             }
         }
 
         if($orderInfo['status'] == $GemapayOrderModel::CLOSED)
         {
             $message = "后台强制完成订单,扣除佣金";
-            $res = accountLog($orderInfo['gema_userid'], \app\common\library\enum\MoneyOrderTypes::ORDER_FORCE_FINISH,
+            $res = $this->accountLogUser($orderInfo['gema_userid'], \app\common\library\enum\MoneyOrderTypes::ORDER_FORCE_FINISH,
                 \app\common\library\enum\MoneyOrderTypes::OP_SUB, $orderInfo["order_price"], $message);
             if($res == false)
             {
                 Db::rollback();
-                return ['code' => CodeEnum::ERROR, 'msg' => '更新数据失败'];
+                return ['code' => CodeEnum::ERROR, 'msg' => '!更新数据失败'];
             }
         }
 
@@ -225,7 +265,7 @@ class GemapayOrderLogic
         if($res == false)
         {
             Db::rollback();
-            return ['code' => CodeEnum::ERROR, 'msg' => '更新数据失败'];
+            return ['code' => CodeEnum::ERROR, 'msg' => '!更新数据失败!'];
         }
 
         $postData['out_trade_no']= $orderInfo['out_trade_no'];//这是第三方提交过来的订单号回传过去

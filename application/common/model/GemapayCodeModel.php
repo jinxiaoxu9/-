@@ -126,7 +126,7 @@ class GemapayCodeModel extends BaseModel
             $where["adm.id"] = $adminId;
         }
         //20分钟在线
-        $bt=time()-C('online_time_toqiangdan');
+        $bt=time()-Config('online_time_toqiangdan');
         //最近20分钟在线
         $where["a.last_online_time"] = array('gt',$bt);
 
@@ -159,9 +159,12 @@ class GemapayCodeModel extends BaseModel
             "a.*",
         ];
 
-        $this->join(C('DB_PREFIX').'user u on u.userid=a.user_id', "left");
-        $this->join(C('DB_PREFIX').'admin adm on adm.id=u.add_admin_id', "left");
-        return $this->alias('a')->field($fileds)->where($where)->count();
+        $count = Db::table('ysk_gemapay_Code')->alias('a')
+            ->join('ysk_user u ', ' u.userid=a.user_id', "left")
+            ->join('ysk_admin adm ', 'adm.id=u.add_admin_id', "left")
+            ->field($fileds)->where($where)->count();
+
+        return $count;
     }
     /**
      * 增加ｃｏｄｅ支付个数

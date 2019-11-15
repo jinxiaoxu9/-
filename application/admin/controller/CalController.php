@@ -6,8 +6,8 @@ use app\admin\model\GroupModel;
 use app\admin\model\UserInviteSetting;
 use app\admin\model\UserGroupModel;
 use app\index\model\UserModel;
-use app\admin\model\GemaPayCodeModel;
-use app\admin\model\GemapayCodeTypeModel;
+use app\common\model\GemapayCodeModel;
+use app\common\model\GemapayCodeTypeModel;
 use app\admin\model\GemapayOrderModel;
 use app\admin\logic\UserLogic;
 use app\admin\logic\AdminLogic;
@@ -32,7 +32,7 @@ class CalController extends AdminController
         $adminTzs = Db::name('admin')->where(['auth_id' => $tzRole])->select();
         $this->assign('tzs', $adminTzs);
 
-       // echo date("Y-m-d Hi:s", 1571833991);die(); 2019-10-23 20:33:11
+
         //时间搜素
         //时间
         $startTime = $request->param('start_time',date("Y-m-d 00:00:00", time()));
@@ -55,7 +55,8 @@ class CalController extends AdminController
         $int_is_admingroup = 0;
         if($adminLogic->checkIstz(session('user_auth.uid'))){
             $adminId = $map['b.add_admin_id'] = session('user_auth.uid');
-            $int_is_admingroup = 0;
+
+            $int_is_admingroup = 1;
         }
 
         if ($adminId) {
@@ -66,25 +67,28 @@ class CalController extends AdminController
         $data = [];
         if (is_array($adminTzs) && count($adminTzs) > 0) {
             foreach ($adminTzs as $k => $v) {
+                //dump($v);exit();
                 $map['b.add_admin_id'] = $v['id'];
+                //dump($map);exit();
                 $tzOrders = Db::name('gemapay_order')->alias('a')->field('a.order_price,a.status')
-                    ->join('ysk_user  b ON a.gema_userid=b.userid', "LEFT")
+                    ->join('ysk_user b', 'a.gema_userid=b.userid', "LEFT")
                     ->where($map)
                     ->select();
+                //echo Db::getLastSql();exit();
                 $row['tc_nickname'] = $v['nickname'];
                 $row['total_count'] = count($tzOrders);//总订单数
 
                 $success_count = 0;
                 $sueccesPrice = 0.00;
                 foreach ($tzOrders as $k1 => $v1) {
-                    if ($v1['status'] == \Gemapay\Model\GemapayOrderModel::PAYED) {
+                    if ($v1['status'] == GemapayOrderModel::PAYED) {
                         $success_count++;
                         $sueccesPrice += $v1['order_price'];
                     }
                 }
                 $row['online_num'] = $GemapayCodeModel->getOnlineCodes($v['id']);
-                $row['zfb_online_num'] = $GemapayCodeModel->getOnlineCodes($v['id'], \Gemapay\Model\GemapayCodeTypeModel::ZHIFUBAO);
-                $row['vx_online_num'] = $GemapayCodeModel->getOnlineCodes($v['id'], \Gemapay\Model\GemapayCodeTypeModel::WEIXIN);
+                $row['zfb_online_num'] = $GemapayCodeModel->getOnlineCodes($v['id'], GemapayCodeTypeModel::ZHIFUBAO);
+                $row['vx_online_num'] = $GemapayCodeModel->getOnlineCodes($v['id'], GemapayCodeTypeModel::WEIXIN);
                 $row['success_count'] = $success_count;
                 $row['success_percent'] = ($success_count != 0) ? $success_count / $row['total_count'] : 0;
                 $row['success_percent'] = sprintf("%.2f", $row['success_percent']);
@@ -114,7 +118,7 @@ class CalController extends AdminController
             $_map['admin_id'] = $adminId;
         }
 
-        $userGroups = Db::name('user_group')->where($_map)->field('id,parentid,name')->select();
+        $userGroups = Db::name('user_group')->where($_map)->field('id, parentid,name')->select();
         //时间搜素
         $startTime = $request->param('start_time',date("Y-m-d 00:00:00", time()));
         $endTime =  $request->param('end_time');
@@ -138,7 +142,12 @@ class CalController extends AdminController
         }
         $adminId = session('user_auth.uid');
 
-        $adminLogic->checkIstz($adminId) &&  $map['gema_userid'] = ['in', $adminLogic->tzUsers()];
+        $a_uid = $adminLogic->tzUsers();
+        $map    = array();
+        if(is_array($a_uid) && $a_uid && isset($_map['admin_id'])) {
+            $map['gema_userid'] = ['in', $a_uid];
+        }
+        //$adminLogic->checkIstz($adminId) &&  $map['gema_userid'] = ['in', $adminLogic->tzUsers()];
         $list = Db::name('gemapay_order')->alias('a')
             ->field('sum(a.order_price) as total_group_price,count(a.id) as total_group_count ,group_concat(a.id) as ids,b.group_id')
             ->join("ysk_user b", "a.gema_userid=b.userid", "left")

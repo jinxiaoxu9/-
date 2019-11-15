@@ -5,8 +5,8 @@ namespace app\admin\controller;
 use app\admin\model\GemaPayOrderModel;
 use app\admin\logic\AdminLogic;
 use app\admin\logic\UserLogic;
-use app\admin\logic\GemaPayOrderLogic;
-use Common\Library\enum\CodeEnum;
+use app\common\logic\GemapayOrderLogic;
+use app\common\Library\enum\CodeEnum;
 use think\Request;
 use think\Db;
 
@@ -55,9 +55,15 @@ class GemaController extends AdminController
 
         $map = [];
         $order_no && $map['order_no'] = ['like', '%' . $order_no . '%'];
+
         $adminLogic = new AdminLogic();
+
+        $map    = array();
         if(session('user_auth.uid')!=1) {
-            $map['gema_userid'] = ['in', $adminLogic->tzUsers()];
+            $a_uid = $adminLogic->tzUsers();
+            if(is_array($a_uid) && $a_uid) {
+                $map['gema_userid'] = ['in', $a_uid];
+            }
         }
 
         //检测是否是团长
@@ -96,7 +102,7 @@ class GemaController extends AdminController
 
         $this->assign('status', $status);
         //时间
-        $startTime = $request->param('start_time', date("Y-m-d 00:00:00", time()) );
+        $startTime = $request->param('start_time');//, date("Y-m-d 00:00:00", time())
         $endTime = $request->param('end_time');
         if ($startTime && empty($endTime)) {
             $map['add_time'] = ['egt', strtotime($startTime)];
@@ -107,11 +113,13 @@ class GemaController extends AdminController
         if ($startTime && $endTime) {
             $map['add_time'] = ['between', [strtotime($startTime), strtotime($endTime)]];
         }
+        //print_r($map);exit();
         $this->assign('groupId', $groupId);
         $fileds = [
             "o.*",
             "admin.nickname as adminnickname",
             "u.mobile",
+            "u.account",
         ];
 
         $listData = Db::name('gemapay_order')->alias('o')->field($fileds)
@@ -119,7 +127,6 @@ class GemaController extends AdminController
             ->join("ysk_admin admin", "admin.id=u.add_admin_id", "left")
             ->where($map)->order('id desc')->paginate(10);
 
-// dump(Db::getLastSql());exit();
         //当前条件下订单总金额以及总提成
         $totalOrderPrice = Db::name('gemapay_order')->alias('o')
             ->join("ysk_user u", "o.gema_userid=u.userid", "left")->where($map)->sum('order_price');//订单
@@ -130,7 +137,6 @@ class GemaController extends AdminController
 
         $list = $listData->items();
         $count = $listData->count();
-//echo $count;exit();
         $page = $listData->render();
 
         foreach ($list as $key => $vals) {
@@ -162,33 +168,36 @@ class GemaController extends AdminController
         $where['id'] = $id;
         $data['is_back'] = 1;
         $GemapayOrderModel = new GemaPayOrderModel();
+        Db::startTrans();
         $order = $GemapayOrderModel->where($where)->find();
         if ($order['status'] != GemaPayOrderModel::PAYED && $order["is_back"] != GemaPayOrderModel::STATUS_NO) {
-            $this->error('失败');
+            $this->error('!失败');
 
         }
 
         $GemapayOrderModel->startTrans();
-        $re = $GemapayOrderModel->where($where)->save($data);
+        $re = $GemapayOrderModel->where($where)->update($data);
         if (!$re) {
-            $GemapayOrderModel->rollback();
-            $this->error('失败');
+            Db::rollback();
+            $this->error('失败!');
         }
         $userLogic = new UserLogic();
         $message = "确认返还,添加余额";
         if (false == $userLogic->accountLog($order['gema_userid'], 7, 1, $order['order_price'], $message)) {
-            $GemapayOrderModel->rollback();
-            $this->error('失败');
+            Db::rollback();
+            $this->error('!失败!');
         }
+        Db::commit();
         $this->success('成功', url('Gema/index'));
 
     }
 
     public function issueOrder(Request $request)
     {
-        $id = trim($request->param('get.id'));
+        $id = trim($request->param('id'));
         $GemapayOrderLogic = new GemapayOrderLogic();
-        $ret = $GemapayOrderLogic->setOrderSucessByAdmin($id, $this->admin_id);
+        $admin_id = session('user_auth.uid');
+        $ret = $GemapayOrderLogic->setOrderSucessByAdmin($id, $admin_id);
         if($ret['code'] != CodeEnum::SUCCESS)
         {
             $this->error($ret['msg']);die();

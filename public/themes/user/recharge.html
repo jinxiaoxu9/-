@@ -112,7 +112,7 @@
                                                                 <?php $wayMsg=[1=>'支付宝','微信','银行卡'];echo $wayMsg[$v['way']]; ?>
                                                             </td>
 															<td style="font-size:12px;"><?php echo date("Y-m-d H:i",$v['addtime']);?></td>
-															<td style="font-size:12px;"><?php echo getst($v['status']);?></td>
+															<td style="font-size:12px;"><?php echo isset($status_type[$v['status']])? $status_type[$v['status']] : '';?></td>
 															<td style="font-size:12px;"><?php echo $v['marker'];?></td>
 															
 															<td style="font-size:12px;">

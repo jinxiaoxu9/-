@@ -87,22 +87,28 @@
                                 <tbody>
                                 {volist name="list" id="data"}
                                     <tr>
-                                        <td>{php} echo $data['account_name'];{/php}</td>
+                                        <td>{php} echo $data['account'];{/php}</td>
                                         <td>{php} echo $data['order_no'];{/php}</td>
                                         <td>{php} echo $data['mobile'];{/php}</td>
                                         <td>{php} echo $data['adminnickname'];{/php}</td>
-                                        <td>{php} echo $data['order_price'];{php}</td>
+                                        <td>{php} echo $data['order_price'];{/php}</td>
                                         <td>{php} echo $data['order_pay_price'];{/php}</td>
                                         <td>{php} echo $data['bonus_fee'];{/php}</td>
-                                        <td>{php} if($data['bonus_fee']>0.0){echo sprintf("%.2f",$data['order_price']-$data['bonus_fee']);}else{echo '0.00';}{/php}</td>
+                                        <td>{php}
+                                            if($data['bonus_fee']>0.0){
+                                                echo sprintf("%.2f",$data['order_price']-$data['bonus_fee']);
+                                            }else{
+                                                echo '0.00';
+                                            }
+                                        {/php}</td>
                                         <td>{php} echo  $data['s_type_name'];{/php}</td>
-                                        <td> <img onclick="openpic('{php} echo $data.qr_image;{/php}')" src="{php} echo $data.qr_image;{/php}" style="width:30%"/></td>
+                                        <td> <img onclick="openpic('{$data.qr_image}')" src="{$data.qr_image}" style="width:30%"/></td>
                                         {php} $statusMsg=['未支付','已支付','已关闭'] {/php}
                                         <td>{php} echo $statusMsg[$data['status']];{/php}</td>
 
                                         {php} $is_upload_credentials_Msg=['否','是'] {/php}
                                         <td>{php} echo $is_upload_credentials_Msg[$data['is_upload_credentials']];{/php}</td>
-                                        <td> <img onclick="openpic('{php} echo $data.credentials;{/php}','600','650')" src="{php} echo $data.credentials;{php/}" style="width:30%"/></td>
+                                        <td> <img onclick="openpic('{$data.credentials}','600','650')" src="{$data.credentials}" style="width:30%"/></td>
 
 
 

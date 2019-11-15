@@ -481,13 +481,14 @@ function get_userip(){
  */
 function accountLog($uid, $type=1,$add_subtract = 1, $money=0.00, $tip_message = '')
 {
-    $userTable = M('user');
+    $userTable = new \app\index\model\UserModel();
     $user=$userTable->where(['userid'=>$uid])->find();
 
     //转账身份检测
     if ($user) {  //当前用户状态正常
         $moneys = ($add_subtract == 1) ? $money : 0 - $money;
         $updateBalanceRes = $userTable->where(['userid' => $uid])->setInc('money', $moneys);
+
         if ($updateBalanceRes) {
             //记录流水
             $insert['uid'] = $uid;
@@ -498,7 +499,7 @@ function accountLog($uid, $type=1,$add_subtract = 1, $money=0.00, $tip_message =
             $insert['num']= $money;
             $insert['pre_amount']= $user['money'];
             $insert['last_amount']= $user['money']+$moneys;
-            if (M('somebill')->add($insert)) {
+            if (\think\Db::name('somebill')->insert($insert)) {
                 return true;
             }
             return false;
