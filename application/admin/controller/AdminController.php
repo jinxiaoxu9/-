@@ -136,7 +136,7 @@ class AdminController extends Controller
                     $model,
                     $data,
                     $map,
-                    array('success' => '成功移至回收站', 'error' => '删除失败')
+                    array('success' => '成功移至回收站', 'error' => '删除失败', 'url' => url('index'))
                 );
                 break;
             case 'restore': // 从回收站还原
@@ -146,7 +146,7 @@ class AdminController extends Controller
                     $model,
                     $data,
                     $map,
-                    array('success' => '恢复成功', 'error' => '恢复失败')
+                    array('success' => '恢复成功', 'error' => '恢复失败', 'url' => url('index'))
                 );
                 break;
             case 'delete': // 删除条目

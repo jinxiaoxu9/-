@@ -53,16 +53,18 @@ class GroupController extends AdminController
     {
         if ($request->isPost()) {
             $group_object       = Db::name('Group');
-            /*$_POST['menu_auth'] = implode(',', $request->param('post.menu_auth'));
-            $_POST['hylb'] = implode(',', $request->param('post.hylb'));
-            $data               = $group_object->create();*/
             $data               = $request->post();
+            if (empty($data['title'])) {
+                $this->error('角色名不能为空');
+            }
             if( isset($data['menu_auth']) && $data['menu_auth'] ){
                 $data['menu_auth'] = implode(',', $data['menu_auth']);
             }
             if(isset($data['hylb']) && $data['hylb']) {
                 $data['hylb'] = implode(',', $data['hylb']);
             }
+            unset($data['hylbs']);
+            //dump($data);exit();
             if ($data) {
                 $id = $group_object->insert($data);
                 if ($id) {
@@ -75,9 +77,11 @@ class GroupController extends AdminController
             }
         } else {
             $all_module_menu_list=$this->getMenuTree();
-            $this->assign('all_module_menu_list', $all_module_menu_list);
 
-            return $this->fetch('add');
+            $this->assign('all_module_menu_list', $all_module_menu_list);
+            $this->assign('act', url('add'));
+
+            return $this->fetch('edit');
         }
     }
 
@@ -90,8 +94,14 @@ class GroupController extends AdminController
         if ($request->isPost()) {
             $group_object       = DB::name('Group');
             $data               = $request->post();
+            if (empty($data['title'])) {
+                $this->error('角色名不能为空');
+            }
             if( isset($data['menu_auth']) && $data['menu_auth'] ){
                 $data['menu_auth'] = implode(',', $data['menu_auth']);
+            }
+            if(!isset($data['menu_auth']) || $data['menu_auth']=='') {
+                $this->error('权限设置不能为空');
             }
             if(isset($data['hylb']) && $data['hylb']) {
                 $data['hylb'] = implode(',', $data['hylb']);
@@ -125,7 +135,7 @@ class GroupController extends AdminController
             }
             $this->assign('info', $info);
             $this->assign('hylb', $hylb);
-            
+            $this->assign('act', url('edit'));
             return $this->fetch('edit');
         }
     }
@@ -135,8 +145,9 @@ class GroupController extends AdminController
         $tree                 = new TreeLogic();
         $con['status']     = 1;
         $menu=Db::name('Menu')->where($con)->order('sort asc,id asc')->select();
-        $temp                               = $menu;
-        $menu_list_item                     = $tree->list2tree($temp);
+
+        $menu_list_item                     = $tree->list2tree($menu);
+
         return $menu_list_item;
     }
 

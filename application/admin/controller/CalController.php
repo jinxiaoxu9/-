@@ -141,9 +141,7 @@ class CalController extends AdminController
             $map['group_id'] = array("in", $groups . "");
         }
         $adminId = session('user_auth.uid');
-
         $a_uid = $adminLogic->tzUsers();
-        $map    = array();
         if(is_array($a_uid) && $a_uid && isset($_map['admin_id'])) {
             $map['gema_userid'] = ['in', $a_uid];
         }
