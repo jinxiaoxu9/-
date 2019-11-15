@@ -59,7 +59,7 @@ class GemaController extends AdminController
         $adminLogic = new AdminLogic();
 
         $map    = array();
-        if(session('user_auth.uid')!=1) {
+        if($this->admin_id!=1) {
             $a_uid = $adminLogic->tzUsers();
             if(is_array($a_uid) && $a_uid) {
                 $map['gema_userid'] = ['in', $a_uid];
@@ -68,9 +68,9 @@ class GemaController extends AdminController
 
         //检测是否是团长
         $_map = array();
-        $adminId = session('user_auth.uid');
+        $adminId = $this->admin_id;
         if($adminId) {
-            if($adminLogic->checkIstz($adminId)) {
+            if($adminLogic->checkIstz()) {
                 $_map['admin_id'] = $adminId;
             }
 
@@ -196,7 +196,7 @@ class GemaController extends AdminController
     {
         $id = trim($request->param('id'));
         $GemapayOrderLogic = new GemapayOrderLogic();
-        $admin_id = session('user_auth.uid');
+        $admin_id = $this->admin_id;
         $ret = $GemapayOrderLogic->setOrderSucessByAdmin($id, $admin_id);
         if($ret['code'] != CodeEnum::SUCCESS)
         {

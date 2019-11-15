@@ -9,6 +9,7 @@
 namespace app\admin\controller;
 
 use app\admin\logic\AdminLogic;
+use app\index\model\AdminBankModel;
 use think\Request;
 use think\Db;
 
@@ -44,13 +45,14 @@ class AdminBankController extends AdminController
             $map['account_num'] = array('like',"%{$account_num}%");
         }
 
-        $listData = Db::name('admin_bank')->where($map)->paginate(15);
+        $admin_bank = new AdminBankModel();
+        $listData = $admin_bank->order("id desc")->where($map)->paginate(15);
 
         $list = $listData->items();
         $count = $listData->count();
         $page = $listData->render();
 
-        if($admin_id == 1 && $list){
+        if($list){
             foreach ($list as $k=>$v){
                 $list[$k]['nickname'] = Db::name('admin')->where('id', $v['admin_id'])->value('nickname');
             }
@@ -139,13 +141,13 @@ class AdminBankController extends AdminController
      */
     public function del()
     {
+
         $id = input('id', 0, 'intval');
         if (empty($id)) {
             $this->error('参数错误');
         }
         $adminLogic = new AdminLogic();
         $admin_id = $adminLogic->is_login();
-
         if($admin_id != 1){
             $info = Db::name('admin_bank')->find($id);
             if(!$info || $info['admin_id'] != $admin_id){

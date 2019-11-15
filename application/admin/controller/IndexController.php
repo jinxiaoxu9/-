@@ -43,10 +43,10 @@ class IndexController extends AdminController
         $endTime = strtotime(date('Y-m-d 23:59:59'));
         $map['add_time'] = ['between', [$startTime, $endTime]];
         $map['status'] =1;
-        $adminId = session('user_auth.uid');
+        $adminId = $this->admin_id;
         $AdminLogic = new \app\admin\logic\AdminLogic();
         //如果是团长就统计团长的会员  和组无关  可能是团长的会员单没有入团长的组
-        $AdminLogic->checkIstz($adminId) &&  $map['gema_userid'] = ['in', $tzUserID];
+        $AdminLogic->checkIstz() &&  $map['gema_userid'] = ['in', $tzUserID];
 
         $gemapayOrder = new GemaPayOrderModel();
         $success= $gemapayOrder->field('sum(order_price) success_price,count(id) as success_nums')

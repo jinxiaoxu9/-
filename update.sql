@@ -1,3 +1,6 @@
+ALTER TABLE `ysk_recharge`
+CHANGE COLUMN `way` `way` VARCHAR(255) NOT NULL COMMENT '充值方式：' ;
+
 ALTER TABLE `ysk_gemapay_code`
 ADD COLUMN `is_delete` TINYINT(1) NOT NULL DEFAULT 0 AFTER `is_lock`;
 

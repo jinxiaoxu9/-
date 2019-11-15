@@ -23,9 +23,9 @@ class InviteSettingController extends AdminController
     {
         $map = [];
         // 获取所有用户
-        if(session("user_auth.uid")!=1)
+        if($this->admin_id!=1)
         {
-            $map['admin_id'] = session("user_auth.uid"); //超级管理员　admin 添加
+            $map['admin_id'] = $this->admin_id; //超级管理员　admin 添加
             $map['user_id'] = 0;
         }
 
@@ -92,7 +92,7 @@ class InviteSettingController extends AdminController
             $data["invite_setting"] = json_encode($setting);
             $data["user_id"]        = 0;
             $data["code"]           = strrand(9);
-            $data["admin_id"]       = session("user_auth.uid");
+            $data["admin_id"]       = $this->admin_id;
             $data["create_time"]    = time();
             $re = $Setting->insert($data);
             if($re){
@@ -110,7 +110,6 @@ class InviteSettingController extends AdminController
 	
 	public function editInviteSetting(Request $request)
     {
-        $CodeTypeList = new GemapayCodeTypeModel();
         //$codeTypeLists = $CodeTypeList->getAllType();
         $codeTypeLists = Db::name('gemapay_code_type')->select();
         $Setting = DB::name('user_invite_setting');

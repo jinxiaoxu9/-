@@ -109,7 +109,7 @@
 															<td style="font-size:12px;"><?php echo $v['name']?></td>
 															<td style="font-size:12px;"><?php echo $v['price'];?></td>
 															<td style="font-size:12px;">
-                                                                <?php $wayMsg=[1=>'支付宝','微信','银行卡'];echo $wayMsg[$v['way']]; ?>
+                                                                <?php echo $v['way']; ?>
                                                             </td>
 															<td style="font-size:12px;"><?php echo date("Y-m-d H:i",$v['addtime']);?></td>
 															<td style="font-size:12px;"><?php echo isset($status_type[$v['status']])? $status_type[$v['status']] : '';?></td>

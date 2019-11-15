@@ -37,7 +37,7 @@ class UserController extends AdminController
         $ulist = Db::name('user')->where(array('userid' => $userid))->find();
 
         $InviteSettingLogic = new InviteSettingLogic();
-        $where["admin_id"] = session("user_auth.uid");
+        $where["admin_id"] = $this->admin_id;
         $data_list = Db::name('user_invite_setting')->where($where)->select();
 
         $codeTypeLists = Db::name('gemapay_code_type')->select();
@@ -99,9 +99,9 @@ class UserController extends AdminController
         $userId = intval($request->param('user_id'));
         $userInfo = null;
         $InviteSettingModel = new UserInviteSetting();
-        $where["admin_id"] = session("user_auth.uid");
+        $where["admin_id"] = $this->admin_id;
         //$data_list = $InviteSettingModel->where($where)->select();
-        $data_list = Db::name('user_invite_setting')->where($where)->select();
+        $data_list = $InviteSettingModel->where($where)->select();
         $InviteSettingLogic = new InviteSettingLogic();
         $codeTypeLists = Db::name('gemapay_code_type')->select();
         //添加描述
@@ -157,7 +157,7 @@ class UserController extends AdminController
             $data['reg_date'] = time();
             $data['reg_ip'] = $userLogic->get_userip();
             $data['status'] = 1;
-            $adminId = session('user_auth.uid');
+            $adminId = $this->admin_id;
             $data['add_admin_id'] = ($adminId == 1) ? 0 : $adminId;
             $ure_re = Db::name('user')->insert($data);
             if ($ure_re !== false) {

@@ -34,6 +34,22 @@ class UserModel extends BaseModel
     }
 
 
+    //验证登录密码是否正确
+    public function check_pwd_one($value, $userId)
+    {
+        $where['userid'] = $userId;
+        $u_info = $this->where($where)->field('login_pwd,login_salt')->find();
+        $salt = $u_info['login_salt'];
+        $pwd = $u_info['login_pwd'];
+        if ($pwd == pwdMd5($value, $salt))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 
 
 }

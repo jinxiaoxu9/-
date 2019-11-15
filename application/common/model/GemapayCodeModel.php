@@ -159,7 +159,7 @@ class GemapayCodeModel extends BaseModel
             "a.*",
         ];
 
-        $count = Db::table('ysk_gemapay_Code')->alias('a')
+        $count = $this->alias('a')
             ->join('ysk_user u ', ' u.userid=a.user_id', "left")
             ->join('ysk_admin adm ', 'adm.id=u.add_admin_id', "left")
             ->field($fileds)->where($where)->count();

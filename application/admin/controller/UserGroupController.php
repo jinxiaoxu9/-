@@ -22,9 +22,9 @@ class UserGroupController extends AdminController
     {
         $map = [];
         // 获取所有用户
-        if(session("user_auth.uid")!=1)
+        if($this->admin_id!=1)
         {
-            $map['admin_id'] = session("user_auth.uid"); //超级管理员　admin 添加
+            $map['admin_id'] = $this->admin_id; //超级管理员　admin 添加
         }
 
         $UserGroupModel   = new UserGroupModel();
@@ -64,7 +64,6 @@ class UserGroupController extends AdminController
     public function setAllWorkStatus(Request $request)
     {
         $status = $request->param('work_status');
-        $ids = $request->param('ids');
         $UserGroupModel   = new UserGroupModel();
 
         $UserGroupModel->startTrans();
@@ -73,14 +72,14 @@ class UserGroupController extends AdminController
         $data["work_status"] = $status;
 
             //xiaozhu
-        $re = $UserGroupModel->where(array('admin_id'=>session("user_auth.uid")))->update($data);
+        $re = $UserGroupModel->where(array('admin_id'=>$this->admin_id))->update($data);
         if($re===false)
         {
                 $UserGroupModel->rollback();
                 $this->error('失败');
         }
 
-        $re = Db::name("user")->where(array('add_admin_id'=>session("user_auth.uid")))->update($data);
+        $re = Db::name("user")->where(array('add_admin_id'=>$this->admin_id))->update($data);
         if($re===false)
         {
             $UserGroupModel->rollback();
@@ -168,7 +167,7 @@ class UserGroupController extends AdminController
 	public function addGroup(Request $request)
     {
         $UserGroupModel   = new UserGroupModel();
-        $levelOneList = $UserGroupModel->getLevelList(session("user_auth.uid"),1);
+        $levelOneList = $UserGroupModel->getLevelList($this->admin_id,1);
         if ($request->isPost()) {
             $err = $this->checkValid($request, false);
             if($err) {
@@ -191,7 +190,7 @@ class UserGroupController extends AdminController
             $data["work_status"]    = UserGroupModel::STATUS_NOT_WORK;
             $data["level"]    = $level;
             $data["parentid"]    = $parentid;
-            $data["admin_id"] = session("user_auth.uid");
+            $data["admin_id"] = $this->admin_id;
             $re = $UserGroupModel->save($data);
             if($re){
                 $this->success('发布成功', url('UserGroup/index'));
@@ -235,7 +234,7 @@ class UserGroupController extends AdminController
 	public function editGroup(Request $request)
     {
         $UserGroupModel   = new UserGroupModel();
-        $levelOneList = $UserGroupModel->getLevelList(session("user_auth.uid"),1);
+        $levelOneList = $UserGroupModel->getLevelList($this->admin_id,1);
         if ($request->isPost()) {
             $err = $this->checkValid($request, true);
             if($err) {
@@ -314,7 +313,7 @@ class UserGroupController extends AdminController
         }
         $info = Db::name("user")->find($request->param('userid'));
         $UserGroupModel   = new UserGroupModel();
-        $levelList = $UserGroupModel->getLevelList(session("user_auth.uid"),2);
+        $levelList = $UserGroupModel->getLevelList($this->admin_id,2);
         $this->assign('data_lists',$levelList);
         $this->assign('info',$info);
         $this->assign('act', url('joinGroup'));

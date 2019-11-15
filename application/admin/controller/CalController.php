@@ -53,7 +53,7 @@ class CalController extends AdminController
         //重置团长
         $adminLogic = new AdminLogic();
         $int_is_admingroup = 0;
-        if($adminLogic->checkIstz(session('user_auth.uid'))){
+        if($adminLogic->checkIstz()){
             $adminId = $map['b.add_admin_id'] = session('user_auth.uid');
 
             $int_is_admingroup = 1;
@@ -112,9 +112,9 @@ class CalController extends AdminController
     {
         $adminLogic = new AdminLogic();
         //用户组别
-        $adminId = session('user_auth.uid');
+        $adminId = $this->admin_id;
         $_map = array();
-        if($adminLogic->checkIstz($adminId)) {
+        if($adminLogic->checkIstz()) {
             $_map['admin_id'] = $adminId;
         }
 
