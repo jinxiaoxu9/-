@@ -27,9 +27,8 @@ class CodeController extends CommonController
      */
     public function codeList()
     {
-        $page = $this->request->post("page", 1);
         $UserGemaCodeLogic =  new CodeLogic();
-        $codeLists = $UserGemaCodeLogic->getCodeList($this->user_id, $page);
+        $codeLists = $UserGemaCodeLogic->getCodeList($this->user_id);
         $data['code_list'] = $codeLists;
         ajaxReturn('成功',1,'', $data);
     }
@@ -70,7 +69,7 @@ class CodeController extends CommonController
         }
         else
         {
-            ajaxReturn("ok", 1);
+            ajaxReturn($result['msg'], 1);
             exit;
         }
     }

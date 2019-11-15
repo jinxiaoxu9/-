@@ -3,6 +3,7 @@
 namespace app\index\logic;
 
 use app\common\library\enum\CodeEnum;
+use app\index\model\GemapayCodeTypeModel;
 use app\index\model\GemapayOrderModel;
 use app\index\model\UserInviteSettingModel;
 use app\index\model\UserModel;
@@ -20,11 +21,19 @@ class OrderLogic
         $where['gema_userid'] = $userId;
         $lists =  $GemapayOrderModel->getList($where ,'*','add_time desc' ,10);
 
+        $GemapayCodeTypeModel = new GemapayCodeTypeModel();
+        $codeTypeLists = $GemapayCodeTypeModel->getAllType("id, type_name, type_logo");
+        $codeTypeLists = filterDataMap($codeTypeLists, "id");
+
         if (!empty($lists))
         {
             $statusMs = ['未支付', '已支付', '已关闭'];
-            foreach ($lists as $k => $V) {
+            foreach ($lists as $k => $V)
+            {
                 $lists[$k]['status'] = $statusMs[$V['status']];
+                $lists[$k]['back_money'] = 100.1;
+                $lists[$k]['type_logo'] = $codeTypeLists[$V['code_type']]['type_logo'];;
+                $lists[$k]['type_name'] = $codeTypeLists[$V['code_type']]['type_name'];;
             }
         }
         return $lists;

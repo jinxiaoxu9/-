@@ -32,6 +32,13 @@ class CodeLogic
         {
             return [];
         }
+
+        $settingArray = [];
+        foreach ($setting as $key=>$s)
+        {
+            $settingArray[$key] = $s;
+        }
+
         foreach ($setting as $key => $s) {
             if (!empty($s)) {
                 $typeIds[] = $key;
@@ -46,7 +53,7 @@ class CodeLogic
         }
         foreach ($codeTypes as $key=>$codeType)
         {
-            $codeTypes[$key]['rate'] = $setting->$codeType["id"];
+            $codeTypes[$key]['rate'] = $settingArray[$codeType["id"]];
         }
         return $codeTypes;
     }
@@ -60,9 +67,9 @@ class CodeLogic
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
-    public function getCodeList($userId, $page, $pageSize=30)
+    public function getCodeList($userId)
     {
-        $GemapayCodeModel = new \app\index\model\GemapayCodeModel();
+        $GemapayCodeModel = new \app\common\model\GemapayCodeModel();
         $fileds = [
             'id',
             'status',
@@ -76,13 +83,20 @@ class CodeLogic
             "create_time",
             "account_number"
         ];
+        $where['user_id'] = $userId;
+        $where['is_delete'] = $GemapayCodeModel::STATUS_NO;
 
-        $list = $GemapayCodeModel->field($fileds)->where(array('user_id' => $userId))->page($page, $pageSize)->select();
-        foreach ($list as $key=>$l)
+        $lists =  $GemapayCodeModel->getList($where ,$fileds,'create_time desc' ,10);
+
+        $GemapayCodeTypeModel = new GemapayCodeTypeModel();
+        $codeTypeLists = $GemapayCodeTypeModel->getAllType("id, type_name, type_logo");
+        $codeTypeLists = filterDataMap($codeTypeLists, "id");
+
+        foreach ($lists as $key=>$l)
         {
-            $list[$key]['type_icon'] = "/static/icon/t_".$l['type'].".png";
+            $lists[$key]['type_icon'] = $codeTypeLists[$l['type']]['type_logo'];
         }
-        return $list;
+        return $lists;
     }
 
     /**
@@ -93,10 +107,14 @@ class CodeLogic
      */
     public function delCode($userId, $codeId)
     {
-        $GemapayCodeModel = new \app\index\model\GemapayCodeModel();
+        $GemapayCodeModel = new \app\common\model\GemapayCodeModel();
+
         $where['id'] = $codeId;
         $where['user_id'] = $userId;
-        $ret = $GemapayCodeModel->where($where)->delete();
+
+        $data['is_delete'] = $GemapayCodeModel::STATUS_YES;
+
+        $ret = $GemapayCodeModel->isUpdate(true, $where)->save($data);
         if($ret)
         {
             return ['code' => \app\common\library\enum\CodeEnum::SUCCESS, 'msg' => '删除成功！'];
@@ -115,7 +133,7 @@ class CodeLogic
      */
     public function disactiveCode($userId, $codeId)
     {
-        $GemapayCodeModel = new \app\index\model\GemapayCodeModel();
+        $GemapayCodeModel = new \app\common\model\GemapayCodeModel();
         $where['id'] = $codeId;
         $where['user_id'] = $userId;
 
@@ -139,7 +157,7 @@ class CodeLogic
      */
     public function activeCode($userId, $codeId)
     {
-        $GemapayCodeModel = new \app\index\model\GemapayCodeModel();
+        $GemapayCodeModel = new \app\common\model\GemapayCodeModel();
         $where['id'] = $codeId;
         $where['user_id'] = $userId;
 
@@ -162,7 +180,7 @@ class CodeLogic
     {
         $UserModel = new UserModel();
         $InviteSettingModel = new UserInviteSettingModel();
-        $GemapayCodeModel = new \app\index\model\GemapayCodeModel();
+        $GemapayCodeModel = new \app\common\model\GemapayCodeModel();
         $SecurityLogic = new SecurityLogic();
         $userInfo = $UserModel->find($userId);
 
@@ -170,7 +188,7 @@ class CodeLogic
 
         if($res['code'] == \app\common\library\enum\CodeEnum::ERROR)
         {
-            return $res;
+          //  return $res;
         }
 
         if (empty($userInfo["u_yqm"]))
@@ -210,6 +228,6 @@ class CodeLogic
             return ['code' => \app\common\library\enum\CodeEnum::ERROR, 'msg' => '保存失败,请一会儿再试'];
         }
 
-        return ['code' => \app\common\library\enum\CodeEnum::SUCCESS, 'msg' => '修改成功'];
+        return ['code' => \app\common\library\enum\CodeEnum::SUCCESS, 'msg' => '添加成功'];
     }
 }

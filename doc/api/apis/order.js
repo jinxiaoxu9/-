@@ -6,7 +6,7 @@ apiSelect["order"] = {
         dataType: 'json',
         params:{
             'page': 'page(第几页)',
-            'status': '0:wating 1:sucess 2:close, -1: all',
+            'status': '0:表示支付中 1:表示成功完成订单 2:关闭状态的订单, -1: 所有订单',
         },
         comment:{
             status : 1,

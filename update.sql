@@ -1,3 +1,9 @@
+ALTER TABLE `ysk_gemapay_code`
+ADD COLUMN `is_delete` TINYINT(1) NOT NULL DEFAULT 0 AFTER `is_lock`;
+
+ALTER TABLE `ysk_user_invite_setting`
+ADD COLUMN `is_delete` INT(1) NOT NULL DEFAULT 0 AFTER `create_time`;
+
 ALTER TABLE `ysk_recharge`
 ADD COLUMN `account_name` VARCHAR(225) NOT NULL AFTER `marker`,
 ADD COLUMN `account_num` VARCHAR(225) NOT NULL AFTER `account_name`,

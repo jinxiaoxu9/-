@@ -33,4 +33,8 @@ class GemapayCodeTypeModel extends BaseModel
         return $this->getList($where,$field,$order,$paginate);
     }
 
+    public function getAllType()
+    {
+        return $this->select();
+    }
 }

@@ -10,7 +10,6 @@ class OrderController extends CommonController
         $OrderLogic = new \app\index\logic\OrderLogic();
         $status = $this->request->post('status', '-1');
         $orderList = $OrderLogic->getList($this->user_id, $status);
-
         $data['order'] = $orderList;
         ajaxReturn('成功',1,'', $orderList);
     }

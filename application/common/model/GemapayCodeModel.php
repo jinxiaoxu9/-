@@ -3,10 +3,7 @@
 
 namespace app\common\model;
 
-
-use think\Model;
-
-class GemapayCodeModel extends Model
+class GemapayCodeModel extends BaseModel
 {
 
     //打开中
@@ -85,6 +82,9 @@ class GemapayCodeModel extends Model
 
         //二维码没有被锁定
         $where["code.is_lock"] = self::STATUS_NO;
+
+        //二维码没被删除
+        $where["code.is_delete"] = self::STATUS_NO;
 
         //余额足够
         $where["u.money"] = array('gt',$money);

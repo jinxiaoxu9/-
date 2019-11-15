@@ -80,11 +80,8 @@ apiSelect["code"] = {
             'bank_account_number':'bank_account_number(开户卡号,当type=3的时候显示)',
         },
         comment:{
-            status : 1,
-            msg : "消息",
-            url: "",
-            result:[
-            ]
+            "message": "添加成功",
+            "status": 1
         },
     },
 
@@ -97,11 +94,8 @@ apiSelect["code"] = {
             'code_id': 'code_id(二维码id)',
         },
         comment:{
-            status : 1,
-            msg : "消息",
-            url: "",
-            result:[
-            ]
+            "message": "删除成功",
+            "status": 1
         },
     },
 
@@ -114,11 +108,8 @@ apiSelect["code"] = {
             'code_id': 'code_id(二维码id)',
         },
         comment:{
-            status : 1,
-            msg : "消息",
-            url: "",
-            result:[
-            ]
+            "message": "激活成功",
+            "status": 1
         },
     },
 
@@ -131,11 +122,8 @@ apiSelect["code"] = {
             'code_id': 'code_id(二维码id)',
         },
         comment:{
-            status : 1,
-            msg : "消息",
-            url: "",
-            result:[
-            ]
+            "message": "冻结成功",
+            "status": 1
         },
     },
 };

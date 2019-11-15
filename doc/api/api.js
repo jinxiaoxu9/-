@@ -2,13 +2,14 @@ var apis = {
     Index: '登录注册模块',
     Order: '订单模块',
     Code: '二维码模块',
+    Share: '分享邀请模块',
     Home: '首页抢单模块',
     User: '用户模块',
     Message: '消息模块',
     BankCard:'银行卡',
     Belongs:'资产模块',
     SystemTool:'系统工具模块',
-    Withdraw:'充值提现',
+    Withdraw:'充值提现模块',
 }
 
 var comments = {

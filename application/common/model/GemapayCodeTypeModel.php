@@ -15,8 +15,8 @@ class GemapayCodeTypeModel extends Model
     const CAIFUTONG = 3;
     const BAIFUTONG =4;
 
-    public function getAllType()
+    public function getAllType($fileds = "*")
     {
-        return $this->select();
+        return $this->field($fileds)->select();
     }
 }
