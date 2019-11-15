@@ -13,7 +13,6 @@ class HomeLogic
         $codeTypes = $UserGemaCodeLogic->getcodeTypes($userId);
         $where['userid'] = $userId;
         $userInfo = $UserModel->find($where);
-
         //
         $data["code_infos"] = $codeTypes;
         //工作状态
@@ -30,6 +29,8 @@ class HomeLogic
         $data["today_total_order"] = 100;
         //未读消息
         $data["unread"] = 3;
+        //当前排队第几位
+        $data["queen_num"] = 3;
         //今日成功率
         $data["today_success_rate"] = sprintf("%.2f", ($data["today_finish_order"]*100)/$data["today_total_order"])."%";
 

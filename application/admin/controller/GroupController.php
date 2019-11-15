@@ -133,8 +133,6 @@ class GroupController extends AdminController
      // 获取功能模块的后台菜单列表
     private function getMenuTree(){
         $tree                 = new TreeLogic();
-        $all_module_menu_list = array();
-
         $con['status']     = 1;
         $menu=Db::name('Menu')->where($con)->order('sort asc,id asc')->select();
         $temp                               = $menu;

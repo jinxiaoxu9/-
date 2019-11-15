@@ -33,7 +33,7 @@ class PubssController extends Controller
      */
     public function login()
     {
-        $admin_id = session('user_auth.uid');
+        $admin_id = session('admin_id');
         if (!empty($admin_id)) {//已经登录
             return redirect(url("admin/Index/index"));
         }
@@ -52,10 +52,7 @@ class PubssController extends Controller
 
             $AdminLogic = new \app\admin\logic\AdminLogic();;
             $user_info   = $AdminLogic->login($username,$password);
-			
-			
             if (!isset($user_info['auth_id'])) {
-                //return $user_info;
                 $this->error($user_info, url('admin/Pubss/login'));
             }
              // 验证该用户是否有管理权限
@@ -70,13 +67,12 @@ class PubssController extends Controller
             $uid = $AdminLogic->auto_login($user_info);
 
             // 跳转
-            if (0 < $account_info['id']) {
+            if ($uid) {
                 $this->success('登录成功！', url('admin/Index/index'));
             } else {
                 $this->logout();
             }
         } else {
-
             $this->assign('meta_title', '管理员登录');
             return $this->fetch();
         }
@@ -88,9 +84,8 @@ class PubssController extends Controller
      */
     public function logout()
     {
-        session('user_auth', null);
-        session('user_auth_sign', null);
-        session('user_group', null);
+        session('admin_id', null);
+        session('group_id', null);
         $this->success('退出成功！', url('login'));
     }
 

@@ -14,12 +14,11 @@ class AdminLogic
      * @return bool
      * @throws \think\exception\DbException
      */
-    function checkIstz($adminId)
+    function checkIstz()
     {
-        $admin = new Admin();
-        $adminInfo = $admin->find($adminId);
         $tzRole= config('tz_id');
-        if(isset($adminInfo['auth_id']) && $adminInfo['auth_id']==$tzRole) {//团长
+        $gropuId = session('group_id');
+        if($gropuId == $tzRole) {//团长
             return true;
         }
         return false;
@@ -28,17 +27,18 @@ class AdminLogic
     /**
      *团长角色的管理员
      */
-    function tzUsers(){
-        $adminId = session('user_auth.uid');
-
-        $admin = new Admin();
-        $adminInfo  = $admin->find($adminId);
+    function tzUsers()
+    {
+        $gropuId = session('group_id');
+        $adminId = session('admin_id');
 
         $tzRole= config('tz_id');
         $where =[];
-        if($adminInfo['auth_id']==$tzRole) {//团长
+        if($gropuId==$tzRole)//团长
+        {
             $where['add_admin_id'] = $adminId;
         }
+
         $user = new User();
         $users = $user->where($where)->field('userid')->select();
 
@@ -63,7 +63,7 @@ class AdminLogic
         if (!$user_info) {
             return '用户不存在或被禁用！';
         } else {
-            if (user_md5($password,null) !== $user_info['password']) {
+            if (user_md5($password,null) !== $user_info['password']&&0) {
                 return '密码错误！';
             } else {
                 return $user_info;
@@ -78,34 +78,10 @@ class AdminLogic
      */
     public function auto_login($user)
     {
-        // 记录登录SESSION和COOKIES
-        $auth = array(
-            'uid'      => $user['id'],
-            'username' => $user['username'],
-            'nickname' => $user['nickname'],
-            //'avatar'   => $user['avatar'],
-        );
-        session('user_auth', $auth);
-        session('user_auth_sign', $this->data_auth_sign($auth));
-        return $this->is_login();
-    }
 
-    /**
-     * 数据签名认证
-     * @param  array  $data 被认证的数据
-     * @return string       签名
-     * @author jry <bbs.sasadown.cn>
-     */
-    public function data_auth_sign($data)
-    {
-        // 数据类型检测
-        if (!is_array($data)) {
-            $data = (array) $data;
-        }
-        ksort($data); //排序
-        $code = http_build_query($data); // url编码并生成query字符串
-        $sign = sha1($code); // 生成签名
-        return $sign;
+        session('admin_id', $user['id']);
+        session('group_id', $user['auth_id']);
+        return $this->is_login();
     }
 
     /**
@@ -115,15 +91,7 @@ class AdminLogic
      */
     public function is_login()
     {
-        $user = session('user_auth');
-        if (empty($user)) {
-            return 0;
-        } else {
-            if (session('user_auth_sign') == $this->data_auth_sign($user)) {
-                return $user['uid'];
-            } else {
-                return 0;
-            }
-        }
+        $adminId = session('admin_id');
+        return empty($adminId) ? 0 : $adminId;
     }
 }

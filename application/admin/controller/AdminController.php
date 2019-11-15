@@ -10,7 +10,6 @@ namespace app\admin\controller;
 
 use think\Controller;
 use think\Request;
-use think\Db;
 
 /**
  * 后台公共控制器
@@ -25,6 +24,9 @@ class AdminController extends Controller
     public $s_name_controller ='';
     public $s_name_module ='';
 
+    public $admin_id = 0;
+
+    public $group_id = 0;
     /**
      * 初始化方法
      * @author jry <bbs.sasadown.cn>
@@ -41,7 +43,7 @@ class AdminController extends Controller
         $this->s_name_module = strtolower($request->module());
         $this->s_name_controller = strtolower($request->controller());
         $this->s_name_action = strtolower($request->action());
-
+        $this->admin_id = $adminLogic->is_login();
         $this->assign('s_name_module', $this->s_name_module);
         $this->assign('s_name_controller', $this->s_name_controller);
         $this->assign('s_name_action', $this->s_name_action);

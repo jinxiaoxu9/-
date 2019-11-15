@@ -9,6 +9,7 @@
 namespace app\admin\controller;
 
 use app\admin\logic\AdminLogic;
+use app\index\model\AdminBankModel;
 use think\Request;
 use think\Db;
 
@@ -30,7 +31,7 @@ class AdminBankController extends AdminController
         $adminLogic = new AdminLogic();
         $admin_id = $adminLogic->is_login();
 
-        $admin_bank = Db::name('admin_bank');
+
         $map = array();
         if($admin_id != 1){
             $map['admin_id'] = $admin_id;
@@ -44,6 +45,7 @@ class AdminBankController extends AdminController
             $map['account_num'] = array('like',"%{$account_num}%");
         }
 
+        $admin_bank = new AdminBankModel();
         $listData = $admin_bank->order("id desc")->where($map)->paginate(15);
 
         $list = $listData->items();
@@ -139,21 +141,20 @@ class AdminBankController extends AdminController
      */
     public function del()
     {
-        $id = request()->get('id');
+
+        $id = input('id', 0, 'intval');
         if (empty($id)) {
             $this->error('参数错误');
         }
-
-        $table = Db::name('admin_bank');
-
-        $admin_id = $this->admin_id;
+        $adminLogic = new AdminLogic();
+        $admin_id = $adminLogic->is_login();
         if($admin_id != 1){
-            $info = $table->find($id);
+            $info = Db::name('admin_bank')->find($id);
             if(!$info || $info['admin_id'] != $admin_id){
                 $this->error('这不是您的银行账号，不能删除');
             }
         }
-        $re = $table->where(array('id' => $id))->delete();
+        $re = Db::name('admin_bank')->where(array('id' => $id))->delete();
         if ($re) {
             $this->success('删除成功');
         } else {

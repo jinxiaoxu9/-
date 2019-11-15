@@ -331,15 +331,12 @@ class UserController extends AdminController
             ->where($map)
             ->order('addtime desc')
             ->paginate(20);
-            //->limit($p->firstRow, $p->listRows)->select();
+
         $list = $listData->items();
         $count = $listData->count();
         $page = $listData->render();
-        //[1=>'佣金','团队奖励','充值','提现','订单匹配','平台操作','关闭订单'];//
+        
         $bill_types = config('bill_types');
-        /*foreach ($list as $key => $value) {
-
-        }*/
 
         $this->assign('billTypes', $bill_types);
         $this->assign('count', $count);
