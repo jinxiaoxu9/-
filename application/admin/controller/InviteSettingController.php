@@ -92,7 +92,7 @@ class InviteSettingController extends AdminController
             $data["invite_setting"] = json_encode($setting);
             $data["user_id"]        = 0;
             $data["code"]           = strrand(9);
-            $data["admin_id"]       = session("user_auth.uid");
+            $data["admin_id"]       = $this->admin_id;
             $data["create_time"]    = time();
             $re = $Setting->insert($data);
             if($re){
