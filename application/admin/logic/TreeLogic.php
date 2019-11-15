@@ -26,9 +26,10 @@ class TreeLogic
                 $refer[$data[$pk]] = &$list[$key];
             }
             foreach ($list as $key => $data) {
+
                 // 判断是否存在parent
                 $parent_id = $data[$pid];
-                if ($parent_id === null || (String) $root === $parent_id) {
+                if ($parent_id === 0 || (String) $root === $parent_id) {
                     $tree[] = &$list[$key];
                 } else {
                     if (isset($refer[$parent_id])) {
@@ -40,8 +41,10 @@ class TreeLogic
                         }
                     }
                 }
+
             }
         }
+
         return $tree;
     }
 }

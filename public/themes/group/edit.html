@@ -39,7 +39,7 @@
                                             <div class="form-group hidden item_id ">
                                                 <label class="left control-label">ID：</label>
                                                 <div class="right">
-                                                    <input type="hidden" class="form-control input" name="id" value="{$info.id}">
+                                                    <input type="hidden" class="form-control input" name="id" value="{:isset($info.id) ? $info.id : ''}">
                                                 </div>
                                             </div>
 
@@ -47,13 +47,13 @@
                                             <div class="form-group item_title ">
                                                 <label class="left control-label">角色名：</label>
                                                 <div class="right">
-                                                    <input type="text" class="form-control input" name="title" value="{$info.title}" placeholder="角色名" >
+                                                    <input type="text" class="form-control input" name="title" value="{:isset($info.title) ? $info.title : ''}" placeholder="角色名" >
                                                 </div>
                                             </div>
                                             <div class="form-group item_title ">
                                                 <label class="left control-label">排序：</label>
                                                 <div class="right">
-                                                    <input type="text" class="form-control input" name="sort" value="{$info.sort}" placeholder="排序" >
+                                                    <input type="text" class="form-control input" name="sort" value="{:isset($info.sort) ? $info.sort : ''}" placeholder="排序" >
                                                 </div>
                                             </div>
                                     </div>
@@ -71,21 +71,23 @@
                                             <div class="{$module_name}">
                                                 <div class="cui-control cui-checkbox">
                                                     <label class="checkbox-label checkbox-inline">
-                                                        <input type="checkbox" name="menu_auth[]" data-module-name="{$module_name}" <php>if(in_array($vo1['id'], $info['menu_auth'])) echo "checked";</php> value="{$vo1.id}">
+                                                        <input type="checkbox" name="menu_auth[]" data-module-name="{$module_name}" {php}if(isset($info['menu_auth']) && in_array($vo1['id'], $info['menu_auth'])) echo "checked";{/php} value="{$vo1.id}">
                                                         <span class="cui-control-indicator"></span>
                                                         <span> {$vo1.name}</span>
                                                     </label>
                                                     <div class="auth{$vo1.id}" style="padding-left: 25px;margin-top: 10px;">
+
+                                                        {if condition="isset($vo1['_child'])"}
                                                         {volist name="vo1._child" id="vo2"}
                                                             <label class="checkbox-label checkbox-inline">
-                                                                <input type="checkbox" name="menu_auth[]" data-module-name="{$module_name}" <php>if(in_array($vo2['id'], $info['menu_auth'])) echo "checked";</php> value="{$vo2.id}">
+                                                                <input type="checkbox" name="menu_auth[]" data-module-name="{$module_name}" {php}if(isset($info['menu_auth']) && in_array($vo2['id'], $info['menu_auth'])) echo "checked";{/php} value="{$vo2.id}">
                                                                 <span class="cui-control-indicator"></span>
                                                                 <span> {$vo2.name}</span>
                                                             </label>
                                                             <div class="auth{$vo2.id}" style="padding-left: 25px;margin-top: 10px;">
                                                                 {foreach $vo2._child as $vo3}
                                                                     <label class="checkbox-label checkbox-inline">
-                                                                        <input type="checkbox" name="menu_auth[]" data-module-name="{$module_name}" <php>if(in_array($vo3['id'], $info['menu_auth'])) echo "checked";</php> value="{$vo3.id}">
+                                                                        <input type="checkbox" name="menu_auth[]" data-module-name="{$module_name}" {php}if(isset($info['menu_auth']) && in_array($vo3['id'], $info['menu_auth'])) echo "checked";{/php} value="{$vo3.id}">
                                                                         <span class="cui-control-indicator"></span>
                                                                         <span> {$vo3.name}</span>
                                                                     </label>
@@ -94,13 +96,13 @@
                                                                             {volist name="vo3._child" id="vo4"}
                                                                                 {notempty name="vo4._child"}
                                                                                     <label class="checkbox-inline" style="display: block;margin-top: 10px;margin-left: 0px;">
-                                                                                        <input type="checkbox" name="menu_auth[]" data-module-name="{$module_name}" <php>if(in_array($vo4['id'], $info['menu_auth'])) echo "checked";</php> value="{$vo4.id}">
+                                                                                        <input type="checkbox" name="menu_auth[]" data-module-name="{$module_name}" {php}if(isset($info['menu_auth']) && in_array($vo4['id'], $info['menu_auth'])) echo "checked";{/php} value="{$vo4.id}">
                                                                                         <span class="cui-control-indicator"></span>
                                                                                         <span> {$vo4.name}</span>
                                                                                     </label>
                                                                                 {else /}
                                                                                      <label class="checkbox-inline">
-                                                                                        <input type="checkbox" name="menu_auth[]" data-module-name="{$module_name}" <php>if(in_array($vo4['id'], $info['menu_auth'])) echo "checked";</php> value="{$vo4.id}">
+                                                                                        <input type="checkbox" name="menu_auth[]" data-module-name="{$module_name}" {php}if(isset($info['menu_auth']) && in_array($vo4['id'], $info['menu_auth'])) echo "checked";{/php} value="{$vo4.id}">
                                                                                         <span class="cui-control-indicator"></span>
                                                                                         <span> {$vo4.name}</span>
                                                                                     </label>
@@ -109,7 +111,7 @@
                                                                                     <div class="auth{$vo4.id}" style="padding-left: 25px;margin-top: 10px;margin-bottom: 10px;">
                                                                                         {foreach $vo4._child as $vo5}
                                                                                             <label class="checkbox-inline">
-                                                                                                <input type="checkbox" name="menu_auth[]" data-module-name="{$module_name}" <php>if(in_array($vo5['id'], $info['menu_auth'])) echo "checked";</php> value="{$vo5.id}">
+                                                                                                <input type="checkbox" name="menu_auth[]" data-module-name="{$module_name}" {php}if(isset($info['menu_auth']) && in_array($vo5['id'], $info['menu_auth'])) echo "checked";{/php} value="{$vo5.id}">
                                                                                                 <span class="cui-control-indicator"></span>
                                                                                                 <span> {$vo5.name}</span>
                                                                                             </label>
@@ -122,6 +124,7 @@
                                                                 {/foreach}
                                                             </div>
                                                         {/volist}
+                                                        {/if}
                                                     </div>
                                                 </div>
                                             </div>
@@ -139,27 +142,27 @@
                                                     <div class="authhylb" style="padding-left: 25px;margin-top: 10px;">
                                                      
                                                             <label class="checkbox-label checkbox-inline">
-                                                                <input type="checkbox" name="hylb[]" {php}if(in_array(1,$hylb)) echo "checked";{/php}  data-module-name="hylb"   value="1">
+                                                                <input type="checkbox" name="hylb[]" {php}if(isset($hylb) && in_array(1,$hylb)) echo "checked";{/php}  data-module-name="hylb"   value="1">
                                                                 <span class="cui-control-indicator"></span>
                                                                 <span>编辑</span>
                                                             </label>                                                     
                                                             <label class="checkbox-label checkbox-inline">
-                                                                <input type="checkbox" name="hylb[]" data-module-name="hylb"   {php}if(in_array(2,$hylb)) echo "checked";{/php}  value="2">
+                                                                <input type="checkbox" name="hylb[]" data-module-name="hylb"   {php}if(isset($hylb) && in_array(2,$hylb)) echo "checked";{/php}  value="2">
                                                                 <span class="cui-control-indicator"></span>
                                                                 <span>财富</span>
                                                             </label>
                                                             <label class="checkbox-label checkbox-inline">
-                                                                <input type="checkbox" name="hylb[]" data-module-name="hylb"   {php}if(in_array(3,$hylb)) echo "checked";{/php}  value="3">
+                                                                <input type="checkbox" name="hylb[]" data-module-name="hylb"   {php}if(isset($hylb) && in_array(3,$hylb)) echo "checked";{/php}  value="3">
                                                                 <span class="cui-control-indicator"></span>
                                                                 <span>锁定</span>
                                                             </label>
                                                             <label class="checkbox-label checkbox-inline">
-                                                                <input type="checkbox" name="hylb[]" data-module-name="hylb"  {php}if(in_array(4,$hylb)) echo "checked";{/php}   value="4">
+                                                                <input type="checkbox" name="hylb[]" data-module-name="hylb"  {php}if(isset($hylb) && in_array(4,$hylb)) echo "checked";{/php}   value="4">
                                                                 <span class="cui-control-indicator"></span>
                                                                 <span>隐蔽</span>
                                                             </label>
                                                             <label class="checkbox-label checkbox-inline">
-                                                                <input type="checkbox" name="hylb[]" data-module-name="hylb"   {php}if(in_array(5,$hylb)) echo "checked";{/php}  value="5">
+                                                                <input type="checkbox" name="hylb[]" data-module-name="hylb"   {php}if(isset($hylb) && in_array(5,$hylb)) echo "checked";{/php}  value="5">
                                                                 <span class="cui-control-indicator"></span>
                                                                 <span>登录</span>
                                                             </label>
