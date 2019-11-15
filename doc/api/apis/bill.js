@@ -1,7 +1,7 @@
-apiSelect["belongs"] = {
+apiSelect["bill"] = {
     index: {
         title: '个人中心用户资产数据(页面级API)',
-        uri: '/index/Belongs/index',
+        uri: '/index/Bill/index',
         type: 'post',
         dataType: 'json',
         comment:{
@@ -54,9 +54,31 @@ apiSelect["belongs"] = {
         },
 
     },
+
+    getBillTypes: {
+        title: '资产变动类型',
+        uri: '/index/Bill/getBillTypes',
+        type: 'post',
+        dataType: 'json',
+        comment: {
+            message: "success",
+                "status": 1,
+                "result": {
+                "type_list": {
+                    "1": "充值",
+                        "2": "提现",
+                        "3": "抢单成功,押金",
+                        "4": "关闭订单,押金返回",
+                        "5": "订单完成,添加利润",
+                        "6": "后台强制完成订单"
+                }
+            }
+        }
+    },
+
     changeLog: {
         title: '资产变动记录',
-        uri: '/index/Belongs/changeLog',
+        uri: '/index/Bill/changeLog',
         type: 'post',
         dataType: 'json',
         comment:{
@@ -185,4 +207,4 @@ apiSelect["belongs"] = {
 
 };
 
-runGroup("belongs");
+runGroup("bill");

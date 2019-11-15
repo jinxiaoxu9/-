@@ -39,7 +39,7 @@ class SecurityController extends CommonController
         $data['have_security'] = $status ? 1 : 0;
         ajaxReturn('成功',1,'', $data);
     }
-    
+
     public function updateSecurityPassword()
     {
         $SecurityLogic = new SecurityLogic();

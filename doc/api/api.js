@@ -7,7 +7,7 @@ var apis = {
     User: '用户模块',
     Message: '消息模块',
     BankCard:'银行卡',
-    Belongs:'资产模块',
+    Bill:'资产模块',
     SystemTool:'系统工具模块',
     Withdraw:'充值提现模块',
 }
