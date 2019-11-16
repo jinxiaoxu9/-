@@ -43,8 +43,9 @@ class SecurityLogic
      */
     public function changeSecurity($userId, $security, $re_security, $old_security)
     {
-        $UserModel = new User();
+        $UserModel = new UserModel();
         $userInfo = $UserModel->find($userId);
+
         if(!empty($userInfo['security_pwd']))
         {
             if(empty($old_security))
@@ -73,7 +74,7 @@ class SecurityLogic
         $data['security_salt'] = strrand(4);
         $data['security_pwd'] = pwdMd5($re_security, $data['security_salt']);
 
-        $ret = $UserModel->where($where)->save($data);
+        $ret = $UserModel->isUpdate(true, $where)->save($data);
         if(!$ret)
         {
             return ['code' => CodeEnum::ERROR, 'msg' => '保存失败,请稍后再试'];

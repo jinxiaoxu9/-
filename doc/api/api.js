@@ -10,6 +10,7 @@ var apis = {
     Bill:'资产模块',
     SystemTool:'系统工具模块',
     Withdraw:'充值提现模块',
+    Security:'登录密码和安全码'
 }
 
 var comments = {

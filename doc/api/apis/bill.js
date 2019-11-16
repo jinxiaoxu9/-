@@ -1,60 +1,4 @@
 apiSelect["bill"] = {
-    index: {
-        title: '个人中心用户资产数据(页面级API)',
-        uri: '/index/Bill/index',
-        type: 'post',
-        dataType: 'json',
-        comment:{
-            "message": "success",
-            "status": 1,
-            "result": {
-                "money": "399.00",
-                "codeTypeJjPercent": {
-                    "1": {
-                        "id": 1,
-                        "type_name": "微信",
-                        "type_logo": "./Uploads/2019-10-06/5d994cc4cf16b.jpg",
-                        "sort": 1,
-                        "create_time": "2019-10-06 10:01:17",
-                        "limit_money": "15000.00",
-                        "defualt_bonus_points": 0
-                    },
-                    "2": {
-                        "id": 2,
-                        "type_name": "支付宝",
-                        "type_logo": "./Uploads/2019-10-06/5d994aede29a5.jpg",
-                        "sort": 2,
-                        "create_time": "2019-10-06 10:02:09",
-                        "limit_money": "17000.00",
-                        "defualt_bonus_points": 0
-                    },
-                    "3": {
-                        "id": 3,
-                        "type_name": "支付宝转银行卡",
-                        "type_logo": "./Uploads/2019-10-06/5d994aede29a5.jpg",
-                        "sort": 3,
-                        "create_time": "2019-10-06 10:02:37",
-                        "limit_money": "10000.00",
-                        "defualt_bonus_points": 0
-                    },
-                    "4": {
-                        "id": 4,
-                        "type_name": "百付通",
-                        "type_logo": "./Uploads/2019-10-06/5d994aede29a5.jpg",
-                        "sort": 4,
-                        "create_time": "2019-10-06 10:02:37",
-                        "limit_money": "5000.00",
-                        "defualt_bonus_points": 0
-                    }
-                },
-                "jjMoneys": "0.00",
-                "skMoneys ": "0.00",
-                "unskMoneys  ": "0.00"
-            }
-        },
-
-    },
-
     getBillTypes: {
         title: '资产变动类型',
         uri: '/index/Bill/getBillTypes',
@@ -77,7 +21,7 @@ apiSelect["bill"] = {
     },
 
     changeLog: {
-        title: '资产变动记录',
+        title: '帐变列表',
         uri: '/index/Bill/changeLog',
         type: 'post',
         dataType: 'json',

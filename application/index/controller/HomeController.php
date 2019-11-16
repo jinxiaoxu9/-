@@ -7,6 +7,9 @@ use app\index\logic\HomeLogic;
 
 class HomeController extends CommonController
 {
+    /**
+     * 抢单页面信息显示
+     */
     public function index()
     {
         $HomeLogic = new HomeLogic();
@@ -16,6 +19,9 @@ class HomeController extends CommonController
         ajaxReturn('操作成功',1,'', $data);
     }
 
+    /**
+     * 开始工作
+     */
     public function startWork()
     {
         $HomeLogic = new HomeLogic();
@@ -28,6 +34,9 @@ class HomeController extends CommonController
         ajaxReturn('操作成功',1,'');
     }
 
+    /**
+     * 停止工作
+     */
     public function stopWork()
     {
         $HomeLogic = new HomeLogic();

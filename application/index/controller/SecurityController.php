@@ -17,6 +17,9 @@ use think\Request;
  */
 class SecurityController extends CommonController
 {
+    /**
+     * 修改密码
+     */
     public function updateLoginPassword()
     {
         $UserLogic = new UserLogic();
@@ -31,7 +34,9 @@ class SecurityController extends CommonController
         ajaxReturn('操作成功',1,'');
     }
 
-
+    /**
+     * 获取是否设置过安全码
+     */
     public function getSecurityInfo()
     {
         $SecurityLogic = new SecurityLogic();
@@ -40,6 +45,9 @@ class SecurityController extends CommonController
         ajaxReturn('成功',1,'', $data);
     }
 
+    /**
+     * 修改安全码
+     */
     public function updateSecurityPassword()
     {
         $SecurityLogic = new SecurityLogic();
@@ -53,6 +61,6 @@ class SecurityController extends CommonController
         {
             ajaxReturn($res['msg'],0);
         }
-        ajaxReturn('操作成功',1,'');
+        ajaxReturn($res['msg'],1,'');
     }
 }

@@ -12,6 +12,7 @@ class IndexController extends Controller
     {
         ajaxReturn('test',1,'', '');
     }
+
 	public function doregister()
     {
 		if($this->request->isPost())
@@ -27,7 +28,7 @@ class IndexController extends Controller
             {
                 ajaxReturn($res['msg'],0);
             }
-            ajaxReturn('注册成功',1,'', url('User/index'));
+            ajaxReturn('注册成功',1,'');
 		}
 	}
 

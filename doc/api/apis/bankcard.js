@@ -8,6 +8,7 @@ apiSelect["BankCard"] = {
             'name': 'name(银行卡号账户名)',
             'bankname':'bankname(银行名称)',
             'banknum':'banknum(银行卡卡号)',
+            'security':'security(安全码)',
         },
         comment:{
             "message": "添加成功",
@@ -44,7 +45,7 @@ apiSelect["BankCard"] = {
                     {
                         "id": 47,
                         "uid": 1752,
-                        "name": "李健芸",
+                        "name": "xxx",
                         "bankname": "传达银行",
                         "banknum": "848409831377333",
                         "addtime": "1573544295"
@@ -52,7 +53,7 @@ apiSelect["BankCard"] = {
                     {
                         "id": 48,
                         "uid": 1752,
-                        "name": "李健芸",
+                        "name": "xxx",
                         "bankname": "中国农业银行",
                         "banknum": "62284840924588",
                         "addtime": "1573544370"
@@ -60,7 +61,7 @@ apiSelect["BankCard"] = {
                     {
                         "id": 49,
                         "uid": 1752,
-                        "name": "李健芸",
+                        "name": "xxxx",
                         "bankname": "中国信业银行",
                         "banknum": "62284840512477",
                         "addtime": "1573544387"

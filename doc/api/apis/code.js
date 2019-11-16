@@ -1,6 +1,6 @@
 apiSelect["code"] = {
     codeTypes: {
-        title: '二维码类型',
+        title: '获取可添加二维码类型',
         uri: '/index/code/codeTypes',
         type: 'post',
         dataType: 'json',

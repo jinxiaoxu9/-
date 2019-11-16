@@ -10,8 +10,6 @@ use app\common\model\BaseModel;
 class SomebillModel extends BaseModel
 {
 
-
-
     /**
      * 数据库表名
      * @author jry <bbs.sasadown.cn>
@@ -44,7 +42,7 @@ class SomebillModel extends BaseModel
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
-    public function  getBelongs($where = [], $field = true, $order = '', $paginate = 0){
+    public function  getLists($where = [], $field = true, $order = '', $paginate = 0){
           return $this->getList($where ,$field,$order ,$paginate);
     }
 

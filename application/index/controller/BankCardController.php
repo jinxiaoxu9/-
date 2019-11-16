@@ -14,7 +14,6 @@ use app\index\logic\BankCardLogic;
  */
 class BankCardController extends CommonController
 {
-
     /**
      * 添加提现银行卡
      */
@@ -27,7 +26,8 @@ class BankCardController extends CommonController
             ajaxReturn($checkParams['message'], $checkParams['status']);
         }
         $params['uid'] = $this->user_id;
-        $ret = $this->logicBankCard->add($params);
+        $BankCardLogic = new BankCardLogic();
+        $ret = $BankCardLogic->add($params);
         ajaxReturn($ret['message'], $ret['status']);
     }
 
