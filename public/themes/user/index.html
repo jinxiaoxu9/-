@@ -79,6 +79,7 @@
                     <th style="font-size:12px;">上级</th>
                     <th style="font-size:12px;">授信额度</th>
                     <th style="font-size:12px;">冻结</th>
+                    <th style="font-size:12px;">工作状态</th>
                     <th style="font-size:12px;">认证</th>
                     <th style="font-size:12px;">添加管理员</th>
                     <th style="max-width:20%;font-size:12px;" >操作</th>
@@ -113,6 +114,17 @@
                             <?php }?>
                             </td>
 
+                            <td style="font-size:12px;">
+                                <?php if($v['work_status']==0){?>
+
+                                <a style="font-size:12px;color:red;cursor:pointer;">否</a>
+                                <?php }elseif($v['work_status']==1){?>
+                                <a style="font-size:12px;color:green;cursor:pointer;">是</a>
+                                <?php }else{?>
+                                <span style="font-size:12px; color:yellow;">黑了</span>
+                                <?php }?>
+                            </td>
+
                             <?php if($v['rz_st']!=1){?>
                                 <td style="font-size:12px; color:red;">否</td>
                             <?php }else{?>
@@ -122,6 +134,14 @@
                                <?php echo $v['role_name']; ?>
                             </td>
                             <td style="font-size:12px;">
+                                <?php if($v['work_status']==1){?>
+                                <a href="<?php echo url('User/set_work_status',array('userid'=>$v['userid'],'st'=>0));?>" style="font-size:12px;color:red;cursor:pointer;">禁工</a>
+
+                                <?php }elseif($v['work_status']==0){?>
+                                <a href="<?php echo url('User/set_work_status',array('userid'=>$v['userid'],'st'=>1));?>" style="font-size:12px;color:green;cursor:pointer;">开工</a>
+                                <?php }else{?>
+                                <span style="font-size:12px; color:yellow;">黑了</span>
+                                <?php }?>||
                                     <?php if($v['status']==1){?>
                                     <a href="<?php echo url('User/set_status',array('userid'=>$v['userid'],'st'=>1));?>" style="font-size:12px;color:red;cursor:pointer;">冻结</a>
 

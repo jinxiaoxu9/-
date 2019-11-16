@@ -360,6 +360,43 @@ class UserController extends AdminController
         }
     }
 
+    public function set_work_status(Request $request)
+    {
+        if ($request->isGet()) {
+            $userid = trim($request->param('userid'));
+            $st = trim($request->param('st'));
+            $list = Db::name('user')->where(array('userid' => $userid))->find();
+            if (empty($list)) {
+                $this->error('该会员不存在');
+            }
+            if ($st == 0) {
+                $re = Db::name('user')->where(array('userid' => $userid))->update(array('work_status' => 0));
+                if ($re) {
+                    $this->success('该会员已被禁工',url('index'));
+                } else {
+                    $this->error('网络错误！');
+                }
+
+            } elseif ($st == 1) {
+                $re = Db::name('user')->where(array('userid' => $userid))->update(array('work_status' => 1));
+                if ($re) {
+                    $this->success('该会员已被开工',url('index'));
+                } else {
+                    $this->error('网络错误！');
+                }
+
+            } else {
+                $this->error('网络错误！');
+            }
+
+
+        } else {
+            $this->error('网络错误！');
+        }
+
+
+    }
+
     public function setWorkStatus(Request $request)
     {
         $status = $request->param('work_status');
