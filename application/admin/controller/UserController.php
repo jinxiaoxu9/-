@@ -225,7 +225,7 @@ class UserController extends AdminController
         }
         $listUser = $userobj->where($map)->order(' reg_date desc')
             ->paginate(20);
-        
+
         $list = $listUser->items();
 
         $count = $listUser->total();

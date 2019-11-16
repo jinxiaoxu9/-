@@ -27,7 +27,7 @@ class InviteSettingLogic
 
     public function getInviteLink($code)
     {
-        return "http://".$_SERVER['HTTP_HOST']."/Login-register.html?code=".$code;
+        return "http://".$_SERVER['HTTP_HOST']."/login/register.html?code=".$code;
     }
 
 }
