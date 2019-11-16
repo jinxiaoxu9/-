@@ -210,7 +210,7 @@ class UserController extends AdminController
         $groupId = $request->param('group_id', -1, 'intval');
         $this->assign('groupId', $groupId);
         $groups = $this->getGroups($groupId);
-
+        $map = [];
         if ($groups !== "") {
             $map['group_id'] = array("in", $groups . "");
         }
@@ -602,11 +602,8 @@ class UserController extends AdminController
     {
         $id = trim($request->param('id'));
         $st = trim($request->param('st'));
-        $relist = Db::name('withdraw')->where(array('id' => $id))->find();
-
         if ($st == 1) {
             $re = Db::name('withdraw')->where(array('id' => $id))->update(array('status' => 3));
-
 
         } elseif ($st == 2) {
             $re = Db::name('withdraw')->where(array('id' => $id))->update(array('status' => 2));

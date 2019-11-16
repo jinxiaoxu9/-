@@ -42,17 +42,7 @@
                                                     <span class="input-group-btn"><a class="btn btn-default search-btn"><i class="fa fa-search"></i></a></span>
                                                 </div>
 												 </form>
-												 
-												<form class="form" method="get" action="">
-												<div style="float:left;width:10%;" class="input-group search-form" style="">
-                                                    <input type="hidden" value="1" name="coinpx" />
-                                                    <input type="submit" value="金额排序" style="border:none;height:33px;width:80%;background:#2699ed;color:#ffffff;cursor:pointer;"/></button>
-                                                </div>
-												 </form>
-
-												
                                             </div>
-                                       
                                  </div>
                             </div>
                         </div>
@@ -68,10 +58,12 @@
                                               <thead>
                                                 <tr>
                                                     <th style="font-size:12px;">ID</th>
-                                                    <th style="font-size:12px;">账号</th>
-                                                    <th style="font-size:12px;">姓名</th>
                                                     <th style="font-size:12px;">提现金额</th>
-                                                    <th style="font-size:12px;">提现方式</th>
+
+                                                    <th style="font-size:12px;">提现银行</th>
+                                                    <th style="font-size:12px;">提现姓名</th>
+                                                    <th style="font-size:12px;">提现账号</th>
+
                                                     <th style="font-size:12px;">提现日期</th>
                                                     <th style="font-size:12px;">状态</th> 
 
@@ -89,10 +81,12 @@
 													{foreach $list as $v}
 														<tr>
 															<td style="font-size:12px;"><?php echo $v['id'];?></td>
+                                                            <td style="font-size:12px;"><?php echo $v['price'];?></td>
+
+                                                            <td style="font-size:12px;"><?php echo $v['way'];?></td>
+                                                            <td style="font-size:12px;"><?php echo $v['name']?></td>
 															<td style="font-size:12px;"><?php echo $v['account'];?></td>
-															<td style="font-size:12px;"><?php echo $v['name']?></td>
-															<td style="font-size:12px;"><?php echo $v['price'];?></td>
-															<td style="font-size:12px;"><?php echo $v['way'];?></td>
+
 															<td style="font-size:12px;"><?php echo date("Y-m-d H:i",$v['addtime']);?></td>
 															<td style="font-size:12px;"><?php echo isset($status_type[$v['status']]) ? $status_type[$v['status']] : '';?></td>
 

@@ -84,10 +84,9 @@
                                               <thead>
                                                 <tr>
                                                     <th style="font-size:12px;">ID</th>
-                                                    <th style="font-size:12px;">账号</th>
-                                                    <th style="font-size:12px;">姓名</th>
+                                                    <th style="font-size:12px;">UID</th>
+                                                    <th style="font-size:12px;">充值姓名</th>
                                                     <th style="font-size:12px;">充值金额</th>
-                                                    <th style="font-size:12px;">充值方式</th>
                                                     <th style="font-size:12px;">充值日期</th>
                                                     <th style="font-size:12px;">状态</th> 
                                                     <th style="font-size:12px;">备注</th>
@@ -105,12 +104,9 @@
 													{foreach $list as $v}
 														<tr>
 															<td style="font-size:12px;"><?php echo $v['id'];?></td>
-															<td style="font-size:12px;"><?php echo $v['account'];?></td>
+															<td style="font-size:12px;"><?php echo $v['uid'];?></td>
 															<td style="font-size:12px;"><?php echo $v['name']?></td>
 															<td style="font-size:12px;"><?php echo $v['price'];?></td>
-															<td style="font-size:12px;">
-                                                                <?php echo $v['way']; ?>
-                                                            </td>
 															<td style="font-size:12px;"><?php echo date("Y-m-d H:i",$v['addtime']);?></td>
 															<td style="font-size:12px;"><?php echo isset($status_type[$v['status']])? $status_type[$v['status']] : '';?></td>
 															<td style="font-size:12px;"><?php echo $v['marker'];?></td>
