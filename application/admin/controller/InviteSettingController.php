@@ -113,7 +113,7 @@ class InviteSettingController extends AdminController
         //$codeTypeLists = $CodeTypeList->getAllType();
         $codeTypeLists = Db::name('gemapay_code_type')->select();
         $Setting = DB::name('user_invite_setting');
-        $setting = $Setting->find($request->param('get.id'));
+        $setting = $Setting->find($request->param('id'));
 
         if ($request->isPost()) {
 

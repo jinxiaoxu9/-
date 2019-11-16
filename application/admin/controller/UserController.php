@@ -215,14 +215,17 @@ class UserController extends AdminController
             $map['group_id'] = array("in", $groups . "");
         }
         $mobile = $request->param('mobile');
-        (!empty($mobile)) && $map['mobile'] = ['like', "%" . $mobile . "%"];
+        if($mobile) {
+            $map['mobile'] = ['like', "%" . $mobile . "%"];
+        }
         $tz_users = $adminLogic->tzUsers();
-        $map = array();
+
         if($tz_users) {
             $map['userid'] = ['in', $tz_users];
         }
         $listUser = $userobj->where($map)->order(' reg_date desc')
             ->paginate(20);
+        
         $list = $listUser->items();
 
         $count = $listUser->total();
