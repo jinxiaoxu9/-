@@ -1,4 +1,4 @@
-apiSelect["BankCard"] = {
+apiSelect["bankcard"] = {
     add: {
         title: '添加银行卡',
         uri: '/index/BankCard/add',
@@ -73,4 +73,4 @@ apiSelect["BankCard"] = {
 
 };
 
-runGroup("BankCard");
+runGroup("bankcard");

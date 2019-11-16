@@ -28,7 +28,7 @@ class BankCardController extends CommonController
         $params['uid'] = $this->user_id;
         $BankCardLogic = new BankCardLogic();
         $ret = $BankCardLogic->add($params);
-        ajaxReturn($ret['message'], $ret['status']);
+        ajaxReturn($ret['message'], $ret['code']);
     }
 
     /**

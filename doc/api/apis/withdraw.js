@@ -1,6 +1,6 @@
 apiSelect["withdraw"] = {
     bankindex: {
-        title: '获取用户银行卡',
+        title: '获取用户提现银行卡',
         uri: '/index/BankCard/index',
         type: 'post',
         dataType: 'json',
@@ -72,32 +72,15 @@ apiSelect["withdraw"] = {
                     "current_page": 1,
                     "data": [
                         {
-                            "id": 3,
-                            "uid": 5,
-                            "account": "",
-                            "name": "1",
-                            "price": 1,
-                            "way": 0,
-                            "addtime": "1573734918",
-                            "status": 0,
-                            "marker": "",
-                            "account_name": "1",
-                            "account_num": "1",
-                            "bank_name": "1"
-                        },
-                        {
-                            "id": 2,
-                            "uid": 5,
-                            "account": "",
-                            "name": "1",
-                            "price": 1,
-                            "way": 0,
-                            "addtime": "1573734779",
-                            "status": 0,
-                            "marker": "",
-                            "account_name": "1",
-                            "account_num": "1",
-                            "bank_name": "1"
+                            "id": 10,
+                            "uid": 6,
+                            "account": "622848123456789258369",
+                            "name": "小三子",
+                            "way": "中国银行",
+                            "price": 100,
+                            "addtime": "1573923711",
+                            "endtime": "1573923257处理时间",
+                            "status": "0处理中2已驳回3已完成"
                         }
                     ]
                 }
@@ -112,8 +95,15 @@ apiSelect["withdraw"] = {
         params:{
         },
         comment:{
-            "message": "提现成功",
-            "status": 1
+            "message": "成功",
+            "status": 1,
+            "result": {
+                "info": {
+                    "account_name": "充值银行卡开户姓名",
+                    "account_num": "充值银行卡卡号",
+                    "bank_name": "充值银行卡开户行"
+                }
+            }
         },
     },
     apply: {
@@ -122,9 +112,9 @@ apiSelect["withdraw"] = {
         type: 'post',
         dataType: 'json',
         params:{
-            'bank_name': 'bank_name(银行卡开户行)',
-            'bank_account': 'bank_account(银行卡开户姓名)',
-            'bank_number': 'bank_number(银行卡开户卡号)',
+            'bank_name': 'bank_name(银行卡开户行,applyInfo接口返回)',
+            'bank_account': 'bank_account(银行卡开户姓名,applyInfo接口返回)',
+            'bank_number': 'bank_number(银行卡开户卡号,applyInfo接口返回)',
             'money': 'money(充值金额)',
             'name': 'name(充值姓名)',
         },
@@ -152,31 +142,16 @@ apiSelect["withdraw"] = {
                         {
                             "id": 3,
                             "uid": 5,
-                            "account": "",
-                            "name": "1",
-                            "price": 1,
-                            "way": 0,
+                            "name": "test 充值姓名",
+                            "price": "1",
                             "addtime": "1573734918",
-                            "status": 0,
-                            "marker": "",
-                            "account_name": "1",
-                            "account_num": "1",
-                            "bank_name": "1"
+                            "status": "0处理中2已驳回1已完成",
+                            "marker": "note",
+                            "account_name": "充值银行卡开户姓名",
+                            "account_num": "充值银行卡开户卡号",
+                            "bank_name": "充值银行卡开户行",
+                            "deal_time": "处理时间"
                         },
-                        {
-                            "id": 2,
-                            "uid": 5,
-                            "account": "",
-                            "name": "1",
-                            "price": 1,
-                            "way": 0,
-                            "addtime": "1573734779",
-                            "status": 0,
-                            "marker": "",
-                            "account_name": "1",
-                            "account_num": "1",
-                            "bank_name": "1"
-                        }
                     ]
                 }
             }

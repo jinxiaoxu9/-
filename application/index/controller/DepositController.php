@@ -4,9 +4,6 @@ namespace app\index\controller;
 
 use app\common\library\enum\CodeEnum;
 use app\index\logic\DepositLogic;
-use think\Controller;
-use think\db;
-use think\Request;
 
 /**
  * 提现控制器

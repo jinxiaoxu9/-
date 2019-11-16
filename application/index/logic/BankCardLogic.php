@@ -18,13 +18,13 @@ class BankCardLogic extends BaseLogic
 
          if(!is_numeric($param['banknum']))
          {
-             return ['status' =>CodeEnum::ERROR,'message'=>'银行卡格式错误'];
+             return ['code' =>CodeEnum::ERROR,'message'=>'银行卡格式错误'];
          }
 
          $count  = $this->modelBankcard->getBankCardCount(['banknum'=>$param['banknum']],'id');
          if($count)
          {
-             return ['status' =>CodeEnum::ERROR,'message'=>'银行卡号已存在'];
+             return ['code' =>CodeEnum::ERROR,'message'=>'银行卡号已存在'];
          }
 
          $SecurityLogic = new SecurityLogic();
@@ -41,9 +41,9 @@ class BankCardLogic extends BaseLogic
          $param['addtime'] = request()->time();
          if($this->modelBankcard->setBankCard($param))
          {
-             return ['status' =>CodeEnum::SUCCESS,'message'=>'银行卡添加成功'];
+             return ['code' =>CodeEnum::SUCCESS,'message'=>'银行卡添加成功'];
          }
-         return ['status' =>CodeEnum::ERROR,'message'=>'银行卡添加失败'];
+         return ['code' =>CodeEnum::ERROR,'message'=>'银行卡添加失败'];
      }
 
 

@@ -17,22 +17,22 @@ class SecurityLogic
     {
         if (empty($security))
         {
-            return ['code' => CodeEnum::ERROR, 'msg' => '安全码不能为空'];
+            return ['code' => CodeEnum::ERROR, 'message' => '安全码不能为空'];
         }
 
         $UserModel = new UserModel();
         $userInfo = $UserModel->find($userId);
         if(empty($userInfo['security_pwd']))
         {
-            return ['code' => CodeEnum::ERROR, 'msg' => '请先前往个人资料设置安全码'];
+            return ['code' => CodeEnum::ERROR, 'message' => '请先前往个人资料设置安全码'];
         }
 
         if((pwdMd5($security,$userInfo['security_salt']) != $userInfo['security_pwd']))
         {
-            return ['code' => CodeEnum::ERROR, 'msg' => '安全码错误'];
+            return ['code' => CodeEnum::ERROR, 'message' => '安全码错误'];
         }
 
-        return ['code' => CodeEnum::SUCCESS, 'msg' => 'OK'];
+        return ['code' => CodeEnum::SUCCESS, 'message' => 'OK'];
     }
 
     /**
