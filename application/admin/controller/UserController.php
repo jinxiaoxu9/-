@@ -596,22 +596,21 @@ class UserController extends AdminController
     }
 
 
-    //提现列表
-
+    /**提现列表 退回用户
+     * @param Request $request st 1提现 2退回 3删除
+     * @throws \think\Exception
+     * @throws \think\exception\PDOException
+     */
     public function wiedit(Request $request)
     {
         $id = trim($request->param('id'));
         $st = trim($request->param('st'));
-        if ($st == 1) {
+        if ($st == 1) { //提现
             $re = Db::name('withdraw')->where(array('id' => $id))->update(array('status' => 3));
-
-        } elseif ($st == 2) {
+        } elseif ($st == 2) { //退回
             $re = Db::name('withdraw')->where(array('id' => $id))->update(array('status' => 2));
-
-
-        } elseif ($st == 3) {
+        } elseif ($st == 3) { //删除
             $re = Db::name('withdraw')->where(array('id' => $id))->update(array('status' => 3));
-
         }
 
         if ($re) {
@@ -642,12 +641,11 @@ class UserController extends AdminController
         $gemapayCode = Db::name('gemapay_code');
         $listGemaPayCode = $gemapayCode->alias('a')->field('a.*,b.account,b.username,c.type_name')
             ->join('ysk_user b' ,'a.user_id=b.userid', "LEFT")
-            //->join('left join ' . C("DB_PREFIX") . 'user as b on a.user_id = b.userid')
-            //->join('left join ' . C("DB_PREFIX") . 'gemapay_code_type as c on a.type = c.id')
             ->join('gemapay_code_type c' , 'a.type=c.id', "LEFT")
             ->where($map)->order('id desc')->paginate(50);
 
         $list = $listGemaPayCode->items();
+        
         $count = $listGemaPayCode->total();
         // 获取分页显示
         $page = $listGemaPayCode->render();
@@ -731,6 +729,7 @@ class UserController extends AdminController
         $account = trim($request->param('keyword'));
         $coinpx = trim($request->param('coinpx'));
 
+        $map = array();
         if ($querytype != '') {
             if ($querytype == 'mobile') {
                 $map['name'] = $account;
@@ -742,9 +741,7 @@ class UserController extends AdminController
         }
         $adminLogic = new AdminLogic();
         $userobj = Db::name('bankcard');
-        //$map['uid'] = ['in', $adminLogic->tzUsers()];
         $a_user_tz = $adminLogic->tzUsers();
-        $map = array();
         if($a_user_tz) {
             $map['uid'] = ['in', $a_user_tz];
         }
@@ -760,7 +757,7 @@ class UserController extends AdminController
         $list = $listData->items();
         foreach ($list as $k => $v) {
             $a_usres = Db::name('user')->where('userid', $v['uid'])->column('account,mobile');
-            if(isset($a_usres['account']) && $a_usres['mobile']) {
+            if(isset($a_usres['account'])) {
                 $list[$k]['user_account'] = $a_usres['account'];
                 $list[$k]['user_mobile'] = $a_usres['mobile'];
             } else {
@@ -780,6 +777,19 @@ class UserController extends AdminController
 
     }
 
+    /**
+     * 删除银行卡
+     */
+    public function delbankcard(Request $request)
+    {
+        $id = trim($request->param('id'));
+        $bankcard = Db::name('bankcard')->where(array('id' => $id))->find();
+        if(!$bankcard) {
+            $this->error('银行卡已经删除或不存', url('bankcard'));
+        }
+        Db::name('bankcard')->where(array('id' => $id))->delete();
+        $this->success('银行卡删除成功', url('bankcard'));
+    }
 
     //冻结会员
     public function set_status(Request $request)
@@ -821,13 +831,17 @@ class UserController extends AdminController
 
 
     /**
-     * 编辑用户
+     * 删除用户
      *
      */
     public function del(Request $request)
     {
         $userid = trim($request->param('userid'));
-        M('user')->where(array('userid' => $userid))->delete();
+        $user = Db::name('user')->where(array('userid' => $userid))->find();
+        if(!$user) {
+            $this->success('会员已经删除或不存');
+        }
+        Db::name('user')->where(array('userid' => $userid))->delete();
         $this->success('会员删除成功');
     }
 

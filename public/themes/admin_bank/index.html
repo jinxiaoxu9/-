@@ -62,6 +62,7 @@
                                                     <table class="table table-bordered table-striped table-hover">
                                                         <thead>
                                                         <tr>
+                                                            <th style="font-size:12px;">UID</th>
                                                             <th style="font-size:12px;">账号名称</th>
                                                             <th style="font-size:12px;">账号</th>
                                                             <th style="font-size:12px;">银行名称</th>
@@ -81,6 +82,7 @@
                                                         {else/}
                                                             {volist name="list" id="v"}
                                                                 <tr>
+                                                                    <td style="font-size:12px;"><?php echo $v['uid'];?></td>
                                                                     <td style="font-size:12px;"><?php echo $v['account_name'];?></td>
                                                                     <td style="font-size:12px;"><?php echo $v['account_num'];?></td>
                                                                     <td style="font-size:12px;"><?php echo $v['bank_name'];?></td>

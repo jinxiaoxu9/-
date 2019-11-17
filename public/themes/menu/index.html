@@ -73,6 +73,8 @@
                                                             <th style="font-size:12px;">控制器</th>
                                                             <th style="font-size:12px;">方法</th>
                                                             <th style="font-size:12px;">排序</th>
+                                                            <th style="font-size:12px;">ICON</th>
+                                                            <th style="font-size:12px;">显示状态</th>
                                                             <th style="max-width:20%;font-size:12px;" >操作</th>
                                                         </tr>
                                                         </thead>
@@ -91,6 +93,8 @@
                                                                     <td style="font-size:12px;"><?php echo $vals['col'];?></td>
                                                                     <td style="font-size:12px;"><?php echo $vals['act'];?></td>
                                                                     <td style="font-size:12px;"><?php echo $vals['sort'];?></td>
+                                                                    <td style="font-size:12px;"><i class="<?php echo $vals['icon'];?>"></i></td>
+                                                                    <td style="font-size:12px;"><?php echo $vals['status'] ? '显示' : '隐藏';?></td>
                                                                     <td style="font-size:12px;">
                                                                         <a href="<?php echo url('Menu/edit',array('id'=>$vals['id']));?>" style="font-size:12px;cursor:pointer;">编辑 ||</a>
                                                                         <a href="<?php echo url('Menu/del',array('id'=>$vals['id']));?>" style="font-size:12px;cursor:pointer;">删除</a>

@@ -27,13 +27,13 @@
                         <div class="builder-toolbar">
                             <div class="row">
                                 <div class="col-xs-12 col-sm-12 clearfix" style="margin-bottom:20px;padding-top:0px;padding-bottom:10px;">
-                                        
+                                    <form class="form" method="get" action="">
                                             <div class="form-group right">
 												<form class="form" method="get" action="">
                                                 <div style="float:left;width:15%;" class="" >
                                                     <select name="querytype" class="form-control lyui-select select">
                                                         <option  value="userid">UID</option>
-                                                         <option {eq name=":input('get.querytype')" value="mobile" }selected="true"{/eq}  value="mobile">持卡人</option>
+                                                         <option {eq name=":input('querytype')" value="mobile" }selected="true"{/eq}  value="mobile">持卡人</option>
                                                     </select>                                            
                                                 </div>
 
@@ -41,9 +41,9 @@
                                                     <input  type="text" name="keyword" class="search-input form-control" value="{:isset($_GET.keyword) ? $_GET.keyword : ''}" placeholder="输入搜索内容">
                                                     <span class="input-group-btn"><a class="btn btn-default search-btn"><i class="fa fa-search"></i></a></span>
                                                 </div>
-												 </form>
+
 												 
-												<form class="form" method="get" action="">
+
 												<div style="float:left;width:10%;" class="input-group search-form" style="">
                                                     <input type="hidden" value="1" name="coinpx" />
                                                     <input type="submit" value="添加时间" style="border:none;height:33px;width:80%;background:#2699ed;color:#ffffff;cursor:pointer;"/></button>
@@ -68,6 +68,7 @@
                                               <thead>
                                                 <tr>
                                                     <th style="font-size:12px;">ID</th>
+                                                    <th style="font-size:12px;">会员UID</th>
                                                     <th style="font-size:12px;">会员账号</th>
                                                     <th style="font-size:12px;">会员昵称</th>
                                                     <th style="font-size:12px;">持卡人</th>
@@ -89,6 +90,7 @@
 													{foreach $list as $v}
 														<tr>
 															<td style="font-size:12px;"><?php echo $v['id'];?></td>
+															<td style="font-size:12px;"><?php echo $v['uid'];?></td>
 															<td style="font-size:12px;"><?php echo $v['user_mobile'];?></td>
 															<td style="font-size:12px;"><?php echo $v['user_account'];?></td>
 															<td style="font-size:12px;"><?php echo $v['name'];?></td>
