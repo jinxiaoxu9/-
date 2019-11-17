@@ -12,7 +12,15 @@ class UserMessageController extends AdminController
      */
     public function index(Request $request)
     {
+        $where = [];
+        if($request->param('title')) {
+            $where['title'] = $request->param('title');
+        }
+        if($request->param('user_id')) {
+            $where['user_id'] = $request->param('user_id');
+        }
         $listData = Db::name('user_message')
+            ->where($where)
             ->order('id desc')
             ->paginate(15);
         $list = $listData->items();
@@ -80,5 +88,25 @@ class UserMessageController extends AdminController
         return $this->fetch();
     }
 
-
+    /**
+     * 删除
+     */
+    public function del(Request $request)
+    {
+        $id = intval($request->param('id'));
+        if (empty($id)) {
+            $this->error('参数错误');
+        }
+        $table = Db::name('user_message');
+        $count = $table->where(array('id'=>$id))->find();
+        if(!$count){
+            $this->error('当前消息已经删除或不存在！');
+        }
+        $re = $table->where(array('id' => $id))->delete();
+        if ($re) {
+            $this->success('删除成功');
+        } else {
+            $this->error('删除失败');
+        }
+    }
 }

@@ -40,8 +40,9 @@
                             <div class="row">
                                 <div class="col-xs-12">
                                     <div class="form-group right">
-                                        <form class="form" method="get" action="{:url('/admin/Menu/index')}">
-                                            标题： <input type="text"  class="lyui-select select" name="name" value="{:Input('name','')}">
+                                        <form class="form" method="get" action="{:url('/admin/userMessage/index')}">
+                                            标题： <input type="text"  class="lyui-select select" name="title" value="{:Input('title','')}">
+                                            用户ID： <input type="text"  class="lyui-select select" name="user_id" value="{:Input('user_id','')}">
                                             <input type="submit"  class="btn btn-primary"  value="搜索"/></button>
                                         </form>
                                     </div>
@@ -52,6 +53,7 @@
                                               <thead>
                                                 <tr>
                                                     <th>ID</th>
+                                                    <th>UID</th>
                                                     <th>标题</th>
                                                     <th>是否是系统公告</th>
                                                     <th>是否已读</th>
@@ -64,6 +66,7 @@
                                                     {volist name="list" id="data"}
                                                         <tr>
                                                             <td>{$data['id']}</td>
+                                                            <td>{$data['user_id']}</td>
                                                             <td>{$data['title']}</td>
                                                             <td>{$data['is_system'] ? "是":'否'}</td>
                                                             <td>{$data['is_read'] ? "是":'否'}</td>
