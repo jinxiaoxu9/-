@@ -57,8 +57,6 @@ class GemaController extends AdminController
         $order_no && $map['order_no'] = ['like', '%' . $order_no . '%'];
 
         $adminLogic = new AdminLogic();
-
-        $map    = array();
         if($this->admin_id!=1) {
             $a_uid = $adminLogic->tzUsers();
             if(is_array($a_uid) && $a_uid) {
@@ -113,7 +111,7 @@ class GemaController extends AdminController
         if ($startTime && $endTime) {
             $map['add_time'] = ['between', [strtotime($startTime), strtotime($endTime)]];
         }
-        //print_r($map);exit();
+
         $this->assign('groupId', $groupId);
         $fileds = [
             "o.*",
@@ -151,8 +149,6 @@ class GemaController extends AdminController
 
         $this->assign('totalOrderPrice', $totalOrderPrice);
         $this->assign('totalTc', $totalTc);
-        // todo 重置分页参数 弊端后面子再改
-        //($p->parameter['group_id']==-1) && $p->parameter['group_id']='';
         $groupId = $request->param('groupId');
         $this->assign('groupId', $groupId);
 

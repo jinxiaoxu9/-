@@ -170,6 +170,7 @@ class GemapayOrderLogic
     {
         $userTable = new \app\index\model\UserModel();
         $user=Db::name('user')->where(['userid'=>$uid])->find();
+
         //转账身份检测
         if ($user) {  //当前用户状态正常
             $moneys = ($add_subtract == 1) ? $money : 0 - $money;
