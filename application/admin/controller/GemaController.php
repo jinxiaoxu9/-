@@ -100,7 +100,7 @@ class GemaController extends AdminController
 
         $this->assign('status', $status);
         //时间
-        $startTime = $request->param('start_time');//, date("Y-m-d 00:00:00", time())
+        $startTime = $request->param('start_time', date("Y-m-d 00:00:00", time()));
         $endTime = $request->param('end_time');
         if ($startTime && empty($endTime)) {
             $map['add_time'] = ['egt', strtotime($startTime)];
