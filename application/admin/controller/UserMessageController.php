@@ -13,7 +13,7 @@ class UserMessageController extends AdminController
     public function index(Request $request)
     {
         $listData = Db::name('user_message')
-            ->order('is_read asc,id desc')
+            ->order('id desc')
             ->paginate(15);
         $list = $listData->items();
         //分页
@@ -53,6 +53,7 @@ class UserMessageController extends AdminController
             if ($data['content'] == '') {
                 $this->error('内容不能为空');
             }
+            $data['user_id'] = $user_id;
             $data['add_time'] = time();
             $data['read_time'] = $data['is_read'] = 0;
             unset($data['mobile']);

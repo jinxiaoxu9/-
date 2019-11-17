@@ -68,8 +68,9 @@ class MessageLogic
         }
         $where['id'] = $messageId;
         $where['user_id'] = $userId;
-        $data['is_read'] = $UserMessageModel::STATUS_YES;
 
+        $data['is_read'] = $UserMessageModel::STATUS_YES;
+        $data['read_time'] = request()->time();
         $UserMessageModel->isUpdate(true, $where)->save($data);
         $info = $UserMessageModel->where(['id' => $messageId, 'user_id' => $userId])->find();
         return $info;
