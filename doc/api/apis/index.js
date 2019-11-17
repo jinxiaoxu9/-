@@ -24,6 +24,7 @@ apiSelect["index"] = {
         params:{
             'username': 'username(用户名)',
             'password':'password(密码)',
+            're_password':'re_password(重复密码)',
             'invent_code': 'invent_code(邀请码)',
             'mobile': 'mobile(手机号码)',
         },

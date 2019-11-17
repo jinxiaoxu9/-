@@ -21,9 +21,9 @@ class IndexController extends Controller
             $username = $this->request->post('username');
             $mobile = $this->request->post('mobile');
             $password = $this->request->post('password');
-
+            $rePassword = $this->request->post('re_password');
             $indexLogic = new IndexLogic();
-            $res = $indexLogic->register($mobile, $username, $password, $invent_code);
+            $res = $indexLogic->register($mobile, $username, $password, $rePassword, $invent_code);
             if ($res['code'] == CodeEnum::ERROR)
             {
                 ajaxReturn($res['msg'],0);

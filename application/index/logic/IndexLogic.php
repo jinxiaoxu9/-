@@ -65,13 +65,22 @@ class IndexLogic
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
-    public function register($mobile, $username, $login_pwd, $inventCode)
+    public function register($mobile, $username, $password, $re_password, $inventCode)
     {
         $UserInviteSetting = new UserInviteSettingModel();
         $setting = $UserInviteSetting->where(array('code'=>$inventCode))->find();
 
+        if(count($password)<6)
+        {
+            return ['code' => CodeEnum::ERROR, 'msg' =>'密码必须大于6位！' ];
+        }
+
+        if($password != $re_password)
+        {
+            return ['code' => CodeEnum::ERROR, 'msg' =>'密码两次输入不一致！' ];
+        }
         if(empty($setting)){
-            return ['code' => CodeEnum::ERROR, 'msg' =>$inventCode. '!推荐人不存在！' ];
+            return ['code' => CodeEnum::ERROR, 'msg' =>'推荐人不存在！' ];
         }
 
         if(!preg_match("/^1[34578]\d{9}$/", $mobile))
@@ -98,7 +107,7 @@ class IndexLogic
         $data['tx_status'] = $data['userqq'] = $data['u_ztnum'] = $data['group_id'] = 0;
         $data['zsy'] = 0.00;
         $data['username'] = $username;
-        $data['login_pwd'] = pwdMd5($login_pwd,$salt);
+        $data['login_pwd'] = pwdMd5($password,$salt);
         $data['login_salt'] = $salt;
         $data['reg_date'] = time();
         $data['reg_ip'] = get_userip();
