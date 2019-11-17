@@ -141,7 +141,7 @@ class UserLogic extends BaseLogic
             return ['code' => \app\common\library\enum\CodeEnum::ERROR, 'msg' => '请输入登录密码'];
         }
 
-        if(count($newPassword)<6)
+        if(strlen($newPassword) < 6)
         {
             return ['code' => CodeEnum::ERROR, 'msg' =>'密码必须大于6位！' ];
         }

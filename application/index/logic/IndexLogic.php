@@ -69,8 +69,7 @@ class IndexLogic
     {
         $UserInviteSetting = new UserInviteSettingModel();
         $setting = $UserInviteSetting->where(array('code'=>$inventCode))->find();
-
-        if(count($password)<6)
+        if(strlen($password)<6)
         {
             return ['code' => CodeEnum::ERROR, 'msg' =>'密码必须大于6位！' ];
         }
