@@ -79,4 +79,6 @@ class UserMessageController extends AdminController
         $this->assign('info', $info);
         return $this->fetch();
     }
+
+
 }
