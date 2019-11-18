@@ -1,3 +1,23 @@
+CREATE TABLE `www_pf_com`.`ysk_daifu_order` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `order_no` VARCHAR(245) NOT NULL COMMENT '本站订单号',
+  `out_order_no` VARCHAR(245) NOT NULL COMMENT '外部订单号',
+  `bank_name` VARCHAR(245) NOT NULL COMMENT '代付银行卡名称',
+  `bank_account_name` VARCHAR(245) NOT NULL COMMENT '代付银行卡账户号',
+  `bank_account_num` VARCHAR(245) NOT NULL,
+  `status` VARCHAR(245) NOT NULL COMMENT '０表示申请中，１表示已经被用户抢单处理中,2表示用户已经确认完成，并且上传了凭证3.表示这笔订单已经处理完成，４表示商户取消了这笔订单，５表示总后台驳回了这笔订单',
+  `note` VARCHAR(245) NOT NULL COMMENT '备注',
+  `credentials` VARCHAR(245) NOT NULL COMMENT '上传凭证路径使用绝对路径',
+  `create_time` INT(10) NOT NULL DEFAULT 0 COMMENT '订单创建时间',
+  `accept_time` INT(10) NOT NULL DEFAULT 0 COMMENT '受理时间',
+  `deal_time` INT(10) NOT NULL DEFAULT 0 COMMENT '用户处理时间',
+  `finish_time` INT(10) NOT NULL DEFAULT 0 COMMENT '完成时间',
+  `deal_user_id` INT(10) NOT NULL COMMENT '受理用户ｉｄ',
+  `deal_admin_id` INT(10) NOT NULL COMMENT '受理管理员id',
+  `price` DECIMAL(10,2) NOT NULL COMMENT '订单金额',
+  `bonus_fee` DECIMAL(10,2) NOT NULL COMMENT '处理手续费',
+  PRIMARY KEY (`id`));
+
 ALTER TABLE `ysk_recharge`
 CHANGE COLUMN `way` `way` VARCHAR(255) NOT NULL COMMENT '充值方式：' ;
 
