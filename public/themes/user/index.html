@@ -70,40 +70,42 @@
             <table class="table table-bordered table-striped table-hover">
               <thead>
                 <tr>
-                    <th style="font-size:12px;">UID</th>
-                    <th style="font-size:12px;">账号</th>
-                    <th style="font-size:12px;">昵称</th>
-                    <th style="font-size:12px;">用户组</th>
-                    <th style="font-size:12px;">注册</th>
-                    <th style="font-size:12px;">直推</th>
-                    <th style="font-size:12px;">上级</th>
-                    <th style="font-size:12px;">授信额度</th>
-                    <th style="font-size:12px;">冻结</th>
-                    <th style="font-size:12px;">工作状态</th>
-                    <th style="font-size:12px;">认证</th>
-                    <th style="font-size:12px;">添加管理员</th>
+                    <th class="font12">UID</th>
+                    <th class="font12">账号</th>
+                    <th class="font12">昵称</th>
+                    <th class="font12">手机号</th>
+                    <th class="font12">用户组</th>
+                    <th class="font12">注册</th>
+                    <th class="font12">直推</th>
+                    <th class="font12">上级</th>
+                    <th class="font12">授信额度</th>
+                    <th class="font12">冻结</th>
+                    <th class="font12">工作状态</th>
+                    <th class="font12">认证</th>
+                    <th class="font12">添加管理员</th>
                     <th style="max-width:20%;font-size:12px;" >操作</th>
                 </tr>
             </thead>
                 <tbody>
                     {empty name="list"}
                         <tr class="builder-data-empty">
-                            <td class="text-center empty-info" colspan="20"  style="font-size:12px;">
+                            <td class="text-center empty-info" colspan="20"  class="font12">
                                 <i class="fa fa-database"></i> 暂时没有数据<br>
                             </td>
                         </tr>
                     {else/}
                     {foreach $list as $v}
                         <tr>
-                            <td style="font-size:12px;"><?php echo $v['userid'];?></td>
-                            <td style="font-size:12px;"><?php echo $v['account'];?></td>
-                            <td style="font-size:12px;"><?php echo $v['username'];?></td>
-                            <td style="font-size:12px;"><?php echo $v['group_name'];?></td>
-                            <td style="font-size:12px;"><?php echo date('Y-m-d H:i:s',$v['reg_date']);?></td>
-                            <td style="font-size:12px;"><?php echo $v['pid_account_count'];?></td>
-                            <td style="font-size:12px;"><?php echo $v['pid_account'];?></td>
-                            <td style="font-size:12px;"><?php echo $v['money'];?></td>
-                            <td style="font-size:12px;">
+                            <td class="font12"><?php echo $v['userid'];?></td>
+                            <td class="font12"><?php echo $v['account'];?></td>
+                            <td class="font12"><?php echo $v['username'];?></td>
+                            <td class="font12"><?php echo $v['mobile'];?></td>
+                            <td class="font12"><?php echo $v['group_name'];?></td>
+                            <td class="font12"><?php echo date('Y-m-d H:i:s',$v['reg_date']);?></td>
+                            <td class="font12"><?php echo $v['pid_account_count'];?></td>
+                            <td class="font12"><?php echo $v['pid_account'];?></td>
+                            <td class="font12"><?php echo $v['money'];?></td>
+                            <td class="font12">
                             <?php if($v['status']==1){?>
                                 <a style="font-size:12px;color:green;cursor:pointer;">否</a>
 
@@ -114,7 +116,7 @@
                             <?php }?>
                             </td>
 
-                            <td style="font-size:12px;">
+                            <td class="font12">
                                 <?php if($v['work_status']==0){?>
 
                                 <a style="font-size:12px;color:red;cursor:pointer;">否</a>
@@ -130,10 +132,10 @@
                             <?php }else{?>
                                 <td style="font-size:12px; color:green;">是</td>
                             <?php }?>
-                            <td style="font-size:12px;">
+                            <td class="font12">
                                <?php echo $v['role_name']; ?>
                             </td>
-                            <td style="font-size:12px;">
+                            <td class="font12">
                                 <?php if($v['work_status']==1){?>
                                 <a href="<?php echo url('User/set_work_status',array('userid'=>$v['userid'],'st'=>0));?>" style="font-size:12px;color:red;cursor:pointer;">禁工</a>
 
@@ -150,10 +152,11 @@
                                     <?php }else{?>
                                     <span style="font-size:12px; color:yellow;">黑了</span>
                                     <?php }?>
-                                ||<a href="<?php echo url('UserGroup/joinGroup',array('userid'=>$v['userid']));?>" style="font-size:12px;cursor:pointer;">加入分组||</a>
-                                <a href="<?php echo url('User/changeUserBalance',array('userid'=>$v['userid']));?>" style="font-size:12px;cursor:pointer;">修改授信额度||</a>
-                                <a href="<?php echo url('User/edit',array('userid'=>$v['userid']));?>" style="font-size:12px;cursor:pointer;">详情 ||</a>
-                                <a href="<?php echo url('User/restrict',array('userid'=>$v['userid']));?>" style="font-size:12px;cursor:pointer;">限制 ||</a>
+                                ||<a href="<?php echo url('UserGroup/joinGroup',array('userid'=>$v['userid']));?>" style="font-size:12px;cursor:pointer;">加入分组</a> ||
+                                <a href="<?php echo url('User/changeUserBalance',array('userid'=>$v['userid']));?>" style="font-size:12px;cursor:pointer;">修改授信额度</a> ||<br/>
+                                <a href="<?php echo url('User/edit',array('userid'=>$v['userid']));?>" style="font-size:12px;cursor:pointer;">详情</a> ||
+                                <a href="<?php echo url('User/restrict',array('userid'=>$v['userid']));?>" style="font-size:12px;cursor:pointer;">限制</a> ||
+                                <a href="<?php echo url('User/bill',array('username'=>$v['username']));?>" style="font-size:12px;cursor:pointer;">看查账变记录</a>
                             </td>
 
                         </tr>
