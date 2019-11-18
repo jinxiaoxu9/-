@@ -605,15 +605,26 @@ class UserController extends AdminController
     {
         $id = trim($request->param('id'));
         $st = trim($request->param('st'));
-        if ($st == 1) { //提现
-            $re = Db::name('withdraw')->where(array('id' => $id))->update(array('status' => 3));
-        } elseif ($st == 2) { //退回
-            $re = Db::name('withdraw')->where(array('id' => $id))->update(array('status' => 2));
-        } elseif ($st == 3) { //删除
-            $re = Db::name('withdraw')->where(array('id' => $id))->update(array('status' => 3));
-        }
+        $update_data = array( 'endtime' => date('Y-m-d H:i:s'));
+        $result = Db::name('withdraw')->where(array('id' => $id))->find();
 
-        if ($re) {
+        if ($st == 1) { //提现
+            if($result['status']==3) {
+                $this->error('操作失败,已经完成提现');
+            }
+            $update_data['status'] = 3;
+            $re = Db::name('withdraw')->where(array('id' => $id))->update($update_data);
+        } elseif ($st == 2 ) { //退回
+            if($result['status']==2) {
+                $this->error('操作失败,金额已经退回');
+            }
+            $update_data['status'] = 2;
+            $re = Db::name('withdraw')->where(array('id' => $id))->update($update_data);
+        } elseif ($st == 3 && $result['status'] != 3) { //删除
+            $update_data['status'] = 3;
+            $re = Db::name('withdraw')->where(array('id' => $id))->update($update_data);
+        }
+        if (isset($re) && $re) {
             $this->success('操作成功');
         } else {
             $this->error('操作失败');

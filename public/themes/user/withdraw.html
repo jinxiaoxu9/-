@@ -57,15 +57,14 @@
                                             <table class="table table-bordered table-striped table-hover">
                                               <thead>
                                                 <tr>
-                                                    <th style="font-size:12px;">ID</th>
-                                                    <th style="font-size:12px;">提现金额</th>
-
-                                                    <th style="font-size:12px;">提现银行</th>
-                                                    <th style="font-size:12px;">提现姓名</th>
-                                                    <th style="font-size:12px;">提现账号</th>
-
-                                                    <th style="font-size:12px;">提现日期</th>
-                                                    <th style="font-size:12px;">状态</th> 
+                                                    <th class="font12">ID</th>
+                                                    <th class="font12">提现金额</th>
+                                                    <th class="font12">提现银行</th>
+                                                    <th class="font12">提现姓名</th>
+                                                    <th class="font12">提现账号</th>
+                                                    <th class="font12">提现日期</th>
+                                                    <th class="font12">处理时间</th>
+                                                    <th class="font12">状态</th>
 
                                                     <th style="max-width:20%;font-size:12px;" >操作</th>
                                                 </tr>
@@ -73,28 +72,34 @@
 												<tbody>
 													{empty name="list"}
 														<tr class="builder-data-empty">
-                                                            <td class="text-center empty-info" colspan="20"  style="font-size:12px;">
+                                                            <td class="text-center empty-info" colspan="20"  class="font12">
                                                                 <i class="fa fa-database"></i> 暂时没有数据<br>
                                                             </td>
                                                         </tr> 
 													{else/}
 													{foreach $list as $v}
 														<tr>
-															<td style="font-size:12px;"><?php echo $v['id'];?></td>
-                                                            <td style="font-size:12px;"><?php echo $v['price'];?></td>
+															<td class="font12"><?php echo $v['id'];?></td>
+                                                            <td class="font12"><?php echo $v['price'];?></td>
 
-                                                            <td style="font-size:12px;"><?php echo $v['way'];?></td>
-                                                            <td style="font-size:12px;"><?php echo $v['name']?></td>
-															<td style="font-size:12px;"><?php echo $v['account'];?></td>
-
-															<td style="font-size:12px;"><?php echo date("Y-m-d H:i",$v['addtime']);?></td>
-															<td style="font-size:12px;"><?php echo isset($status_type[$v['status']]) ? $status_type[$v['status']] : '';?></td>
+                                                            <td class="font12"><?php echo $v['way'];?></td>
+                                                            <td class="font12"><?php echo $v['name']?></td>
+															<td class="font12"><?php echo $v['account'];?></td>
+															<td class="font12"><?php echo date("Y-m-d H:i",$v['addtime']);?></td>
+															<td class="font12"><?php echo $v['endtime'];?></td>
+															<td class="font12"><?php echo isset($status_type[$v['status']]) ? $status_type[$v['status']] : '';?></td>
 
 															
-															<td style="font-size:12px;">
-																<a href="<?php echo url('User/wiedit',array('id'=>$v['id'],'st'=>1));?>" style="font-size:12px;cursor:pointer;">提现 ||</a>
-																<a href="<?php echo url('User/wiedit',array('id'=>$v['id'],'st'=>2));?>" style="font-size:12px;cursor:pointer;">退回 ||</a>
-																<a href="<?php echo url('User/wiedit',array('id'=>$v['id'],'st'=>3));?>" style="font-size:12px;cursor:pointer;">删除</a>
+															<td class="font12">
+                                                                {neq name="v.status" value="1"}
+																<a href="<?php echo url('User/wiedit',array('id'=>$v['id'],'st'=>1));?>" class="pointerfont">提现 ||</a>
+                                                                {/neq}
+                                                                {neq name="v.status" value="1"}
+																<a href="<?php echo url('User/wiedit',array('id'=>$v['id'],'st'=>2));?>" class="pointerfont">退回 ||</a>
+                                                                {/neq}
+                                                                {eq name="v.status" value="3"}
+																<a href="<?php echo url('User/wiedit',array('id'=>$v['id'],'st'=>3));?>" class="pointerfont">删除</a>
+                                                                {/eq}
 															</td>
 	
 														</tr>
