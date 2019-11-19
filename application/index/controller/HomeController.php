@@ -30,7 +30,6 @@ class HomeController extends CommonController
         $data['qeeen'] = $HomeLogic->getUserOrderQueen();
         //当前用户的最新订单ID
         $gemaOrderModel = $this->modelGemapayOrder;
-        $this->user_id = 647;
         $lastOrderInfo = $gemaOrderModel->getLastGemapayOrder(['status' => $gemaOrderModel::PAYED, 'gema_userid' => $this->user_id], 'id', ['id' => 'desc']);
         $data['userLastOrderId'] = $lastOrderInfo['id'];
         //最新十条订单数据
