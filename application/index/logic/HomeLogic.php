@@ -6,6 +6,27 @@ use app\index\model\User;
 
 class HomeLogic
 {
+
+
+    /**
+     * 获取等待排队中的用户的
+     * @return array
+     */
+    public function getUserOrderQueen(){
+        return [
+            ['user_id'=>1,'order_status'=>rand(0,2),'add_time'=>time()],
+            ['user_id'=>2,'order_status'=>rand(0,2),'add_time'=>time()],
+            ['user_id'=>5,'order_status'=>rand(0,2),'add_time'=>time()],
+            ['user_id'=>8,'order_status'=>rand(0,2),'add_time'=>time()],
+            ['user_id'=>3,'order_status'=>rand(0,2),'add_time'=>time()],
+            ['user_id'=>7,'order_status'=>rand(0,2),'add_time'=>time()],
+            ['user_id'=>5,'order_status'=>rand(0,2),'add_time'=>time()],
+            ['user_id'=>8,'order_status'=>rand(0,2),'add_time'=>time()],
+            ['user_id'=>5,'order_status'=>rand(0,2),'add_time'=>time()],
+        ];
+    }
+
+
     public function getUserWorkInfo($userId)
     {
         $UserModel = new \app\index\model\UserModel();

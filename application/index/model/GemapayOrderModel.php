@@ -14,4 +14,22 @@ class GemapayOrderModel extends BaseModel
     const PAYED = 1;
     const CLOSED = 2;
 
+
+    public function  getGemapayOrder($where = [], $field = true){
+        return $this->getInfo($where,$field);
+    }
+
+
+
+    public function  getLastGemapayOrder($where = [], $field = '*',$order='id desc'){
+        return $this->where($where)->field($field)->order($order)->find();
+    }
+
+
+    public function getOrderList($where = [], $field = true, $order = '', $paginate = 0){
+       return  $this->getList($where,$field,$order,$paginate);
+    }
+
+
+
 }
